@@ -203,12 +203,12 @@ public class Analizador
 				aux1 = "";
 				aux = "";
 				j = 0;
+				i = i+1;
 				while (rech[i] != '}')
 				{
 					aux1 += rech[i]; // Guardamos en aux1 la macro 
 					i = i+1;
 				}
-				aux1 += rech[i]; // Guardamos también el último '}'
 				// Comprobamos que la lista no esté vacia o sea nula
 				if (listaM != null && !listaM.isEmpty()) 
 				{
@@ -278,8 +278,7 @@ public class Analizador
 				{
 					aux += "0"; // Añadimos un 0 si después del grupo no hay ni un +, ni un * o ni un ?
 					i = i-1;
-				}
-					
+				}	
 				out.add(")" + aux);
 			}
 			// Se encuentra un OR
@@ -290,14 +289,75 @@ public class Analizador
 				out.add(aux);
 			}
 			// Se encuentra un "
-			else if (rech[i] == '\"')
+			else if (rech[i] == '"')
 			{
-				
+				aux = "";
+				i = i+1; // Apuntamos al siguiente caracter
+				while (rech[i] != '"') // REPASAR ESTO
+				{
+					aux += rech[i];
+					i = i+1;
+				}
+				// Comprobamos qué hay después
+				i = i+1; // Apuntamos al siguiente caracter
+				if (re.length() == i) // Se acaba la expresión regular
+					aux += "0"; // Añadimos un 0 si después no hay ni un +, ni un * o ni un ?
+				else if (rech[i] == '+') 
+					aux += "1"; // Añadimos un 1 si después hay un +
+				else if (rech[i] == '*') 
+					aux += "2"; // Añadimos un 2 si después hay un *
+				else if (rech[i] == '?') 
+					aux += "3"; // Añadimos un 3 si después hay un ?
+				else
+				{
+					aux += "0"; // Añadimos un 0 si después no hay ni un +, ni un * o ni un ?
+					i = i-1;
+				}
+				out.add(aux);
+			}
+			else if (rech[i] == ' ')
+			{
+				// Añadir
 			}
 			// Cualquier otro caracter
 			else
 			{
-				
+				aux = "";
+				while (true)
+				{
+					if (re.length() == i) // Se acaba la expresión regular
+					{
+						aux += "0"; // Añadimos un 0 si después no hay ni un +, ni un * o ni un ?
+						break;
+					}
+					else if (rech[i] == '+') 
+					{
+						aux += "1"; // Añadimos un 1 si después hay un +
+						break;
+					}
+					else if (rech[i] == '*') 
+					{
+						aux += "2"; // Añadimos un 2 si después hay un *
+						break;
+					}
+					else if (rech[i] == '?') 
+					{
+						aux += "3"; // Añadimos un 3 si después hay un ?
+						break;
+					}
+					else if (rech[i] == ' ')
+					{
+						aux += "0"; // Añadimos un 0 si después hay un espacio
+						i = i-1;
+						break;
+					}
+					else
+					{
+						aux += rech[i];
+						i = i+1;
+					}
+				}
+				out.add(aux);
 			}
 			i = i+1;
 		}

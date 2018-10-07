@@ -40,23 +40,29 @@ public class Principal {
 	          e.printStackTrace();
 	        }
 	        Analizador aux = new Analizador();
-	        //List<String> auxmacro = aux.translateMacro(scanner.macrosList);
-		    //List<String> auxregex = aux.translateRegex(scanner.regexList);
-		    //for (String cadena : auxregex)
-		    //{
-		    	//System.out.println(cadena);
-		    //}
-	        List<String> lER = new LinkedList<>();
-	        lER.add("[1-5]+");
-	        lER.add("[A5tg]+ {auxiliar}[0-9]+");
-	        List<String> lM = new LinkedList<>();
-	        lM.add("{Auxiliar}");
-	        lM.add("{macro}");
-	        List<String> l = aux.parsear("[0-4]? {macro} | ({Auxiliar}? [34g])+",lER,lM);
-	        for (String cadena : l)
-	        {
-	        	System.out.println(cadena);
-	        }
+	        List<String> auxmacro = aux.translateMacro(scanner.macrosList);
+		    List<String> auxregex = aux.translateRegex(scanner.regexList);
+		    List<String> l;
+		    for (String cadena : auxregex)
+		    {
+		    	l = aux.parsear(cadena, auxregex, auxmacro);
+		    	for (String a : l)
+		    	{
+		    		System.out.println(a);
+		    	}
+		    	System.out.println();
+		    }
+//	        List<String> lER = new LinkedList<>();
+//	        lER.add("0+ a34 oj?");
+//	        lER.add("[A5tg]+ {auxiliar}\"hola\"");
+//	        List<String> lM = new LinkedList<>();
+//	        lM.add("{Auxiliar}");
+//	        lM.add("{macro}");
+//	        List<String> l = aux.parsear("[0-4]? {macro} | ({Auxiliar}? [34g])+",lER,lM);
+//	        for (String cadena : l)
+//	        {
+//	        	System.out.println(cadena);
+//	        }
 	      }
 	    }
 	  }
