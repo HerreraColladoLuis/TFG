@@ -114,29 +114,30 @@ public class Analizador
 	}
 	/**
 	 * Récibe un string que es una expresión regular y 
-	 * devuelve esa expresión regular traducida para que
-	 * lo entienda el algoritmo
+	 * devuelve esa expresión regular traducida en forma 
+	 * de arbol para que lo entienda el algoritmo
 	 * @param expresión regular
 	 * @param lista de expresiones regulares
 	 * @param lista de las macros
-	 * @return expresión regular parseada en una lista
+	 * @return expresión regular parseada en forma de arbol
 	 * @throws Exception 
 	 */
-	public List<String> parsear(String re, List<String> listaER, List<String> listaM) throws Exception
+	public NodoArbol parsear(String re, List<String> listaER, List<String> listaM) throws Exception
 	{
-		List<String> out = new LinkedList<>(); // Lista donde guardaremos las partes de la expresión regular
-		List<String> listaAux;
+		NodoArbol arbol = new NodoArbol(); // Creamos el arbol que vamos a devolver
+		arbol.setEsVacio(true); // Lo creamos vacío
 		String aux, aux1;
 		char[] rech = re.toCharArray();
 		int i = 0;
 		int j;
+		int pos;
 		// Vamos a recorrer el string caracter a caracter
 		while (i < re.length()) 
 		{	
 			// Entramos en el caso en el que se abre un set
 			if (rech[i] == '[') 
 			{
-				aux = "";
+				aux = ""; // String donde guardaremos la información del nodo
 				if (rech[i+1] == '^') // Comprobamos si está negado
 				{
 					aux+= rech[i+1]; // aux += ^
@@ -173,17 +174,28 @@ public class Analizador
 					else if (rech[i] == ']') // Acaba el set
 					{
 						i = i+1; // Apuntamos al siguiente caracter
-						if (re.length() == i) // Se acaba la expresión regular
-							aux += "0"; // Añadimos un 0 si después del set no hay ni un +, ni un * o ni un ?
-						else if (rech[i] == '+') 
-							aux += "1"; // Añadimos un 1 si después del set hay un +
-						else if (rech[i] == '*') 
-							aux += "2"; // Añadimos un 2 si después del set hay un *
-						else if (rech[i] == '?') 
-							aux += "3"; // Añadimos un 3 si después del set hay un ?
-						else
+						if (re.length() == i) // Se acaba la expresión regular (no hay cuantificador)
 						{
-							aux += "0"; // Añadimos un 0 si después del set no hay ni un +, ni un * o ni un ?
+							arbol = arbol.nuevaHoja(aux); // Añadimos solo la hoja con la expresión regular
+						}
+						else if (rech[i] == '+') // Cuantificador +
+						{
+							arbol = arbol.nuevoHijo("+"); // Añadimos el nodo (que no va a ser hoja)
+							arbol = arbol.nuevaHoja(aux).getPadre(); // Añadimos la hoja con la expresión regular y cogemos el padre
+						}
+						else if (rech[i] == '*') // Cuantificador *
+						{
+							arbol = arbol.nuevoHijo("*"); // Añadimos el nodo (que no va a ser hoja)
+							arbol = arbol.nuevaHoja(aux).getPadre(); // Añadimos la hoja con la expresión regular y cogemos el padre
+						}
+						else if (rech[i] == '?') // Cuantificador ?
+						{
+							arbol = arbol.nuevoHijo("?"); // Añadimos el nodo (que no va a ser hoja)
+							arbol = arbol.nuevaHoja(aux).getPadre(); // Añadimos la hoja con la expresión regular y cogemos el padre
+						}
+						else // Sin cuantificador
+						{
+							arbol = arbol.nuevaHoja(aux); // Añadimos solo la hoja con la expresión regular
 							i = i-1;
 						}
 						break; // Salimos del while
@@ -194,126 +206,125 @@ public class Analizador
 						aux += rech[i]; // Guardamos el símbolo
 						i = i+1;
 					}	
-				}	
-				out.add(aux);
+				}			
 			}
 			// Entramos en el caso en el que se abre una macro
 			else if (rech[i] == '{')
 			{
-				aux1 = "";
-				aux = "";
-				j = 0;
-				i = i+1;
-				while (rech[i] != '}')
-				{
-					aux1 += rech[i]; // Guardamos en aux1 la macro 
-					i = i+1;
-				}
-				// Comprobamos que la lista no esté vacia o sea nula
-				if (listaM != null && !listaM.isEmpty()) 
-				{
-					for (String comp : listaM) // Recorremos la lista buscando la posición de la macro dada
-					{
-						if (comp.equalsIgnoreCase(aux1)) // Cuando la encontramos, salimos
-							break;
-						j = j+1; // En esta variable guardamos la posición
-					}
-				}
-				else 
-					throw new Exception("Lista de Macros vacía o nula"); // Devolvemos una excepción 
-				// Comprobamos que la lista no esté vacia o sea nula
-				if (listaER != null && !listaER.isEmpty()) 
-					listaAux = parsear(listaER.get(j), listaER, listaM); // Hacemos recursividad para parsear una macro
-				else
-					throw new Exception("Lista de ER vacía o nula"); // Devolvemos una excepción
-				// Añadimos la lista auxiliar a la lista principal más paréntesis
-				if (listaAux != null && !listaAux.isEmpty())
-				{
-					out.add("(");
-					for (String a : listaAux)
-						out.add(a);
-				}
-				else
-					throw new Exception("Lista auxiliar vacía o nula"); // Devolvemos una excepción
-				// Comprobamos qué hay después de la macro
-				i = i+1; // Apuntamos al siguiente caracter
-				if (re.length() == i) // Se acaba la expresión regular
-					aux += "0"; // Añadimos un 0 si después de la macro no hay ni un +, ni un * o ni un ?
-				else if (rech[i] == '+') 
-					aux += "1"; // Añadimos un 1 si después de la macro hay un +
-				else if (rech[i] == '*') 
-					aux += "2"; // Añadimos un 2 si después de la macro hay un *
-				else if (rech[i] == '?') 
-					aux += "3"; // Añadimos un 3 si después de la macro hay un ?
-				else
-				{
-					aux += "0"; // Añadimos un 0 si después de la macro no hay ni un +, ni un * o ni un ?
-					i = i-1;
-				}
-					
-				out.add(")" + aux);
+//				aux1 = "";
+//				aux = "";
+//				j = 0;
+//				i = i+1;
+//				while (rech[i] != '}')
+//				{
+//					aux1 += rech[i]; // Guardamos en aux1 la macro 
+//					i = i+1;
+//				}
+//				// Comprobamos que la lista no esté vacia o sea nula
+//				if (listaM != null && !listaM.isEmpty()) 
+//				{
+//					for (String comp : listaM) // Recorremos la lista buscando la posición de la macro dada
+//					{
+//						if (comp.equalsIgnoreCase(aux1)) // Cuando la encontramos, salimos
+//							break;
+//						j = j+1; // En esta variable guardamos la posición
+//					}
+//				}
+//				else 
+//					throw new Exception("Lista de Macros vacía o nula"); // Devolvemos una excepción 
+//				// Comprobamos que la lista no esté vacia o sea nula
+//				if (listaER != null && !listaER.isEmpty()) 
+//					auxAr = parsear(listaER.get(j), listaER, listaM); // Hacemos recursividad para parsear una macro
+//				else
+//					throw new Exception("Lista de ER vacía o nula"); // Devolvemos una excepción
+//				// Añadimos la lista auxiliar a la lista principal más paréntesis
+//				if (listaAux != null && !listaAux.isEmpty())
+//				{
+//					out.add("(");
+//					for (String a : listaAux)
+//						out.add(a);
+//				}
+//				else
+//					throw new Exception("Lista auxiliar vacía o nula"); // Devolvemos una excepción
+//				// Comprobamos qué hay después de la macro
+//				i = i+1; // Apuntamos al siguiente caracter
+//				if (re.length() == i) // Se acaba la expresión regular
+//					aux += "0"; // Añadimos un 0 si después de la macro no hay ni un +, ni un * o ni un ?
+//				else if (rech[i] == '+') 
+//					aux += "1"; // Añadimos un 1 si después de la macro hay un +
+//				else if (rech[i] == '*') 
+//					aux += "2"; // Añadimos un 2 si después de la macro hay un *
+//				else if (rech[i] == '?') 
+//					aux += "3"; // Añadimos un 3 si después de la macro hay un ?
+//				else
+//				{
+//					aux += "0"; // Añadimos un 0 si después de la macro no hay ni un +, ni un * o ni un ?
+//					i = i-1;
+//				}
+//					
+//				out.add(")" + aux);
 			}
 			// Entramos en el caso en el que se abre un paréntesis
 			else if (rech[i] == '(')
 			{
-				aux = "";
-				aux += rech[i];
-				out.add(aux);
+//				aux = "";
+//				aux += rech[i];
+//				out.add(aux);
 			}
 			// Se encuentra un paréntesis cerrado
 			else if (rech[i] == ')')
 			{
-				aux = "";
-				// Comprobamos qué hay después del grupo
-				i = i+1; // Apuntamos al siguiente caracter
-				if (re.length() == i) // Se acaba la expresión regular
-					aux += "0"; // Añadimos un 0 si después del grupo no hay ni un +, ni un * o ni un ?
-				else if (rech[i] == '+') 
-					aux += "1"; // Añadimos un 1 si después del grupo hay un +
-				else if (rech[i] == '*') 
-					aux += "2"; // Añadimos un 2 si después del grupo hay un *
-				else if (rech[i] == '?') 
-					aux += "3"; // Añadimos un 3 si después del grupo hay un ?
-				else
-				{
-					aux += "0"; // Añadimos un 0 si después del grupo no hay ni un +, ni un * o ni un ?
-					i = i-1;
-				}	
-				out.add(")" + aux);
+//				aux = "";
+//				// Comprobamos qué hay después del grupo
+//				i = i+1; // Apuntamos al siguiente caracter
+//				if (re.length() == i) // Se acaba la expresión regular
+//					aux += "0"; // Añadimos un 0 si después del grupo no hay ni un +, ni un * o ni un ?
+//				else if (rech[i] == '+') 
+//					aux += "1"; // Añadimos un 1 si después del grupo hay un +
+//				else if (rech[i] == '*') 
+//					aux += "2"; // Añadimos un 2 si después del grupo hay un *
+//				else if (rech[i] == '?') 
+//					aux += "3"; // Añadimos un 3 si después del grupo hay un ?
+//				else
+//				{
+//					aux += "0"; // Añadimos un 0 si después del grupo no hay ni un +, ni un * o ni un ?
+//					i = i-1;
+//				}	
+//				out.add(")" + aux);
 			}
 			// Se encuentra un OR
 			else if (rech[i] == '|')
 			{
-				aux = "";
-				aux += rech[i]; // Añadimos simplemente un |
-				out.add(aux);
+//				aux = "";
+//				aux += rech[i]; // Añadimos simplemente un |
+//				out.add(aux);
 			}
 			// Se encuentra un "
 			else if (rech[i] == '"')
 			{
-				aux = "";
-				i = i+1; // Apuntamos al siguiente caracter
-				while (rech[i] != '"') // REPASAR ESTO
-				{
-					aux += rech[i];
-					i = i+1;
-				}
-				// Comprobamos qué hay después
-				i = i+1; // Apuntamos al siguiente caracter
-				if (re.length() == i) // Se acaba la expresión regular
-					aux += "0"; // Añadimos un 0 si después no hay ni un +, ni un * o ni un ?
-				else if (rech[i] == '+') 
-					aux += "1"; // Añadimos un 1 si después hay un +
-				else if (rech[i] == '*') 
-					aux += "2"; // Añadimos un 2 si después hay un *
-				else if (rech[i] == '?') 
-					aux += "3"; // Añadimos un 3 si después hay un ?
-				else
-				{
-					aux += "0"; // Añadimos un 0 si después no hay ni un +, ni un * o ni un ?
-					i = i-1;
-				}
-				out.add(aux);
+//				aux = "";
+//				i = i+1; // Apuntamos al siguiente caracter
+//				while (rech[i] != '"') // REPASAR ESTO
+//				{
+//					aux += rech[i];
+//					i = i+1;
+//				}
+//				// Comprobamos qué hay después
+//				i = i+1; // Apuntamos al siguiente caracter
+//				if (re.length() == i) // Se acaba la expresión regular
+//					aux += "0"; // Añadimos un 0 si después no hay ni un +, ni un * o ni un ?
+//				else if (rech[i] == '+') 
+//					aux += "1"; // Añadimos un 1 si después hay un +
+//				else if (rech[i] == '*') 
+//					aux += "2"; // Añadimos un 2 si después hay un *
+//				else if (rech[i] == '?') 
+//					aux += "3"; // Añadimos un 3 si después hay un ?
+//				else
+//				{
+//					aux += "0"; // Añadimos un 0 si después no hay ni un +, ni un * o ni un ?
+//					i = i-1;
+//				}
+//				out.add(aux);
 			}
 			else if (rech[i] == ' ')
 			{
@@ -322,46 +333,159 @@ public class Analizador
 			// Cualquier otro caracter
 			else
 			{
-				aux = "";
-				while (true)
-				{
-					if (re.length() == i) // Se acaba la expresión regular
-					{
-						aux += "0"; // Añadimos un 0 si después no hay ni un +, ni un * o ni un ?
-						break;
-					}
-					else if (rech[i] == '+') 
-					{
-						aux += "1"; // Añadimos un 1 si después hay un +
-						break;
-					}
-					else if (rech[i] == '*') 
-					{
-						aux += "2"; // Añadimos un 2 si después hay un *
-						break;
-					}
-					else if (rech[i] == '?') 
-					{
-						aux += "3"; // Añadimos un 3 si después hay un ?
-						break;
-					}
-					else if (rech[i] == ' ')
-					{
-						aux += "0"; // Añadimos un 0 si después hay un espacio
-						i = i-1;
-						break;
-					}
-					else
-					{
-						aux += rech[i];
-						i = i+1;
-					}
-				}
-				out.add(aux);
+//				aux = "";
+//				while (true)
+//				{
+//					if (re.length() == i) // Se acaba la expresión regular
+//					{
+//						aux += "0"; // Añadimos un 0 si después no hay ni un +, ni un * o ni un ?
+//						break;
+//					}
+//					else if (rech[i] == '+') 
+//					{
+//						aux += "1"; // Añadimos un 1 si después hay un +
+//						break;
+//					}
+//					else if (rech[i] == '*') 
+//					{
+//						aux += "2"; // Añadimos un 2 si después hay un *
+//						break;
+//					}
+//					else if (rech[i] == '?') 
+//					{
+//						aux += "3"; // Añadimos un 3 si después hay un ?
+//						break;
+//					}
+//					else if (rech[i] == ' ')
+//					{
+//						aux += "0"; // Añadimos un 0 si después hay un espacio
+//						i = i-1;
+//						break;
+//					}
+//					else
+//					{
+//						aux += rech[i];
+//						i = i+1;
+//					}
+//				}
+//				out.add(aux);
 			}
 			i = i+1;
 		}
-		return out;
+		return arbol;
+	}
+	/**
+	 * Clase auxiliar para un nodo del arbol
+	 * @author Luis Herrera
+	 *
+	 */
+	public class NodoArbol
+	{
+		private NodoArbol padre;
+		private List<NodoArbol> hijos;
+		private String info;
+		private boolean esHoja;
+		private boolean esOr;
+		private boolean esVacio;
+		
+		/**
+		 * Método para añadir un nuevo hijo a un nodo padre
+		 * @param información del nodo hijo
+		 * @param información de si es hoja o no
+		 * @return nodo añadido
+		 */
+		public NodoArbol nuevoHijo(String info)
+		{
+			NodoArbol n = new NodoArbol(); // Nodo para el hijo que vamos a añadir
+			if ((this.isEsHoja() || !this.isEsOr()) && (this.getInfo() != ".")) // Se encuentra una concatenación 
+			{
+				NodoArbol n1 = new NodoArbol(); // Nodo para la concatenación
+				// Creamos el nodo concatenación 
+				n1.setInfo(".");
+				n1.setHijos(new LinkedList<>());
+				// Asignamos n1 como padre de este arbol
+				this.setPadre(n1);
+				// Creamos el nodo hijo a añadir
+				n.setEsHoja(false);
+				n.setInfo(info);
+				n.setPadre(n1);
+				// Añadimos los hijos a n1
+				n1.getHijos().add(this);
+				n1.getHijos().add(n);
+				// Devolvemos n
+				return n;
+			}
+			else // Se encuentra un or o ya está la concatenación
+			{
+				// Creamos el nodo hijo
+				n.setEsHoja(false);
+				n.setInfo(info);
+				n.setPadre(this);
+				// Añadimos el hijo a este arbol
+				this.getHijos().add(n);
+				// Devolvemos n
+				return n;
+			}
+		}
+		
+		public NodoArbol nuevaHoja(String info)
+		{
+			if (this.isEsVacio())
+			{
+				this.setInfo(info);
+				this.setEsHoja(true);
+				this.setEsVacio(false);
+				return this;
+			}
+			else
+			{
+				NodoArbol n = new NodoArbol(); // Nodo para el hijo que vamos a añadir
+				n.setEsHoja(true);
+				n.setInfo(info);
+				n.setPadre(this);
+				this.getHijos().add(n);
+				return this;
+			}
+		}
+		
+		public boolean isEsVacio() {
+			return esVacio;
+		}
+		public void setEsVacio(boolean esVacio) {
+			this.esVacio = esVacio;
+		}
+		public boolean isEsOr() {
+			return this.getInfo() == "|";
+		}
+		public void setEsOr(boolean esOr) {
+			this.esOr = esOr;
+		}
+		public boolean isEsHoja() {
+			return this.getHijos() == null;
+		}
+		public void setEsHoja(boolean esHoja) {
+			if (!esHoja)
+				this.setHijos(new LinkedList<>());
+			this.esHoja = esHoja;
+		}
+		public NodoArbol getPadre() {
+			return padre;
+		}
+		public void setPadre(NodoArbol padre) {
+			this.padre = padre;
+		}
+		public List<NodoArbol> getHijos() {
+			return hijos;
+		}
+		public void setHijos(List<NodoArbol> hijos) {
+			this.hijos = hijos;
+		}
+		public String getInfo() {
+			return info;
+		}
+		public void setInfo(String info) {
+			this.info = info;
+		}
 	}
 	/**
 	 * Clase auxiliar para un nodo
