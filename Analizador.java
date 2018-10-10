@@ -126,6 +126,7 @@ public class Analizador
 	{
 		NodoArbol arbol = new NodoArbol(); // Creamos el arbol que vamos a devolver
 		arbol.setEsVacio(true); // Lo creamos vacío
+		NodoArbol auxArbol;
 		String aux, aux1;
 		char[] rech = re.toCharArray();
 		int i = 0;
@@ -175,23 +176,27 @@ public class Analizador
 					{
 						i = i+1; // Apuntamos al siguiente caracter
 						if (re.length() == i) // Se acaba la expresión regular (no hay cuantificador)
-						{
 							arbol = arbol.nuevaHoja(aux); // Añadimos solo la hoja con la expresión regular
-						}
 						else if (rech[i] == '+') // Cuantificador +
 						{
 							arbol = arbol.nuevoHijo("+"); // Añadimos el nodo (que no va a ser hoja)
-							arbol = arbol.nuevaHoja(aux).getPadre(); // Añadimos la hoja con la expresión regular y cogemos el padre
+							arbol = arbol.nuevaHoja(aux); // Añadimos la hoja con la expresión regular 
+							if (arbol.getPadre() != null) // Si el padre es distinto de null, apuntamos a él
+								arbol = arbol.getPadre();
 						}
 						else if (rech[i] == '*') // Cuantificador *
 						{
 							arbol = arbol.nuevoHijo("*"); // Añadimos el nodo (que no va a ser hoja)
-							arbol = arbol.nuevaHoja(aux).getPadre(); // Añadimos la hoja con la expresión regular y cogemos el padre
+							arbol = arbol.nuevaHoja(aux); // Añadimos la hoja con la expresión regular
+							if (arbol.getPadre() != null) // Si el padre es distinto de null, apuntamos a él
+								arbol = arbol.getPadre();
 						}
 						else if (rech[i] == '?') // Cuantificador ?
 						{
 							arbol = arbol.nuevoHijo("?"); // Añadimos el nodo (que no va a ser hoja)
-							arbol = arbol.nuevaHoja(aux).getPadre(); // Añadimos la hoja con la expresión regular y cogemos el padre
+							arbol = arbol.nuevaHoja(aux); // Añadimos la hoja con la expresión regular 
+							if (arbol.getPadre() != null) // Si el padre es distinto de null, apuntamos a él
+								arbol = arbol.getPadre();
 						}
 						else // Sin cuantificador
 						{
@@ -211,58 +216,65 @@ public class Analizador
 			// Entramos en el caso en el que se abre una macro
 			else if (rech[i] == '{')
 			{
-//				aux1 = "";
-//				aux = "";
-//				j = 0;
-//				i = i+1;
-//				while (rech[i] != '}')
-//				{
-//					aux1 += rech[i]; // Guardamos en aux1 la macro 
-//					i = i+1;
-//				}
-//				// Comprobamos que la lista no esté vacia o sea nula
-//				if (listaM != null && !listaM.isEmpty()) 
-//				{
-//					for (String comp : listaM) // Recorremos la lista buscando la posición de la macro dada
-//					{
-//						if (comp.equalsIgnoreCase(aux1)) // Cuando la encontramos, salimos
-//							break;
-//						j = j+1; // En esta variable guardamos la posición
-//					}
-//				}
-//				else 
-//					throw new Exception("Lista de Macros vacía o nula"); // Devolvemos una excepción 
-//				// Comprobamos que la lista no esté vacia o sea nula
-//				if (listaER != null && !listaER.isEmpty()) 
-//					auxAr = parsear(listaER.get(j), listaER, listaM); // Hacemos recursividad para parsear una macro
-//				else
-//					throw new Exception("Lista de ER vacía o nula"); // Devolvemos una excepción
-//				// Añadimos la lista auxiliar a la lista principal más paréntesis
-//				if (listaAux != null && !listaAux.isEmpty())
-//				{
-//					out.add("(");
-//					for (String a : listaAux)
-//						out.add(a);
-//				}
-//				else
-//					throw new Exception("Lista auxiliar vacía o nula"); // Devolvemos una excepción
-//				// Comprobamos qué hay después de la macro
-//				i = i+1; // Apuntamos al siguiente caracter
-//				if (re.length() == i) // Se acaba la expresión regular
-//					aux += "0"; // Añadimos un 0 si después de la macro no hay ni un +, ni un * o ni un ?
-//				else if (rech[i] == '+') 
-//					aux += "1"; // Añadimos un 1 si después de la macro hay un +
-//				else if (rech[i] == '*') 
-//					aux += "2"; // Añadimos un 2 si después de la macro hay un *
-//				else if (rech[i] == '?') 
-//					aux += "3"; // Añadimos un 3 si después de la macro hay un ?
-//				else
-//				{
-//					aux += "0"; // Añadimos un 0 si después de la macro no hay ni un +, ni un * o ni un ?
-//					i = i-1;
-//				}
-//					
-//				out.add(")" + aux);
+				aux1 = "";
+				aux = "";
+				j = 0;
+				i = i+1;
+				while (rech[i] != '}')
+				{
+					aux1 += rech[i]; // Guardamos en aux1 la macro 
+					i = i+1;
+				}
+				// Comprobamos que la lista no esté vacia o sea nula
+				if (listaM != null && !listaM.isEmpty()) 
+				{
+					for (String comp : listaM) // Recorremos la lista buscando la posición de la macro dada
+					{
+						if (comp.equalsIgnoreCase(aux1)) // Cuando la encontramos, salimos
+							break;
+						j = j+1; // En esta variable guardamos la posición
+					}
+				}
+				else 
+					throw new Exception("Lista de Macros vacía o nula"); // Devolvemos una excepción 
+				// Comprobamos que la lista no esté vacia o sea nula
+				if (listaER != null && !listaER.isEmpty()) 
+					auxArbol = parsear(listaER.get(j), listaER, listaM); // Hacemos recursividad para parsear una macro
+				else
+					throw new Exception("Lista de ER vacía o nula"); // Devolvemos una excepción
+				// Añadimos el arbol de la macro como hijo del arbol actúal
+				if (auxArbol == null)
+					throw new Exception("Lista auxiliar vacía o nula"); // Devolvemos una excepción
+				// Comprobamos qué hay después de la macro
+				i = i+1; // Apuntamos al siguiente caracter
+				if (re.length() == i) // Se acaba la expresión regular
+					arbol = arbol.nuevoArbol(auxArbol); // Añadimos a auxArbol como hijo del arbol actúal
+				else if (rech[i] == '+') 
+				{
+					arbol = arbol.nuevoHijo("+"); // Añadimos el nodo (que no va a ser hoja)
+					arbol = arbol.nuevoArbol(auxArbol); // Añadimos a auxArbol como hijo del arbol actúal
+					if (arbol.getPadre() != null) // Si el padre es distinto de null, apuntamos a él
+						arbol = arbol.getPadre();
+				}
+				else if (rech[i] == '*') 
+				{
+					arbol = arbol.nuevoHijo("*"); // Añadimos el nodo (que no va a ser hoja)
+					arbol = arbol.nuevoArbol(auxArbol); // Añadimos a auxArbol como hijo del arbol actúal
+					if (arbol.getPadre() != null) // Si el padre es distinto de null, apuntamos a él
+						arbol = arbol.getPadre();
+				}
+				else if (rech[i] == '?') 
+				{
+					arbol = arbol.nuevoHijo("?"); // Añadimos el nodo (que no va a ser hoja)
+					arbol = arbol.nuevoArbol(auxArbol); // Añadimos a auxArbol como hijo del arbol actúal
+					if (arbol.getPadre() != null) // Si el padre es distinto de null, apuntamos a él
+						arbol = arbol.getPadre();
+				}
+				else
+				{
+					arbol = arbol.nuevoArbol(auxArbol); // Añadimos a auxArbol como hijo del arbol actúal
+					i = i-1;
+				}
 			}
 			// Entramos en el caso en el que se abre un paréntesis
 			else if (rech[i] == '(')
@@ -295,9 +307,7 @@ public class Analizador
 			// Se encuentra un OR
 			else if (rech[i] == '|')
 			{
-//				aux = "";
-//				aux += rech[i]; // Añadimos simplemente un |
-//				out.add(aux);
+				arbol = arbol.nuevoHijo("|");
 			}
 			// Se encuentra un "
 			else if (rech[i] == '"')
@@ -392,17 +402,32 @@ public class Analizador
 		 * Método para añadir un nuevo hijo a un nodo padre
 		 * @param información del nodo hijo
 		 * @param información de si es hoja o no
-		 * @return nodo añadido
+		 * @return devolvemos el nodo añadido
 		 */
 		public NodoArbol nuevoHijo(String info)
 		{
 			NodoArbol n = new NodoArbol(); // Nodo para el hijo que vamos a añadir
-			if ((this.isEsHoja() || !this.isEsOr()) && (this.getInfo() != ".")) // Se encuentra una concatenación 
+			if (this.isEsVacio()) // Si el arbol es vacío, añadimos el nodo al actúal
+			{
+				this.setInfo(info);
+				this.setEsHoja(false);
+				this.setEsVacio(false);
+				return this;
+			}
+			else if (info == "|" && this.getInfo() != "|") // Tiene que añadir un or
+			{
+				n.setInfo(info);
+				n.setEsHoja(false);
+				this.setPadre(n);
+				n.getHijos().add(this);
+				return n;
+			}
+			else if ((this.isEsHoja() || !this.isEsOr()) && (this.getInfo() != ".")) // Se encuentra una concatenación 
 			{
 				NodoArbol n1 = new NodoArbol(); // Nodo para la concatenación
 				// Creamos el nodo concatenación 
 				n1.setInfo(".");
-				n1.setHijos(new LinkedList<>());
+				n1.setEsHoja(false);
 				// Asignamos n1 como padre de este arbol
 				this.setPadre(n1);
 				// Creamos el nodo hijo a añadir
@@ -427,25 +452,51 @@ public class Analizador
 				return n;
 			}
 		}
-		
+		/**
+		 * Método para añadir una hoja a un nodo
+		 * @param información del nodo hoja
+		 * @return devolvemos el nodo hoja o su padre
+		 */
 		public NodoArbol nuevaHoja(String info)
 		{
-			if (this.isEsVacio())
+			if (this.isEsVacio()) // Si el arbol es vacío, añadimos la información a este nodo
 			{
+				// Añadimos la información
 				this.setInfo(info);
 				this.setEsHoja(true);
 				this.setEsVacio(false);
-				return this;
+				return this; // Devolvemos el nodo sobre el que operamos
 			}
-			else
+			else // El arbol no es vacío, por lo que creamos un nuevo nodo que será la hoja
 			{
-				NodoArbol n = new NodoArbol(); // Nodo para el hijo que vamos a añadir
+				NodoArbol n = new NodoArbol(); // Nodo para el hijo (hoja) que vamos a añadir
+				// Añadimos la información
 				n.setEsHoja(true);
 				n.setInfo(info);
 				n.setPadre(this);
-				this.getHijos().add(n);
-				return this;
+				this.getHijos().add(n); // Añadimos la hoja a los hijos de este nodo
+				return this; // Devolvemos el nodo padre de la hoja que acabamos de añadir
 			}
+		}
+		/**
+		 * Método para añadir un arbol como hijo de otro
+		 * @param arbol a añadir
+		 * @return devolvemos el arbol padre
+		 */
+		public NodoArbol nuevoArbol(NodoArbol arbol)
+		{
+			if (this.getInfo() == arbol.getInfo()) // Si ambos son una concatenación
+				for (NodoArbol n : arbol.getHijos()) // Recorremos los hijos de arbol
+				{
+					n.setPadre(this); // Ponemos al actual como padre
+					this.getHijos().add(n); // Los añadimos a su lista de hijos
+				}	
+			else
+			{
+				arbol.setPadre(this); // Añadimos el arbol inicial como padre 
+				this.getHijos().add(arbol); // Añadimos el arbol a los hijos del inicial
+			}
+			return this; // Devolvemos el padre
 		}
 		
 		public boolean isEsVacio() {

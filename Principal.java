@@ -53,12 +53,12 @@ public class Principal {
 //		    	System.out.println();
 //		    }
 	        List<String> lER = new LinkedList<>();
-	        lER.add("0+ a34 oj?");
+	        lER.add("[0-4]+ | [afg]? [hf]");
 	        lER.add("[A5tg]+ {auxiliar}\"hola\"");
 	        List<String> lM = new LinkedList<>();
-	        lM.add("{Auxiliar}");
+	        lM.add("Auxiliar");
 	        lM.add("{macro}");
-	        Analizador.NodoArbol n =  aux.parsear("[0-9] [A-F]+ [er] [56]?",lER,lM);
+	        Analizador.NodoArbol n =  aux.parsear("{Auxiliar}",lER,lM);
 	        System.out.println("hola");
 	      }
 	    }
