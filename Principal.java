@@ -53,13 +53,26 @@ public class Principal {
 //		    	System.out.println();
 //		    }
 	        List<String> lER = new LinkedList<>();
-	        lER.add("[0-4]+ | [afg]? [hf]");
-	        lER.add("[A5tg]+ {auxiliar}\"hola\"");
+	        lER.add("[0-4]* | \"AA74\"+ [^hf]");
+	        lER.add("[A5tg] {auxiliar}");
 	        List<String> lM = new LinkedList<>();
 	        lM.add("Auxiliar");
-	        lM.add("{macro}");
-	        Analizador.NodoArbol n =  aux.parsear("{Auxiliar}",lER,lM);
-	        System.out.println("hola");
+	        lM.add("macro");
+	        aux.listaER = lER;
+	        aux.listaM = lM;
+	        List<String> salida = aux.parsear("([A5tg]+ | (abd))? | ({Auxiliar}* [hola]?)");
+	        for (String n : salida)
+	        {
+	        	System.out.println(n);
+	        }
+	        /*List<String> lExp = new LinkedList<>();
+	        lExp.add("A");
+	        lExp.add("+");
+	        lExp.add("|");
+	        lExp.add("B");
+	        lExp.add("?");
+	        aux.crearArbol(lExp);
+	        System.out.println("hola");*/
 	      }
 	    }
 	  }
