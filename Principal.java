@@ -40,19 +40,17 @@ public class Principal {
 	          e.printStackTrace();
 	        }
 	        Analizador aux = new Analizador();
-//	        List<String> auxmacro = aux.translateMacro(scanner.macrosList);
-//		    List<String> auxregex = aux.translateRegex(scanner.regexList);
-//		    List<String> l;
-//		    for (String cadena : auxregex)
-//		    {
-//		    	l = aux.parsear(cadena, auxregex, auxmacro);
-//		    	for (String a : l)
-//		    	{
-//		    		System.out.println(a);
-//		    	}
-//		    	System.out.println();
-//		    }
-	        List<String> lER = new LinkedList<>();
+	        List<String> auxmacro = aux.translateMacro(scanner.macrosList);
+		    List<String> auxregex = aux.translateRegex(scanner.regexList);
+		    aux.listaER = auxregex;
+		    aux.listaM = auxmacro;
+		    String out;
+		    for (String cadena : auxregex)
+		    {
+		    	out = aux.traducir(cadena);
+		    	System.out.println(out);
+		    }
+/*	        List<String> lER = new LinkedList<>();
 	        lER.add("[0-4]* | \"AA74\"+ [^hf]");
 	        lER.add("[A5tg] {auxiliar}");
 	        List<String> lM = new LinkedList<>();
@@ -60,11 +58,7 @@ public class Principal {
 	        lM.add("macro");
 	        aux.listaER = lER;
 	        aux.listaM = lM;
-	        List<String> salida = aux.parsear("([A5tg]+ | (abd))? | ({Auxiliar}* [hola]?)");
-	        for (String n : salida)
-	        {
-	        	System.out.println(n);
-	        }
+	        List<String> salida = aux.parsear("([A5tg]+ | (abd))? | ({Auxiliar}* [hola]?)");*/
 	        /*List<String> lExp = new LinkedList<>();
 	        lExp.add("A");
 	        lExp.add("+");

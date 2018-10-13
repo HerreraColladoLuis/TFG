@@ -116,6 +116,160 @@ public class Analizador
 		return out;
 	}
 	/**
+	 * Método para traducir una expresión regular a un formato
+	 * que pueda reconocer el algoritmo
+	 * @param String de la expresión
+	 * @return String de la expresión traducido
+	 * @throws Exception 
+	 */
+	public String traducir(String exp) throws Exception
+	{
+		String cadAux;
+		String aux1;
+		String cadena = "";
+		char[] rech = exp.toCharArray();
+		int i = 0;
+		int j;
+		int cont = 0;
+		// Vamos a recorrer el string caracter a caracter
+		while (i < exp.length()) 
+		{	
+			// Entramos en el caso en el que se abre un set
+			if (rech[i] == '[') 
+			{
+				if (rech[i+1] == '^') // Comprobamos si está negado
+				{
+					cadena+= rech[i+1]; // aux += ^
+					i = i+1; // Apuntamos a la negación
+				}
+				i = i+1; // Apuntamos al primer caracter del set
+				while (true)
+				{
+					// Comprobamos si es una letra, mayúscula o minúscula, o un número
+					if (((int) rech[i] > 64 && (int) rech[i] < 91) || ((int) rech[i] > 96 && (int) rech[i] < 123) || ((int) rech[i] > 47 && (int) rech[i] < 58))
+					{
+						// Caso correspondiente a [a-z] o [0-9] (por ejemplo)
+						if (rech[i+1] == '-')
+						{
+							for (j = (int) rech[i]; j <= (int) rech[i+2]; j++)
+								cadena += (char) j;
+							i = i+3; // Apuntamos al siguiente caracter de la secuencia
+						}
+						else // Si no es una secuencia, guardamos el número o la letra
+						{
+							cadena += rech[i];
+							i = i+1; // Apuntamos al siguiente caracter de la secuencia
+						}
+					}
+					// Comprobamos si es un caracter de escape \
+					else if ((int) rech[i] == 10 || (int) rech[i] == 9 || (int) rech[i] == 13 || (int) rech[i] == 13 ||
+							 (int) rech[i] == 12 || (int) rech[i] == 8 || (int) rech[i] == 92 || (int) rech[i] == 39 ||
+							 (int) rech[i] == 34)
+					{
+						cadena += rech[i]; // Guardamos el caracter de escape
+						i = i+1;
+					}
+					// Comprobamos si es el final del set
+					else if (rech[i] == ']') // Acaba el set
+						break; // Salimos del while
+					// Cualquier otro símbolo
+					else
+					{
+						cadena += rech[i]; // Guardamos el símbolo
+						i = i+1;
+					}	
+				}
+			}
+			// Entramos en el caso en el que se abre una macro
+			else if (rech[i] == '{')
+			{
+				aux1 = "";
+				j = 0;
+				i = i+1;
+				while (rech[i] != '}')
+				{
+					aux1 += rech[i]; // Guardamos en aux1 la macro 
+					i = i+1;
+				}
+				// Comprobamos que la lista no esté vacia o sea nula
+				if (listaM != null && !listaM.isEmpty()) 
+				{
+					for (String comp : listaM) // Recorremos la lista buscando la posición de la macro dada
+					{
+						if (comp.equalsIgnoreCase(aux1)) // Cuando la encontramos, salimos
+							break;
+						j = j+1; // En esta variable guardamos la posición
+					}
+				}
+				else 
+					throw new Exception("Lista de Macros vacía o nula"); // Devolvemos una excepción 
+				// Comprobamos que la lista no esté vacia o sea nula
+				if (listaER != null && !listaER.isEmpty()) 
+				{
+					cadAux = traducir(listaER.get(j)); // Hacemos recursividad para parsear una macro
+				}
+				else
+					throw new Exception("Lista de ER vacía o nula"); // Devolvemos una excepción
+				// Añadimos el arbol de la macro como hijo del arbol actúal
+				if (cadAux == null)
+					throw new Exception("Cadena auxiliar nula"); // Devolvemos una excepción
+				else
+				{
+					cadena += "(" + cadAux + ")";
+				}
+			}
+			// Entramos en el caso en el que se abre un paréntesis
+			else if (rech[i] == '(')
+			{
+				cadena += "(";
+			}
+			else if (rech[i] == ')')
+			{
+				cadena += ")";
+			}
+			// Se encuentra un OR
+			else if (rech[i] == '|')
+			{
+				cadena += "|";
+			}
+			// Se encuentra un "
+			else if (rech[i] == '\"')
+			{
+				i = i+1;
+				while (true)
+				{
+					if (rech[i] == '\"')
+						break;
+					cadena += rech[i];
+				}
+			}
+			else if (rech[i] == ' ')
+			{
+				cadena += " ";
+			}
+			else if (rech[i] == '+' || rech[i] == '*' || rech[i] == '?')
+			{
+				cadena += (String.valueOf(rech[i]));
+			}
+			// Cualquier otro caracter
+			else
+			{
+				while (true)
+				{
+					if (rech[i] == '+' || rech[i] == '*' || rech[i] == '?' || rech[i] == ' ' || i == rech.length)
+					{
+						i = i-1;
+						break;
+					}
+					cadena += rech[i];
+					i = i+1;
+				}
+			}
+			i = i+1;
+		}
+		return cadena;
+	}
+	/**
 	 * Método que recibe una expresión regular en forma de string
 	 * y devuelve una lista con sus componentes o null si ya está 
 	 * parseada
@@ -132,7 +286,7 @@ public class Analizador
 		char[] rech = re.toCharArray();
 		int i = 0;
 		int j;
-		int pos;
+		int cont = 0;
 		// Vamos a recorrer el string caracter a caracter
 		while (i < re.length()) 
 		{	
@@ -222,14 +376,9 @@ public class Analizador
 				else
 				{
 					aux2 = "";
-					if (parentesis)
-						aux2 += "(";
 					for (String cad : listaAux)
 						aux2 += cad;
-					if (parentesis)
-						aux2 += ")";
 					out.add(aux2);
-					parentesis = true;
 				}
 			}
 			// Entramos en el caso en el que se abre un paréntesis
@@ -267,14 +416,9 @@ public class Analizador
 				else
 				{
 					aux2 = "";
-					if (parentesis)
-						aux2 += "(";
 					for (String cad : listaAux)
 						aux2 += cad;
-					if (parentesis)
-						aux2 += ")";
 					out.add(aux2);
-					parentesis = true;
 				}
 			}
 			// Se encuentra un OR
