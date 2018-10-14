@@ -40,7 +40,7 @@ public class Principal {
 	          e.printStackTrace();
 	        }
 	        Analizador aux = new Analizador();
-	        List<String> auxmacro = aux.translateMacro(scanner.macrosList);
+/*	        List<String> auxmacro = aux.translateMacro(scanner.macrosList);
 		    List<String> auxregex = aux.translateRegex(scanner.regexList);
 		    aux.listaER = auxregex;
 		    aux.listaM = auxmacro;
@@ -49,16 +49,23 @@ public class Principal {
 		    {
 		    	out = aux.traducir(cadena);
 		    	System.out.println(out);
-		    }
-/*	        List<String> lER = new LinkedList<>();
-	        lER.add("[0-4]* | \"AA74\"+ [^hf]");
-	        lER.add("[A5tg] {auxiliar}");
+		    }*/
+	        List<String> lER = new LinkedList<>();
+	        lER.add("[A-F]+ | er+");
+	        lER.add("{auxiliar}");
 	        List<String> lM = new LinkedList<>();
 	        lM.add("Auxiliar");
 	        lM.add("macro");
 	        aux.listaER = lER;
 	        aux.listaM = lM;
-	        List<String> salida = aux.parsear("([A5tg]+ | (abd))? | ({Auxiliar}* [hola]?)");*/
+	        String out = aux.traducir("([A5tg]+ | (\"abd\"))? | ({Auxiliar}* [hola]?)");
+	        String out1 = aux.traducir(""); 
+	        System.out.println(out);
+	        List<String> salida = aux.parsear(out);
+	        for (String n : salida)
+	        	System.out.println(n);
+	        aux.crearArbol(salida);
+	        System.out.println("hola");
 	        /*List<String> lExp = new LinkedList<>();
 	        lExp.add("A");
 	        lExp.add("+");

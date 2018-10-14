@@ -5,7 +5,6 @@ public class Analizador
 {
 	List<String> listaM;
 	List<String> listaER;
-	private boolean parentesis = false;
 	/**
 	   * Recibe una lista con strings correspondientes a macros y parsea
 	   * cada uno traduciendolos a un estado común
@@ -130,13 +129,13 @@ public class Analizador
 		char[] rech = exp.toCharArray();
 		int i = 0;
 		int j;
-		int cont = 0;
 		// Vamos a recorrer el string caracter a caracter
 		while (i < exp.length()) 
 		{	
 			// Entramos en el caso en el que se abre un set
 			if (rech[i] == '[') 
 			{
+				cadena += "\"";
 				if (rech[i+1] == '^') // Comprobamos si está negado
 				{
 					cadena+= rech[i+1]; // aux += ^
@@ -179,6 +178,7 @@ public class Analizador
 						i = i+1;
 					}	
 				}
+				cadena += "\"";
 			}
 			// Entramos en el caso en el que se abre una macro
 			else if (rech[i] == '{')
@@ -235,17 +235,20 @@ public class Analizador
 			// Se encuentra un "
 			else if (rech[i] == '\"')
 			{
+				cadena += rech[i];
 				i = i+1;
 				while (true)
 				{
 					if (rech[i] == '\"')
 						break;
 					cadena += rech[i];
+					i = i+1;
 				}
+				cadena += "\"";
 			}
 			else if (rech[i] == ' ')
 			{
-				cadena += " ";
+				// Nada
 			}
 			else if (rech[i] == '+' || rech[i] == '*' || rech[i] == '?')
 			{
@@ -254,9 +257,10 @@ public class Analizador
 			// Cualquier otro caracter
 			else
 			{
+				cadena += "\"";
 				while (true)
 				{
-					if (rech[i] == '+' || rech[i] == '*' || rech[i] == '?' || rech[i] == ' ' || i == rech.length)
+					if (i == rech.length || rech[i] == '+' || rech[i] == '*' || rech[i] == '?' || rech[i] == ' ' || rech[i] == ')')
 					{
 						i = i-1;
 						break;
@@ -264,6 +268,7 @@ public class Analizador
 					cadena += rech[i];
 					i = i+1;
 				}
+				cadena += "\"";
 			}
 			i = i+1;
 		}
@@ -277,195 +282,74 @@ public class Analizador
 	 * @return Lista de componentes o null
 	 * @throws Exception 
 	 */
-	public List<String> parsear(String re) throws Exception 
+	public List<String> parsear(String exp) throws Exception 
 	{
-		String aux, aux1, aux2;
-		List<String> listaAux;
-		List<String> out = new LinkedList<>();
-		boolean comillas;
-		char[] rech = re.toCharArray();
+		List<String> lComp = new LinkedList<>();
+		char[] rech = exp.toCharArray();
+		String nuevo;
 		int i = 0;
-		int j;
+		int anidado;
+		boolean com = false;
 		int cont = 0;
-		// Vamos a recorrer el string caracter a caracter
-		while (i < re.length()) 
-		{	
-			// Entramos en el caso en el que se abre un set
-			if (rech[i] == '[') 
+		while (i < exp.length())
+		{
+			if (rech[i] == '\"')
 			{
-				aux = "\""; // String donde guardaremos la información del nodo hoja en este caso
-				if (rech[i+1] == '^') // Comprobamos si está negado
-				{
-					aux+= rech[i+1]; // aux += ^
-					i = i+1; // Apuntamos a la negación
-				}
-				i = i+1; // Apuntamos al primer caracter del set
+				nuevo = "\"";
+				i = i+1;
 				while (true)
 				{
-					// Comprobamos si es una letra, mayúscula o minúscula, o un número
-					if (((int) rech[i] > 64 && (int) rech[i] < 91) || ((int) rech[i] > 96 && (int) rech[i] < 123) || ((int) rech[i] > 47 && (int) rech[i] < 58))
-					{
-						// Caso correspondiente a [a-z] o [0-9] (por ejemplo)
-						if (rech[i+1] == '-')
-						{
-							for (j = (int) rech[i]; j <= (int) rech[i+2]; j++)
-								aux += (char) j;
-							i = i+3; // Apuntamos al siguiente caracter de la secuencia
-						}
-						else // Si no es una secuencia, guardamos el número o la letra
-						{
-							aux += rech[i];
-							i = i+1; // Apuntamos al siguiente caracter de la secuencia
-						}
-					}
-					// Comprobamos si es un caracter de escape \
-					else if ((int) rech[i] == 10 || (int) rech[i] == 9 || (int) rech[i] == 13 || (int) rech[i] == 13 ||
-							 (int) rech[i] == 12 || (int) rech[i] == 8 || (int) rech[i] == 92 || (int) rech[i] == 39 ||
-							 (int) rech[i] == 34)
-					{
-						aux += rech[i]; // Guardamos el caracter de escape
-						i = i+1;
-					}
-					// Comprobamos si es el final del set
-					else if (rech[i] == ']') // Acaba el set
-						break; // Salimos del while
-					// Cualquier otro símbolo
-					else
-					{
-						aux += rech[i]; // Guardamos el símbolo
-						i = i+1;
-					}	
-				}
-				aux += "\"";
-				out.add(aux);
-			}
-			// Entramos en el caso en el que se abre una macro
-			else if (rech[i] == '{')
-			{
-				aux1 = "";
-				aux = "";
-				j = 0;
-				i = i+1;
-				while (rech[i] != '}')
-				{
-					aux1 += rech[i]; // Guardamos en aux1 la macro 
-					i = i+1;
-				}
-				// Comprobamos que la lista no esté vacia o sea nula
-				if (listaM != null && !listaM.isEmpty()) 
-				{
-					for (String comp : listaM) // Recorremos la lista buscando la posición de la macro dada
-					{
-						if (comp.equalsIgnoreCase(aux1)) // Cuando la encontramos, salimos
-							break;
-						j = j+1; // En esta variable guardamos la posición
-					}
-				}
-				else 
-					throw new Exception("Lista de Macros vacía o nula"); // Devolvemos una excepción 
-				// Comprobamos que la lista no esté vacia o sea nula
-				if (listaER != null && !listaER.isEmpty()) 
-				{
-					listaAux = parsear(listaER.get(j)); // Hacemos recursividad para parsear una macro
-				}
-				else
-					throw new Exception("Lista de ER vacía o nula"); // Devolvemos una excepción
-				// Añadimos el arbol de la macro como hijo del arbol actúal
-				if (listaAux == null)
-					throw new Exception("Lista auxiliar vacía o nula"); // Devolvemos una excepción
-				else
-				{
-					aux2 = "";
-					for (String cad : listaAux)
-						aux2 += cad;
-					out.add(aux2);
-				}
-			}
-			// Entramos en el caso en el que se abre un paréntesis
-			else if (rech[i] == '(')
-			{
-				aux = "";
-				aux2 = "";
-				i = i+1;
-				comillas = false;
-				while (true)
-				{
-					if (rech[i] == '\"' && !comillas)
-						comillas = true;
-					if (rech[i] == '\"' && comillas)
-						comillas = false;
-					if (!comillas && rech[i] == '(')
-					{
-						i = i+1;
-						while (true)
-						{
-							// PARENTESIS ANIDADOS MIRAR!!!!!!!!!!!!
-							aux2 += rech[i];
-							i = i+1;
-						}
-						
-					}
-					if (!comillas && rech[i] == ')')
+					nuevo += rech[i];
+					if (rech[i] == '\"')
 						break;
-					aux += rech[i]; // Guardamos en aux el contenido del paréntesis
 					i = i+1;
 				}
-				listaAux = parsear(aux);
-				if (listaAux == null)
-					throw new Exception("Lista auxiliar vacía o nula"); // Devolvemos una excepción
-				else
-				{
-					aux2 = "";
-					for (String cad : listaAux)
-						aux2 += cad;
-					out.add(aux2);
-				}
-			}
-			// Se encuentra un OR
-			else if (rech[i] == '|')
-			{
-				out.add("|");
-			}
-			// Se encuentra un "
-			else if (rech[i] == '"')
-			{
-				aux = "\"";
-				i = i+1;
-				while (rech[i] != '\"')
-				{
-					aux += rech[i];
-					i = i+1;
-				}
-				aux += "\"";
-				out.add(aux);
-			}
-			else if (rech[i] == ' ')
-			{
-				// Añadir
+				lComp.add(nuevo);
+				cont++;
 			}
 			else if (rech[i] == '+' || rech[i] == '*' || rech[i] == '?')
 			{
-				out.add(String.valueOf(rech[i]));
+				nuevo = "";
+				nuevo += rech[i];
+				lComp.add(nuevo);
+				cont++;
 			}
-			// Cualquier otro caracter
-			else
+			else if (rech[i] == '(')
 			{
-				aux = "";
+				anidado = 0;
+				nuevo = "";
+				i = i+1;
 				while (true)
 				{
-					if (i == rech.length || rech[i] == '+' || rech[i] == '*' || rech[i] == '?' || rech[i] == ' ')
-					{
-						i = i-1;
+					if (rech[i] == '\"' && !com)
+						com = true;
+					else if (rech[i] == '\"' && com)
+						com = false;
+					else if (rech[i] == '(' && !com)
+						anidado = anidado+1;
+					else if (rech[i] == ')' && !com && anidado == 0)
 						break;
-					}
-					aux += rech[i];
+					else if (rech[i] == ')' && !com && anidado > 0)
+						anidado = anidado-1;
+					nuevo += rech[i];
 					i = i+1;
 				}
-				out.add(aux);
+				lComp.add(nuevo);
+				cont++;
+			}
+			else if (rech[i] == '|')
+			{
+				nuevo = "";
+				nuevo += rech[i];
+				lComp.add(nuevo);
+				cont++;
 			}
 			i = i+1;
 		}
-		return out;
+		if (cont == 1)
+			return null;
+		else
+			return lComp;
 	}
 	/**
 	 * Método que recibe una lista con los componentes de una 
@@ -482,6 +366,7 @@ public class Analizador
 		NodoArbol nodoAnterior = null;
 		NodoArbol nodoActual = null;
 		NodoArbol nodoAuxiliar = null;
+		boolean antRec = false;
 		List<String> lpar;
 		for (String n : lExp) // Recorremos la lista 
 		{
@@ -489,7 +374,11 @@ public class Analizador
 			if (lpar == null) // Caso base
 				nodoActual = new NodoArbol(n);
 			else // Caso recursivo
+			{
 				nodoActual = crearArbol(lpar);
+				if (nodoActual.operacion)
+					antRec = true;
+			}
 			
 			if (nodoAnterior == null) // Se trata del primer nodo del arbol
 			{
@@ -502,7 +391,7 @@ public class Analizador
 				{
 					if (nodoAnterior.hoja == true || nodoAnterior.operacion == true)
 					{
-						if (arbol.operacion == true) // nodoAnterior.padre
+						if (arbol.operacion == true && nodoAnterior.padre != null) // nodoAnterior.padre
 						{
 							arbol.borrarUltimoHijo();
 							nodoAnterior.padre = nodoActual;
@@ -528,10 +417,11 @@ public class Analizador
 						{
 							nodoActual.padre = nodoAnterior.padre;
 							nodoAnterior.padre.hijos.add(nodoActual);
+							nodoAnterior = arbol;
 						}
 						else
 						{
-							nodoAuxiliar = new NodoArbol("c");
+							nodoAuxiliar = new NodoArbol(".");
 							nodoAnterior.padre = nodoAuxiliar;
 							nodoActual.padre = nodoAuxiliar;
 							nodoAuxiliar.hijos.add(nodoAnterior);
@@ -542,6 +432,11 @@ public class Analizador
 					}
 					else
 					{
+						if (antRec)
+						{
+							nodoAnterior = nodoAnterior.padre;
+							antRec = false;
+						}
 						nodoActual.padre = nodoAnterior;
 						nodoAnterior.hijos.add(nodoActual);
 						arbol = nodoAnterior;
@@ -550,10 +445,62 @@ public class Analizador
 				}
 				else // NODO OPERACIÓN
 				{
-					nodoAnterior.padre = nodoActual;
-					nodoActual.hijos.add(nodoAnterior);
-					arbol = nodoActual;
-					nodoAnterior = nodoActual;
+					if (nodoActual.hijos.size() > 0)
+					{
+						if (nodoAnterior.hoja == true || nodoAnterior.cuantificador == true)
+						{
+							if (nodoAnterior.padre != null && nodoAnterior.padre.operacion == true)
+							{
+								nodoActual.padre = nodoAnterior.padre;
+								nodoAnterior.padre.hijos.add(nodoActual);
+								nodoAnterior = nodoActual;
+							}
+							else
+							{
+								nodoAuxiliar = new NodoArbol(".");
+								nodoAnterior.padre = nodoAuxiliar;
+								nodoActual.padre = nodoAuxiliar;
+								nodoAuxiliar.hijos.add(nodoAnterior);
+								nodoAuxiliar.hijos.add(nodoActual);
+								arbol = nodoAuxiliar;
+								nodoAnterior = nodoActual; 
+							}
+						}
+						else
+						{
+							nodoActual.padre = nodoAnterior;
+							nodoAnterior.hijos.add(nodoActual);
+							nodoAnterior = nodoActual;
+						}
+					}
+					else
+					{
+						if (antRec && nodoAnterior.padre != null && nodoAnterior.padre.operacion == true)
+						{
+							nodoAnterior = nodoAnterior.padre;
+							antRec = false;
+						}
+						else if (antRec && nodoAnterior.padre == null)
+						{
+							nodoAnterior.padre = nodoActual;
+							nodoActual.hijos.add(nodoAnterior);
+							arbol = nodoActual;
+							nodoAnterior = nodoActual;
+							antRec = false;
+						}
+						else
+						{
+							if (nodoAnterior.padre != null && nodoAnterior.padre.operacion == true)
+								nodoAnterior = nodoAnterior.padre;
+							else
+							{
+								nodoAnterior.padre = nodoActual;
+								nodoActual.hijos.add(nodoAnterior);
+								arbol = nodoActual;
+								nodoAnterior = nodoActual;
+							}
+						}
+					}
 				}
 			}
 		}
@@ -580,9 +527,9 @@ public class Analizador
 		public NodoArbol(String info)
 		{
 			this.info = info;
-			if (info == "+" || info == "*" || info == "?")
+			if (info.equals("+") || info.equals("*") || info.equals("?"))
 				this.cuantificador = true;
-			else if (info == "|" || info == "c")
+			else if (info.equals("|") || info.equals("."))
 				this.operacion = true;
 			else
 				this.hoja = true;
@@ -597,6 +544,11 @@ public class Analizador
 		{
 			if (this.hijos != null)
 				this.hijos.remove(this.hijos.size()-1);
+		}
+		
+		public List<String> inOrden()
+		{
+			return null;
 		}
 	}
 }
