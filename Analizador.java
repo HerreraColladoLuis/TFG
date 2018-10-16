@@ -260,7 +260,7 @@ public class Analizador
 				cadena += "\"";
 				while (true)
 				{
-					if (i == rech.length || rech[i] == '+' || rech[i] == '*' || rech[i] == '?' || rech[i] == ' ' || rech[i] == ')')
+					if (i == rech.length || rech[i] == '+' || rech[i] == '*' || rech[i] == '?' || rech[i] == ' ' || rech[i] == ')' || rech[i] == '|')
 					{
 						i = i-1;
 						break;
@@ -276,10 +276,10 @@ public class Analizador
 	}
 	/**
 	 * Método que recibe una expresión regular en forma de string
-	 * y devuelve una lista con sus componentes o null si ya está 
+	 * y devuelve una lista con sus componentes 
 	 * parseada
 	 * @param Expresión regular en forma de string
-	 * @return Lista de componentes o null
+	 * @return Lista de componentes 
 	 * @throws Exception 
 	 */
 	public List<String> parsear(String exp) throws Exception 
@@ -346,10 +346,7 @@ public class Analizador
 			}
 			i = i+1;
 		}
-		if (cont == 1)
-			return null;
-		else
-			return lComp;
+		return lComp;
 	}
 	/**
 	 * Método que recibe una lista con los componentes de una 
@@ -367,12 +364,15 @@ public class Analizador
 		NodoArbol nodoActual = null;
 		NodoArbol nodoAuxiliar = null;
 		boolean antRec = false;
+		boolean operacionOR = false;
 		List<String> lpar;
 		for (String n : lExp) // Recorremos la lista 
 		{
 			lpar = parsear(n);
-			if (lpar == null) // Caso base
+			if (lpar.size() == 1) // Caso base
+			{
 				nodoActual = new NodoArbol(n);
+			}
 			else // Caso recursivo
 			{
 				nodoActual = crearArbol(lpar);
@@ -387,11 +387,11 @@ public class Analizador
 			}
 			else
 			{
-				if (nodoActual.cuantificador == true) // NODO CUANTIFICADOR
+				if (nodoActual.cuantificador) // NODO CUANTIFICADOR
 				{
-					if (nodoAnterior.hoja == true || nodoAnterior.operacion == true)
+					if (nodoAnterior.hoja || nodoAnterior.operacion)
 					{
-						if (arbol.operacion == true && nodoAnterior.padre != null) // nodoAnterior.padre
+						if (arbol.operacion && nodoAnterior.padre != null) // nodoAnterior.padre
 						{
 							arbol.borrarUltimoHijo();
 							nodoAnterior.padre = nodoActual;
@@ -409,15 +409,15 @@ public class Analizador
 						}
 					}
 				}
-				else if (nodoActual.hoja == true) // NODO HOJA
+				else if (nodoActual.hoja) // NODO HOJA
 				{
-					if (nodoAnterior.hoja == true || nodoAnterior.cuantificador == true)
+					if (nodoAnterior.hoja || nodoAnterior.cuantificador)
 					{
-						if (nodoAnterior.padre != null && nodoAnterior.padre.operacion == true)
+						if (nodoAnterior.padre != null && nodoAnterior.padre.operacion)
 						{
 							nodoActual.padre = nodoAnterior.padre;
 							nodoAnterior.padre.hijos.add(nodoActual);
-							nodoAnterior = arbol;
+							nodoAnterior = nodoActual; // CAMBIO (nodoAnterior = arbol)
 						}
 						else
 						{
@@ -432,15 +432,35 @@ public class Analizador
 					}
 					else
 					{
+						// CAMBIO
 						if (antRec)
 						{
-							nodoAnterior = nodoAnterior.padre;
+							if (nodoAnterior.padre != null && nodoAnterior.padre.operacion)
+							{
+								nodoActual.padre = nodoAnterior.padre;
+								nodoAnterior.padre.hijos.add(nodoActual);
+								nodoAnterior = nodoActual; 
+							}
+							else if (nodoAnterior.padre == null)
+							{
+								nodoAuxiliar = new NodoArbol(".");
+								nodoAnterior.padre = nodoAuxiliar;
+								nodoActual.padre = nodoAuxiliar;
+								nodoAuxiliar.hijos.add(nodoAnterior);
+								nodoAuxiliar.hijos.add(nodoActual);
+								arbol = nodoAuxiliar;
+								nodoAnterior = nodoActual;
+							}
+							operacionOR = false; // AÑADIDO
 							antRec = false;
 						}
-						nodoActual.padre = nodoAnterior;
-						nodoAnterior.hijos.add(nodoActual);
-						arbol = nodoAnterior;
-						nodoAnterior = nodoActual;
+						else
+						{
+							nodoActual.padre = nodoAnterior;
+							nodoAnterior.hijos.add(nodoActual);
+							arbol = nodoAnterior;
+							nodoAnterior = nodoActual;
+						}
 					}
 				}
 				else // NODO OPERACIÓN
@@ -468,16 +488,48 @@ public class Analizador
 						}
 						else
 						{
-							nodoActual.padre = nodoAnterior;
-							nodoAnterior.hijos.add(nodoActual);
-							nodoAnterior = nodoActual;
+							if (nodoAnterior.hijos.size() > 0) // AÑADIDO
+							{ // AÑADIDOX2
+								if (nodoAnterior.padre != null && nodoAnterior.padre.operacion == true)
+								{
+									nodoActual.padre = nodoAnterior.padre;
+									nodoAnterior.padre.hijos.add(nodoActual);
+									nodoAnterior = nodoActual;
+								}
+								else if (operacionOR)
+								{
+									nodoActual.padre = nodoAnterior;
+									nodoAnterior.hijos.add(nodoActual);
+									arbol = nodoAnterior;
+									nodoAnterior = nodoActual;
+									operacionOR = false;
+								}
+								else
+								{
+									nodoAuxiliar = new NodoArbol(".");
+									nodoAnterior.padre = nodoAuxiliar;
+									nodoActual.padre = nodoAuxiliar;
+									nodoAuxiliar.hijos.add(nodoAnterior);
+									nodoAuxiliar.hijos.add(nodoActual);
+									arbol = nodoAuxiliar;
+									nodoAnterior = nodoActual; 
+								}
+							}
+							else
+							{
+								nodoActual.padre = nodoAnterior;
+								nodoAnterior.hijos.add(nodoActual);
+								arbol = nodoAnterior;
+								nodoAnterior = nodoActual;
+							}
 						}
 					}
 					else
 					{
-						if (antRec && nodoAnterior.padre != null && nodoAnterior.padre.operacion == true)
+						if (antRec && nodoAnterior.padre != null && nodoAnterior.padre.operacion)
 						{
 							nodoAnterior = nodoAnterior.padre;
+							operacionOR = true; // AÑADIDO
 							antRec = false;
 						}
 						else if (antRec && nodoAnterior.padre == null)
@@ -485,12 +537,13 @@ public class Analizador
 							nodoAnterior.padre = nodoActual;
 							nodoActual.hijos.add(nodoAnterior);
 							arbol = nodoActual;
-							nodoAnterior = nodoActual;
+							nodoAnterior = nodoActual; //
+							operacionOR = true; // AÑADIDO
 							antRec = false;
 						}
 						else
 						{
-							if (nodoAnterior.padre != null && nodoAnterior.padre.operacion == true)
+							if (nodoAnterior.padre != null && nodoAnterior.padre.operacion)
 								nodoAnterior = nodoAnterior.padre;
 							else
 							{
@@ -498,6 +551,7 @@ public class Analizador
 								nodoActual.hijos.add(nodoAnterior);
 								arbol = nodoActual;
 								nodoAnterior = nodoActual;
+								operacionOR = true;
 							}
 						}
 					}
@@ -506,12 +560,18 @@ public class Analizador
 		}
 		return arbol;
 	}
+	
+	public List<String> recorrerArbol(NodoArbol nodo)
+	{
+		NodoArbol n = new NodoArbol("");
+		return n.preOrden(nodo);
+	}
 	/**
 	 * Clase auxiliar para un nodo de un arbol
 	 * @author herre
 	 *
 	 */
-	private class NodoArbol
+	public class NodoArbol
 	{
 		public boolean hoja = false;
 		public boolean cuantificador = false;
@@ -545,10 +605,30 @@ public class Analizador
 			if (this.hijos != null)
 				this.hijos.remove(this.hijos.size()-1);
 		}
-		
-		public List<String> inOrden()
+		/**
+		 * Método para recorrer un arbol en formato pre-orden
+		 * @param Nodo del que empezaremos a recorrer
+		 * @return Lista con los elementos del arbol
+		 */
+		public List<String> preOrden(NodoArbol nodo)
 		{
-			return null;
+			if (nodo == null)
+				return null;
+			List<String> lElem = new LinkedList<>();
+			lElem.add(nodo.info);
+			if (nodo.hijos == null || nodo.hijos.size() == 0)
+				return lElem;
+			List<String> lRec;
+			for (NodoArbol nodoHijo : nodo.hijos)
+			{
+				lRec = preOrden(nodoHijo);
+				if (lRec != null)
+				{
+					for (String info : lRec)
+						lElem.add(info);
+				}
+			}
+			return lElem;
 		}
 	}
 }

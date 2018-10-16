@@ -40,32 +40,48 @@ public class Principal {
 	          e.printStackTrace();
 	        }
 	        Analizador aux = new Analizador();
-/*	        List<String> auxmacro = aux.translateMacro(scanner.macrosList);
+	        /*List<String> auxmacro = aux.translateMacro(scanner.macrosList);
 		    List<String> auxregex = aux.translateRegex(scanner.regexList);
 		    aux.listaER = auxregex;
 		    aux.listaM = auxmacro;
 		    String out;
+		    List<String> lParseada;
+		    Analizador.NodoArbol arbol;
 		    for (String cadena : auxregex)
 		    {
 		    	out = aux.traducir(cadena);
-		    	System.out.println(out);
+		    	System.out.println("ER: " + out);
+		    	lParseada = aux.parsear(out);
+		    	arbol = aux.crearArbol(lParseada);
+		    	System.out.print("ARBOL: ");
+		    	for (String e : aux.recorrerArbol(arbol))
+		    		System.out.print(e + " ");
+		    	System.out.println();
+		    	System.out.println();
 		    }*/
 	        List<String> lER = new LinkedList<>();
-	        lER.add("[A-F]+ | er+");
-	        lER.add("{auxiliar}");
+	        lER.add("([A-F]+ | er+)");
+	        lER.add("{Auxiliar}");
 	        List<String> lM = new LinkedList<>();
 	        lM.add("Auxiliar");
-	        lM.add("macro");
+	        lM.add("Macro");
 	        aux.listaER = lER;
 	        aux.listaM = lM;
-	        String out = aux.traducir("([A5tg]+ | (\"abd\"))? | ({Auxiliar}* [hola]?)");
-	        String out1 = aux.traducir(""); 
-	        System.out.println(out);
-	        List<String> salida = aux.parsear(out);
-	        for (String n : salida)
-	        	System.out.println(n);
-	        aux.crearArbol(salida);
-	        System.out.println("hola");
+	        
+	        String out = aux.traducir("([A5tg]+ (\"abd\"))  ({Auxiliar}* [hola]?)");
+	        String out1 = aux.traducir("(A | B) | (C | D) | (E |(F | G))");
+	        //System.out.println(out);
+	        
+	        List<String> salida = aux.parsear(out1);
+	        //for (String n : salida)
+	        	//System.out.println(n);
+	        Analizador.NodoArbol arbol;
+	        arbol = aux.crearArbol(salida);
+	        
+	        List<String> lElem = aux.recorrerArbol(arbol);
+	        for (String elem : lElem)
+	        	System.out.println(elem);
+	        
 	        /*List<String> lExp = new LinkedList<>();
 	        lExp.add("A");
 	        lExp.add("+");
