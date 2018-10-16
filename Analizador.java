@@ -6,16 +6,16 @@ public class Analizador
 	List<String> listaM;
 	List<String> listaER;
 	/**
-	   * Recibe una lista con strings correspondientes a macros y parsea
-	   * cada uno traduciendolos a un estado común
+	   * Método que recibe una lista con strings correspondientes a macros 
+	   * y parsea cada uno traduciendolos a un estado común
 	   * @param lista con las macros
 	   * @return lista con las macros traducidas a un estado común
 	   */
-	  public List<String> translateMacro(List<String> list)
+	  public List<String> translateMacro(List<String> lista)
 	  {
 		  List<String> out = new LinkedList<>();
 		  String aux;
-		  for (String cad : list)
+		  for (String cad : lista)
 		  {
 			  aux = "";
 			  aux = procesarMacro(cad);
@@ -25,16 +25,16 @@ public class Analizador
 		  return out;
 	  }
 	  /**
-	   * Recibe una lista con strings correspondientes a regex y parsea
-	   * cada una traduciendolos a un estado común
+	   * Método que recibe una lista con strings correspondientes a regex 
+	   * y parsea cada una traduciendolos a un estado común
 	   * @param lista con las regex
 	   * @return lista con las regex traducidas a un estado común
 	   */
-	  public List<String> translateRegex(List<String> list)
+	  public List<String> translateRegex(List<String> lista)
 	  {
 		  List<String> out = new LinkedList<>();
 		  String aux;
-		  for (String cad : list)
+		  for (String cad : lista)
 		  {
 			  aux = "";
 			  aux = procesarRegex(cad);
@@ -46,7 +46,7 @@ public class Analizador
 	/**
 	 * Algoritmo para parsear un string que contiene una 
 	 * expresion regular
-	 * @param expresion regular
+	 * @param re expresion regular
 	 * @return expresion regular parseada
 	 */
 	private String procesarRegex(String re)
@@ -65,18 +65,14 @@ public class Analizador
 			}
 			auxch = new char[i+1];
 			for (j = 0; j < i+1; j++)
-			{
 				auxch[j] = rech[j];
-			}
 			out = String.valueOf(auxch);
 		}
 		else
 		{
 			i = le-1;
 			while (rech[i] == ' ')
-			{
 				i--;
-			}
 			auxch = new char[i];
 			c = 0;
 			for (j = 1; j < i+1; j++)
@@ -90,7 +86,7 @@ public class Analizador
 	}
 	/**
 	 * Algoritmo para parsear un string que contiene una macro
-	 * @param macro
+	 * @param re macro
 	 * @return macro parseada
 	 */
 	private String procesarMacro(String re)
@@ -116,9 +112,9 @@ public class Analizador
 	}
 	/**
 	 * Método para traducir una expresión regular a un formato
-	 * que pueda reconocer el algoritmo
-	 * @param String de la expresión
-	 * @return String de la expresión traducido
+	 * que pueda reconocer el algoritmo final
+	 * @param exp string de la expresión
+	 * @return string de la expresión traducido
 	 * @throws Exception 
 	 */
 	public String traducir(String exp) throws Exception
@@ -260,7 +256,7 @@ public class Analizador
 				cadena += "\"";
 				while (true)
 				{
-					if (i == rech.length || rech[i] == '+' || rech[i] == '*' || rech[i] == '?' || rech[i] == ' ' || rech[i] == ')' || rech[i] == '|')
+					if (i == rech.length || rech[i] == '+' || rech[i] == '*' || rech[i] == '?' || rech[i] == ' ' || rech[i] == ')' || rech[i] == '|' || rech[i] == '(')
 					{
 						i = i-1;
 						break;
@@ -277,8 +273,11 @@ public class Analizador
 	/**
 	 * Método que recibe una expresión regular en forma de string
 	 * y devuelve una lista con sus componentes 
-	 * parseada
-	 * @param Expresión regular en forma de string
+	 * parseada. Es decir, los componentes que se encuentre sin 
+	 * paréntesis, los añade a la lista, y si se encuentra una 
+	 * subexpresión dentro de paréntesis, quita éstos y añade la 
+	 * subexpresión como un elemento más de la lista.
+	 * @param exp Expresión regular en forma de string
 	 * @return Lista de componentes 
 	 * @throws Exception 
 	 */
@@ -290,7 +289,6 @@ public class Analizador
 		int i = 0;
 		int anidado;
 		boolean com = false;
-		int cont = 0;
 		while (i < exp.length())
 		{
 			if (rech[i] == '\"')
@@ -305,14 +303,12 @@ public class Analizador
 					i = i+1;
 				}
 				lComp.add(nuevo);
-				cont++;
 			}
 			else if (rech[i] == '+' || rech[i] == '*' || rech[i] == '?')
 			{
 				nuevo = "";
 				nuevo += rech[i];
 				lComp.add(nuevo);
-				cont++;
 			}
 			else if (rech[i] == '(')
 			{
@@ -335,14 +331,12 @@ public class Analizador
 					i = i+1;
 				}
 				lComp.add(nuevo);
-				cont++;
 			}
 			else if (rech[i] == '|')
 			{
 				nuevo = "";
 				nuevo += rech[i];
 				lComp.add(nuevo);
-				cont++;
 			}
 			i = i+1;
 		}
@@ -352,13 +346,13 @@ public class Analizador
 	 * Método que recibe una lista con los componentes de una 
 	 * expresión regular y devuelve un árbol sintáctico de la
 	 * misma
-	 * @param Lista de componentes de una expresión regular
+	 * @param lExp Lista de componentes de una expresión regular
 	 * @return Árbol sintáctico de una expresión regular
 	 * @throws Exception 
 	 */
 	public NodoArbol crearArbol(List<String> lExp) throws Exception
 	{
-		// Punteros auxiliares
+		// Variables auxiliares
 		NodoArbol arbol = null;
 		NodoArbol nodoAnterior = null;
 		NodoArbol nodoActual = null;
@@ -378,14 +372,13 @@ public class Analizador
 				nodoActual = crearArbol(lpar);
 				if (nodoActual.operacion)
 					antRec = true;
-			}
-			
+			}	
 			if (nodoAnterior == null) // Se trata del primer nodo del arbol
 			{
 				arbol = nodoActual;
 				nodoAnterior = nodoActual;
 			}
-			else
+			else // No es el primer nodo del arbol
 			{
 				if (nodoActual.cuantificador) // NODO CUANTIFICADOR
 				{
@@ -560,7 +553,12 @@ public class Analizador
 		}
 		return arbol;
 	}
-	
+	/**
+	 * Método para recorrer un arbol en forma pre-orden e ir
+	 * metiendo los elementos en una lista
+	 * @param nodo raíz del árbol
+	 * @return lista con los elementos del árbol
+	 */
 	public List<String> recorrerArbol(NodoArbol nodo)
 	{
 		NodoArbol n = new NodoArbol("");
@@ -582,7 +580,7 @@ public class Analizador
 		
 		/**
 		 * Constructor para un nodo del arbol
-		 * @param Información que llevará el nodo
+		 * @param info información que llevará el nodo
 		 */
 		public NodoArbol(String info)
 		{
@@ -607,8 +605,8 @@ public class Analizador
 		}
 		/**
 		 * Método para recorrer un arbol en formato pre-orden
-		 * @param Nodo del que empezaremos a recorrer
-		 * @return Lista con los elementos del arbol
+		 * @param nodo nodo del que empezaremos a recorrer
+		 * @return lista con los elementos del arbol
 		 */
 		public List<String> preOrden(NodoArbol nodo)
 		{
@@ -632,12 +630,3 @@ public class Analizador
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
