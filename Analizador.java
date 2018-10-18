@@ -285,12 +285,15 @@ public class Analizador
 	{
 		List<String> lComp = new LinkedList<>();
 		char[] rech = exp.toCharArray();
+		char[] rechaux, rechaux1;
 		String nuevo;
 		int i = 0;
 		int anidado;
 		boolean com = false;
+		int parentesisIniciales = 0;
+		boolean sig = true;
 		while (i < exp.length())
-		{
+		{		
 			if (rech[i] == '\"')
 			{
 				nuevo = "\"";
@@ -312,23 +315,54 @@ public class Analizador
 			}
 			else if (rech[i] == '(')
 			{
+				if (i == 0)
+					parentesisIniciales++;
 				anidado = 0;
 				nuevo = "";
 				i = i+1;
 				while (true)
 				{
 					if (rech[i] == '\"' && !com)
+					{
 						com = true;
+						if (parentesisIniciales > 0 && sig)
+						{
+							parentesisIniciales--;
+							if (parentesisIniciales > 0)
+							{
+								nuevo = "";
+							}
+						}
+						sig = false;
+					}
 					else if (rech[i] == '\"' && com)
+					{
 						com = false;
+					}
 					else if (rech[i] == '(' && !com)
+					{
+						if (sig)
+							parentesisIniciales++;
 						anidado = anidado+1;
+					}
 					else if (rech[i] == ')' && !com && anidado == 0)
+					{
 						break;
+					}
 					else if (rech[i] == ')' && !com && anidado > 0)
+					{
 						anidado = anidado-1;
+					}
 					nuevo += rech[i];
 					i = i+1;
+				}
+				if (parentesisIniciales > 0)
+				{
+					rechaux = nuevo.toCharArray();
+					rechaux1 = new char[nuevo.length()-parentesisIniciales];
+					for (int x = 0; x < (nuevo.length()-parentesisIniciales); x++)
+						rechaux1[x] = rechaux[x];
+					nuevo = String.valueOf(rechaux1);
 				}
 				lComp.add(nuevo);
 			}

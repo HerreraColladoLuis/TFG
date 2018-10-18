@@ -69,7 +69,7 @@ public class Principal {
 	        aux.listaM = lM;
 	        
 	        String out = aux.traducir("([A5tg]+ (\"abd\"))  ({Auxiliar}* [hola]?)");
-	        String out1 = aux.traducir("A B C | D E F");
+	        String out1 = aux.traducir("((((((C | ((ab)) | D)))))))");
 	        //System.out.println(out);
 	        
 	        List<String> salida = aux.parsear(out1);
