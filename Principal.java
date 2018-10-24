@@ -60,7 +60,7 @@ public class Principal {
 		    	System.out.println();
 		    }*/
 	        List<String> lER = new LinkedList<>();
-	        lER.add("([A-F]+ | er+)");
+	        lER.add("[A-F]+ | er+");
 	        lER.add("{Auxiliar}");
 	        List<String> lM = new LinkedList<>();
 	        lM.add("Auxiliar");
@@ -68,9 +68,9 @@ public class Principal {
 	        aux.listaER = lER;
 	        aux.listaM = lM;
 	        
-	        String out = aux.traducir("([A5tg]+ (\"abd\"))  ({Auxiliar}* [hola]?)");
-	        String out1 = aux.traducir("((((((C | ((ab)) | D)))))))");
-	        //System.out.println(out);
+	        String out = aux.gestionar(aux.traducir("([A5tg]+ (\"abd\"))  ({Auxiliar}* [hola]?)"));
+	        String out1 = aux.gestionar(aux.traducir("((A) B | C (D) | (F (G H) | A))"));
+	        System.out.println(out1);
 	        
 	        List<String> salida = aux.parsear(out1);
 	        //for (String n : salida)

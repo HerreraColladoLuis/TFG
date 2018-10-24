@@ -270,6 +270,115 @@ public class Analizador
 		}
 		return cadena;
 	}
+	
+	private boolean parseado(String exp)
+	{
+		char[] rech = exp.toCharArray();
+		if (rech[0] != '(' || rech[exp.length()-1] != ')')
+			return true;
+		int i = 1;
+		int pA = 0;
+		int pC = 0;
+		boolean com = false;
+		while (i < exp.length()-1)
+		{
+			if (rech[i] == '\"' && !com)
+			{
+				com = true;
+			}
+			if (rech[i] == '\"' && com)
+			{
+				com = false;
+			}
+			if (rech[i] == '(' && !com)
+			{
+				pA++;
+			}
+			if (rech[i] == ')' && !com)
+			{
+				pC++;
+				if (pC > pA)
+					return true;
+			}
+			i++;
+		}
+		return false;
+	}
+	/**
+	 * Método para gestionar la concatenación y el or añadiendo
+	 * paréntesis.
+	 * @param exp Expresión Regular
+	 * @return Expresión Regular gestionada
+	 */
+	public String gestionar(String exp)
+	{
+		String nuevo = "";
+		char[] rech = exp.toCharArray();
+		int i = 0;
+		int pnuevo = 0;
+		boolean parentesis = false;
+		while (i < exp.length())
+		{
+			if (rech[i] == '(')
+			{
+				nuevo += "((";
+				pnuevo++;
+				parentesis = true;
+				i++;
+			}
+			else if (rech[i] == '|')
+			{
+				if (pnuevo > 0)
+				{
+					while (pnuevo > 0)
+					{
+						nuevo += ")";
+						pnuevo--;
+					}
+				}	
+				nuevo += "|(";
+				pnuevo++;
+				parentesis = false;
+				i++;
+			}
+			else if (rech[i] == '\"')
+			{
+				if (!parentesis)
+				{
+					pnuevo++;
+					nuevo += "(";	
+					parentesis = true;
+				}
+				nuevo += rech[i];
+				i++;
+				while (rech[i] != '\"')
+				{
+					nuevo += rech[i];
+					i++;
+				}
+				nuevo += rech[i];
+				i++;
+			}
+			else if (rech[i] == ')')
+			{
+				parentesis = false;
+				nuevo += "))";
+				pnuevo--;
+				i++;
+			}
+			else
+			{
+				nuevo += rech[i];
+				i++;
+			}
+		}
+		while (pnuevo > 0)
+		{
+			nuevo += ")";
+			pnuevo--;
+		}
+		return nuevo;
+	}
 	/**
 	 * Método que recibe una expresión regular en forma de string
 	 * y devuelve una lista con sus componentes 
@@ -285,13 +394,11 @@ public class Analizador
 	{
 		List<String> lComp = new LinkedList<>();
 		char[] rech = exp.toCharArray();
-		char[] rechaux, rechaux1;
 		String nuevo;
 		int i = 0;
 		int anidado;
 		boolean com = false;
-		int parentesisIniciales = 0;
-		boolean sig = true;
+
 		while (i < exp.length())
 		{		
 			if (rech[i] == '\"')
@@ -315,8 +422,6 @@ public class Analizador
 			}
 			else if (rech[i] == '(')
 			{
-				if (i == 0)
-					parentesisIniciales++;
 				anidado = 0;
 				nuevo = "";
 				i = i+1;
@@ -325,15 +430,6 @@ public class Analizador
 					if (rech[i] == '\"' && !com)
 					{
 						com = true;
-						if (parentesisIniciales > 0 && sig)
-						{
-							parentesisIniciales--;
-							if (parentesisIniciales > 0)
-							{
-								nuevo = "";
-							}
-						}
-						sig = false;
 					}
 					else if (rech[i] == '\"' && com)
 					{
@@ -341,8 +437,6 @@ public class Analizador
 					}
 					else if (rech[i] == '(' && !com)
 					{
-						if (sig)
-							parentesisIniciales++;
 						anidado = anidado+1;
 					}
 					else if (rech[i] == ')' && !com && anidado == 0)
@@ -355,14 +449,6 @@ public class Analizador
 					}
 					nuevo += rech[i];
 					i = i+1;
-				}
-				if (parentesisIniciales > 0)
-				{
-					rechaux = nuevo.toCharArray();
-					rechaux1 = new char[nuevo.length()-parentesisIniciales];
-					for (int x = 0; x < (nuevo.length()-parentesisIniciales); x++)
-						rechaux1[x] = rechaux[x];
-					nuevo = String.valueOf(rechaux1);
 				}
 				lComp.add(nuevo);
 			}
@@ -396,10 +482,15 @@ public class Analizador
 		List<String> lpar;
 		for (String n : lExp) // Recorremos la lista 
 		{
+			while (!parseado(n))
+			{
+				lpar = parsear(n);
+				n = lpar.get(0);
+			}
 			lpar = parsear(n);
 			if (lpar.size() == 1) // Caso base
 			{
-				nodoActual = new NodoArbol(n);
+				nodoActual = new NodoArbol(lpar.get(0));
 			}
 			else // Caso recursivo
 			{
