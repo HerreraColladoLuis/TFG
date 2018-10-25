@@ -68,8 +68,8 @@ public class Principal {
 	        aux.listaER = lER;
 	        aux.listaM = lM;
 	        
-	        String out = aux.gestionar(aux.traducir("([A5tg]+ (\"abd\"))  ({Auxiliar}* [hola]?)"));
-	        String out1 = aux.gestionar(aux.traducir("((A) B | C (D) | (F (G H) | A))"));
+	        //String out = aux.gestionar(aux.traducir("([A5tg]+ (\"abd\"))  ({Auxiliar}* [hola]?)"));
+	        String out1 = aux.traducir("(A+ B) | ((C?) D+)*");
 	        System.out.println(out1);
 	        
 	        List<String> salida = aux.parsear(out1);

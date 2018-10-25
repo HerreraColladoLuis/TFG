@@ -270,7 +270,12 @@ public class Analizador
 		}
 		return cadena;
 	}
-	
+	/**
+	 * Método que devuelve si una Expresión Regular está parseada,
+	 * es decir, si no tiene paréntesis inicial y final.
+	 * @param exp Expresión Regular
+	 * @return True si está parseada, false en caso contrario
+	 */
 	private boolean parseado(String exp)
 	{
 		char[] rech = exp.toCharArray();
@@ -326,19 +331,10 @@ public class Analizador
 				parentesis = true;
 				i++;
 			}
-			else if (rech[i] == '|')
+			else if (rech[i] == '|') 
 			{
-				if (pnuevo > 0)
-				{
-					while (pnuevo > 0)
-					{
-						nuevo += ")";
-						pnuevo--;
-					}
-				}	
-				nuevo += "|(";
-				pnuevo++;
-				parentesis = false;
+				nuevo += ")|(";
+				parentesis = true;
 				i++;
 			}
 			else if (rech[i] == '\"')
@@ -398,7 +394,6 @@ public class Analizador
 		int i = 0;
 		int anidado;
 		boolean com = false;
-
 		while (i < exp.length())
 		{		
 			if (rech[i] == '\"')
@@ -507,22 +502,70 @@ public class Analizador
 			{
 				if (nodoActual.cuantificador) // NODO CUANTIFICADOR
 				{
-					if (nodoAnterior.hoja || nodoAnterior.operacion)
+					if (nodoActual.hijos == null || nodoActual.hijos.size() == 0) // X
 					{
-						if (arbol.operacion && nodoAnterior.padre != null) // nodoAnterior.padre
+						if (nodoAnterior.hoja || nodoAnterior.operacion)
 						{
-							arbol.borrarUltimoHijo();
-							nodoAnterior.padre = nodoActual;
-							nodoActual.hijos.add(nodoAnterior);
-							nodoActual.padre = arbol;
-							arbol.hijos.add(nodoActual);
+							if (arbol.operacion && nodoAnterior.padre != null) // nodoAnterior.padre
+							{
+								arbol.borrarUltimoHijo();
+								nodoAnterior.padre = nodoActual;
+								nodoActual.hijos.add(nodoAnterior);
+								nodoActual.padre = arbol;
+								arbol.hijos.add(nodoActual);
+								nodoAnterior = nodoActual;
+							}
+							else
+							{
+								nodoAnterior.padre = nodoActual;
+								nodoActual.hijos.add(nodoAnterior);
+								arbol = nodoActual;
+								nodoAnterior = nodoActual;
+							}
+						}
+						else // XX
+						{
+							if (nodoAnterior.padre != null && nodoAnterior.padre.operacion)
+							{
+								nodoActual.padre = nodoAnterior.padre;
+								nodoAnterior.padre.hijos.add(nodoActual);
+								nodoAnterior = nodoActual; // CAMBIO (nodoAnterior = arbol)
+							}
+							else
+							{
+								nodoAuxiliar = new NodoArbol(".");
+								nodoAnterior.padre = nodoAuxiliar;
+								nodoActual.padre = nodoAuxiliar;
+								nodoAuxiliar.hijos.add(nodoAnterior);
+								nodoAuxiliar.hijos.add(nodoActual);
+								arbol = nodoAuxiliar;
+								nodoAnterior = nodoActual;
+							}
+						} // XX
+					} // X
+					else
+					{
+						if (nodoAnterior.operacion) // XXXXX
+						{
+							nodoActual.padre = nodoAnterior;
+							nodoAnterior.hijos.add(nodoActual);
+							arbol = nodoAnterior;
 							nodoAnterior = nodoActual;
+						}
+						else if (nodoAnterior.padre != null && nodoAnterior.padre.operacion)
+						{
+							nodoActual.padre = nodoAnterior.padre;
+							nodoAnterior.padre.hijos.add(nodoActual);
+							nodoAnterior = nodoActual; // CAMBIO (nodoAnterior = arbol)
 						}
 						else
 						{
-							nodoAnterior.padre = nodoActual;
-							nodoActual.hijos.add(nodoAnterior);
-							arbol = nodoActual;
+							nodoAuxiliar = new NodoArbol(".");
+							nodoAnterior.padre = nodoAuxiliar;
+							nodoActual.padre = nodoAuxiliar;
+							nodoAuxiliar.hijos.add(nodoAnterior);
+							nodoAuxiliar.hijos.add(nodoActual);
+							arbol = nodoAuxiliar;
 							nodoAnterior = nodoActual;
 						}
 					}
