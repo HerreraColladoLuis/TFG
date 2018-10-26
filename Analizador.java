@@ -440,13 +440,13 @@ public class Analizador
 					{
 						if (nodoAnterior.hoja || nodoAnterior.operacion)
 						{
-							if (arbol.operacion && nodoAnterior.padre != null) // nodoAnterior.padre
+							if (nodoAnterior.padre != null && nodoAnterior.padre.operacion) // nodoAnterior.padre
 							{
-								arbol.borrarUltimoHijo();
-								nodoAnterior.padre = nodoActual;
+								nodoAnterior.padre.borrarUltimoHijo();
+								nodoActual.padre = nodoAnterior.padre;
 								nodoActual.hijos.add(nodoAnterior);
-								nodoActual.padre = arbol;
-								arbol.hijos.add(nodoActual);
+								nodoAnterior.padre.hijos.add(nodoActual);
+								nodoAnterior.padre = nodoActual;
 								nodoAnterior = nodoActual;
 							}
 							else
@@ -591,10 +591,23 @@ public class Analizador
 					{
 						if (nodoAnterior.hoja || nodoAnterior.cuantificador)
 						{
-							if (nodoAnterior.padre != null && nodoAnterior.padre.operacion)
+							if (nodoAnterior.padre != null && nodoAnterior.padre.operacion && nodoAnterior.padre.info.equals("."))
 							{
 								nodoActual.padre = nodoAnterior.padre;
 								nodoAnterior.padre.hijos.add(nodoActual);
+								nodoAnterior = nodoActual; 
+							}
+							else if (nodoAnterior.padre != null && nodoAnterior.padre.operacion && nodoAnterior.padre.info.equals("|"))
+							{
+								nodoAuxiliar = new NodoArbol(".");
+								nodoAnterior.padre.borrarUltimoHijo();
+								nodoAuxiliar.hijos.add(nodoAnterior);
+								nodoAuxiliar.hijos.add(nodoActual);
+								nodoAnterior.padre.hijos.add(nodoAuxiliar);
+								nodoAuxiliar.padre = nodoAnterior.padre;
+								arbol = nodoAnterior.padre;
+								nodoAnterior.padre = nodoAuxiliar;
+								nodoActual.padre = nodoAuxiliar;
 								nodoAnterior = nodoActual;
 							}
 							else
@@ -703,6 +716,11 @@ public class Analizador
 									operacionOR = true; ///////////////////
 								}
 								//nodoAnterior = nodoAnterior.padre;
+							}
+							else if (nodoAnterior.padre != null && nodoAnterior.padre.operacion && nodoAnterior.padre.info.equals("|"))
+							{
+								nodoAnterior = nodoAnterior.padre;
+								operacionOR = true;
 							}
 							else
 							{

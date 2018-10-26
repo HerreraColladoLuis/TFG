@@ -68,11 +68,11 @@ public class Principal {
 	        aux.listaER = lER;
 	        aux.listaM = lM;
 	        
-	        String out = aux.traducir("([A5tg]+ (\"abd\"))  ({Auxiliar}* [hola]?)");
-	        //String out1 = aux.traducir("(A B)+ G (E R)*");
-	        System.out.println(out);
+	        //String out = aux.traducir("([A5tg]+ (\"abd\"))  ({Auxiliar}* [hola]?)");
+	        String out1 = aux.traducir("(A+ T)? E | (R T)? E+");
+	        System.out.println(out1);
 	        
-	        List<String> salida = aux.parsear(out);
+	        List<String> salida = aux.parsear(out1);
 	        //for (String n : salida)
 	        	//System.out.println(n);
 	        Analizador.NodoArbol arbol;
