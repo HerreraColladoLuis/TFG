@@ -60,7 +60,7 @@ public class Principal {
 		    	System.out.println();
 		    }*/
 	        List<String> lER = new LinkedList<>();
-	        lER.add("[A-F]+ | er+");
+	        lER.add("([A-F]+ | er+)");
 	        lER.add("{Auxiliar}");
 	        List<String> lM = new LinkedList<>();
 	        lM.add("Auxiliar");
@@ -68,11 +68,11 @@ public class Principal {
 	        aux.listaER = lER;
 	        aux.listaM = lM;
 	        
-	        //String out = aux.gestionar(aux.traducir("([A5tg]+ (\"abd\"))  ({Auxiliar}* [hola]?)"));
-	        String out1 = aux.traducir("(A+ B) | ((C?) D+)*");
-	        System.out.println(out1);
+	        String out = aux.traducir("([A5tg]+ (\"abd\"))  ({Auxiliar}* [hola]?)");
+	        //String out1 = aux.traducir("(A B)+ G (E R)*");
+	        System.out.println(out);
 	        
-	        List<String> salida = aux.parsear(out1);
+	        List<String> salida = aux.parsear(out);
 	        //for (String n : salida)
 	        	//System.out.println(n);
 	        Analizador.NodoArbol arbol;
