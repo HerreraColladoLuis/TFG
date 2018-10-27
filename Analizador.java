@@ -738,15 +738,286 @@ public class Analizador
 		return arbol;
 	}
 	/**
-	 * Método para recorrer un arbol en forma pre-orden e ir
-	 * metiendo los elementos en una lista
-	 * @param nodo raíz del árbol
-	 * @return lista con los elementos del árbol
+	 * Método para numerar las hojas de un arbol sintáctico
+	 * en el orden de aparición en el mismo
+	 * @param nodo nodo inicial del arbol
+	 * @param posicion contador 
+	 * @return última posición asignada
 	 */
-	public List<String> recorrerArbol(NodoArbol nodo)
+	public int numerarHojas(NodoArbol nodo, int posicion)
 	{
-		NodoArbol n = new NodoArbol("");
-		return n.preOrden(nodo);
+		int pos = posicion;
+		if (nodo.hoja)
+		{
+			nodo.posicion = pos+1;
+			return pos+1;
+		}	
+		else 
+		{
+			for (NodoArbol nodoHijo : nodo.hijos)
+				pos = numerarHojas(nodoHijo,pos);
+			return pos;
+		}
+	}
+	/**
+	 * Método para recorrer un arbol en formato pre-orden
+	 * del cúal iremos numerando las hojas
+	 * @param nodo nodo del que empezaremos a recorrer
+	 * @return lista con los elementos del arbol
+	 */
+	public List<String> preOrden(NodoArbol nodo)
+	{
+		if (nodo == null)
+			return null;
+		List<String> lElem = new LinkedList<>();
+		lElem.add(nodo.info);
+		if (nodo.hijos == null || nodo.hijos.size() == 0)
+			return lElem;
+		List<String> lRec;
+		for (NodoArbol nodoHijo : nodo.hijos)
+		{
+			lRec = preOrden(nodoHijo);
+			if (lRec != null)
+			{
+				for (String info : lRec)
+					lElem.add(info);
+			}
+		}
+		return lElem;
+	}
+	/**
+	 * Método para aumentar una Expresión Regular, es decir, 
+	 * añadir un # al final de ésta.
+	 * @param arbol arbol que se va a aumentar
+	 * @return arbol aumentado
+	 */
+	public NodoArbol aumentarExpReg(NodoArbol arbol)
+	{
+		NodoArbol arbolAum = new NodoArbol(".");
+		NodoArbol fin = new NodoArbol("#");
+		arbolAum.hijos.add(arbol);
+		arbol.padre = arbolAum;
+		arbolAum.hijos.add(fin);
+		fin.padre = arbolAum;
+		return arbolAum;
+	}
+	/**
+	 * Método para la función anulable para un nodo de
+	 * un árbol
+	 * @param nodo nodo sobre el que se hará la comprobación
+	 * @return anulable o no anulable
+	 */
+	public boolean anulable(NodoArbol nodo)
+	{
+		if (nodo.hoja)
+		{
+			return false;
+		}	
+		else if (nodo.operacion && nodo.info.equals("."))
+		{
+			for (NodoArbol s : nodo.hijos)
+			{
+				if (!anulable(s))
+					return false;
+			}
+			return true;
+		}
+		else if (nodo.operacion && nodo.info.equals("|"))
+		{
+			for (NodoArbol s : nodo.hijos)
+			{
+				if (anulable(s))
+					return true;
+			}
+			return false;
+		}
+		else if (nodo.cuantificador && nodo.info.equals("*"))
+		{
+			return true;
+		}
+		else if (nodo.cuantificador && nodo.info.equals("+"))
+		{
+			return anulable(nodo.hijos.get(0));
+		}
+		else 
+		{
+			return true;
+		}
+	}
+	/**
+	 * Método para la función primeraPos para un nodo de 
+	 * un árbol.
+	 * @param nodo nodo sobre el que se hará la función
+	 * @return lista de posiciones
+	 */
+	public List<Integer> primeraPos(NodoArbol nodo)
+	{
+		List<Integer> lista = new LinkedList<>();
+		if (nodo.hoja)
+		{
+			lista.add(nodo.posicion);
+		}
+		else if (nodo.operacion && nodo.info.equals("."))
+		{
+			List<Integer> lAux;
+			if (anulable(nodo.hijos.get(0)))
+			{	
+				for (NodoArbol nodoHijo : nodo.hijos)
+				{
+					lAux = primeraPos(nodoHijo);
+					for (Integer i : lAux)
+						lista.add(i);
+				}
+			}
+			else
+			{
+				lAux = primeraPos(nodo.hijos.get(0));
+				for (Integer i : lAux)
+					lista.add(i);
+			}
+		}
+		else if (nodo.operacion && nodo.info.equals("|"))
+		{
+			List<Integer> lAux;
+			for (NodoArbol nodoHijo : nodo.hijos)
+			{
+				lAux = primeraPos(nodoHijo);
+				for (Integer i : lAux)
+					lista.add(i);
+			}
+		}
+		else if (nodo.cuantificador && nodo.info.equals("*"))
+		{
+			List<Integer> lAux;
+			lAux = primeraPos(nodo.hijos.get(0));
+			for (Integer i : lAux)
+				lista.add(i);
+		}
+		else if (nodo.cuantificador && nodo.info.equals("+"))
+		{
+			List<Integer> lAux;
+			lAux = primeraPos(nodo.hijos.get(0));
+			for (Integer i : lAux)
+				lista.add(i);
+		}
+		else 
+		{
+			List<Integer> lAux;
+			lAux = primeraPos(nodo.hijos.get(0));
+			for (Integer i : lAux)
+				lista.add(i);
+		}
+		return lista;
+	}
+	/**
+	 * Método para la función ultimaPos para un nodo de 
+	 * un árbol.
+	 * @param nodo nodo sobre el que se hará la función
+	 * @return lista de posiciones
+	 */
+	public List<Integer> ultimaPos(NodoArbol nodo)
+	{
+		List<Integer> lista = new LinkedList<>();
+		if (nodo.hoja)
+		{
+			lista.add(nodo.posicion);
+		}
+		else if (nodo.operacion && nodo.info.equals("."))
+		{
+			List<Integer> lAux;
+			if (anulable(nodo.hijos.get(nodo.hijos.size()-1)))
+			{	
+				for (NodoArbol nodoHijo : nodo.hijos)
+				{
+					lAux = ultimaPos(nodoHijo);
+					for (Integer i : lAux)
+						lista.add(i);
+				}
+			}
+			else
+			{
+				lAux = ultimaPos(nodo.hijos.get(nodo.hijos.size()-1));
+				for (Integer i : lAux)
+					lista.add(i);
+			}
+		}
+		else if (nodo.operacion && nodo.info.equals("|"))
+		{
+			List<Integer> lAux;
+			for (NodoArbol nodoHijo : nodo.hijos)
+			{
+				lAux = ultimaPos(nodoHijo);
+				for (Integer i : lAux)
+					lista.add(i);
+			}
+		}
+		else if (nodo.cuantificador && nodo.info.equals("*"))
+		{
+			List<Integer> lAux;
+			lAux = ultimaPos(nodo.hijos.get(0));
+			for (Integer i : lAux)
+				lista.add(i);
+		}
+		else if (nodo.cuantificador && nodo.info.equals("+"))
+		{
+			List<Integer> lAux;
+			lAux = ultimaPos(nodo.hijos.get(0));
+			for (Integer i : lAux)
+				lista.add(i);
+		}
+		else 
+		{
+			List<Integer> lAux;
+			lAux = ultimaPos(nodo.hijos.get(0));
+			for (Integer i : lAux)
+				lista.add(i);
+		}
+		return lista;
+	}
+	
+	public List<Integer> siguientePos(NodoArbol nodo, int hoja)
+	{
+		List<Integer> lista = new LinkedList<>();
+		if (nodo.operacion && nodo.info.equals("."))
+		{
+			for (int pos : ultimaPos(nodo.hijos.get(0)))
+			{
+				if (hoja == pos)
+				{
+					int c = 0;
+					for (NodoArbol nodoHijo : nodo.hijos)
+					{
+						if (c == 0)
+							continue;
+						for (int posi : primeraPos(nodoHijo))
+							lista.add(posi);
+						c++;
+					}
+				}
+			}
+		}
+		else if (nodo.cuantificador && nodo.info.equals("*"))
+		{
+			for (int pos : ultimaPos(nodo))
+			{
+				if (hoja == pos)
+				{
+					for (int posi : primeraPos(nodo))
+						lista.add(posi);
+				}
+			}
+		}
+		if (!nodo.hoja)
+		{
+			List<Integer> lAux;
+			for (NodoArbol nodoHijo : nodo.hijos)
+			{
+				lAux = siguientePos(nodoHijo,hoja);
+				for (int pos : lAux)
+					lista.add(pos);
+			}
+		}
+		return lista;
 	}
 	/**
 	 * Clase auxiliar para un nodo de un arbol
@@ -761,6 +1032,7 @@ public class Analizador
 		public String info;
 		public List<NodoArbol> hijos;
 		public NodoArbol padre;
+		public int posicion = 0;
 		
 		/**
 		 * Constructor para un nodo del arbol
@@ -786,31 +1058,6 @@ public class Analizador
 		{
 			if (this.hijos != null)
 				this.hijos.remove(this.hijos.size()-1);
-		}
-		/**
-		 * Método para recorrer un arbol en formato pre-orden
-		 * @param nodo nodo del que empezaremos a recorrer
-		 * @return lista con los elementos del arbol
-		 */
-		public List<String> preOrden(NodoArbol nodo)
-		{
-			if (nodo == null)
-				return null;
-			List<String> lElem = new LinkedList<>();
-			lElem.add(nodo.info);
-			if (nodo.hijos == null || nodo.hijos.size() == 0)
-				return lElem;
-			List<String> lRec;
-			for (NodoArbol nodoHijo : nodo.hijos)
-			{
-				lRec = preOrden(nodoHijo);
-				if (lRec != null)
-				{
-					for (String info : lRec)
-						lElem.add(info);
-				}
-			}
-			return lElem;
 		}
 	}
 }
