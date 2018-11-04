@@ -926,6 +926,26 @@ public class Analizador
 							raiz = nodoAuxiliar;
 						}
 					}
+					else if (nodoAnterior.info.equals("."))
+					{
+						if (nodoAnterior.padre != null)
+						{
+							nodoAuxiliar = new NodoArbol(".");
+							nodoAnterior.padre.hijoDcho = null;
+							nodoAnterior.padre.insertarDcha(nodoAuxiliar);
+							nodoAuxiliar.insertarIzda(nodoAnterior);
+							nodoAuxiliar.insertarDcha(nodoActual);
+							nodoAnterior = nodoActual;
+						}
+						else
+						{
+							nodoAuxiliar = new NodoArbol(".");
+							nodoAuxiliar.insertarIzda(nodoAnterior);
+							nodoAuxiliar.insertarDcha(nodoActual);
+							nodoAnterior = nodoActual;
+							raiz = nodoAuxiliar;
+						}
+					}
 				}
 				else if (nodoActual.info.equals("|"))
 				{
@@ -1016,6 +1036,54 @@ public class Analizador
 									nodoAnterior = nodoActual;
 								}
 							}
+						}
+					}
+				}
+				else if (nodoActual.info.equals("."))
+				{
+					if (nodoAnterior.hoja)
+					{
+						if (nodoAnterior.padre != null)
+						{
+							nodoAuxiliar = new NodoArbol(".");
+							nodoAnterior.padre.hijoDcho = null;
+							nodoAnterior.padre.insertarDcha(nodoAuxiliar);
+							nodoAuxiliar.insertarIzda(nodoAnterior);
+							nodoAuxiliar.insertarDcha(nodoActual);
+							nodoAnterior = nodoActual;
+						}
+						else
+						{
+							nodoAuxiliar = new NodoArbol(".");
+							nodoAuxiliar.insertarIzda(nodoAnterior);
+							nodoAuxiliar.insertarDcha(nodoActual);
+							nodoAnterior = nodoActual;
+							raiz = nodoAuxiliar;
+						}
+					}
+					else if (nodoAnterior.info.equals("|"))
+					{
+						nodoAnterior.insertarDcha(nodoActual);
+						nodoAnterior = nodoActual;
+					}
+					else if (nodoAnterior.info.equals("."))
+					{
+						if (nodoAnterior.padre != null)
+						{
+							nodoAuxiliar = new NodoArbol(".");
+							nodoAnterior.padre.hijoDcho = null;
+							nodoAnterior.padre.insertarDcha(nodoAuxiliar);
+							nodoAuxiliar.insertarIzda(nodoAnterior);
+							nodoAuxiliar.insertarDcha(nodoActual);
+							nodoAnterior = nodoActual;
+						}
+						else
+						{
+							nodoAuxiliar = new NodoArbol(".");
+							nodoAuxiliar.insertarIzda(nodoAnterior);
+							nodoAuxiliar.insertarDcha(nodoActual);
+							nodoAnterior = nodoActual;
+							raiz = nodoAuxiliar;
 						}
 					}
 				}
