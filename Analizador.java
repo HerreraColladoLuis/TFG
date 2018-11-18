@@ -897,12 +897,35 @@ public class Analizador
 							{
 								if (nodoAnterior.padre != null)
 								{
-									nodoAuxiliar = new NodoArbol(".");
-									nodoAnterior.padre.hijoDcho = null;
-									nodoAnterior.padre.insertarDcha(nodoAuxiliar);
-									nodoAuxiliar.insertarIzda(nodoAnterior);
-									nodoAuxiliar.insertarDcha(nodoActual);
-									nodoAnterior = nodoActual;
+									if (nodoAnterior.padre.cuantificador)
+									{
+										if (nodoAnterior.padre.padre != null && nodoAnterior.padre.padre.operacion)
+										{
+											nodoAuxiliar = new NodoArbol(".");
+											nodoAnterior.padre.padre.hijoDcho = null;
+											nodoAnterior.padre.padre.insertarDcha(nodoAuxiliar);
+											nodoAuxiliar.insertarIzda(nodoAnterior.padre);
+											nodoAuxiliar.insertarDcha(nodoActual);
+											nodoAnterior = nodoActual;
+										}
+										else
+										{
+											nodoAuxiliar = new NodoArbol(".");
+											nodoAuxiliar.insertarIzda(nodoAnterior.padre);
+											nodoAuxiliar.insertarDcha(nodoActual);
+											nodoAnterior = nodoActual;
+											raiz = nodoAuxiliar;
+										}
+									}
+									else
+									{
+										nodoAuxiliar = new NodoArbol(".");
+										nodoAnterior.padre.hijoDcho = null;
+										nodoAnterior.padre.insertarDcha(nodoAuxiliar);
+										nodoAuxiliar.insertarIzda(nodoAnterior);
+										nodoAuxiliar.insertarDcha(nodoActual);
+										nodoAnterior = nodoActual;
+									}
 								}
 								else
 								{
@@ -942,12 +965,35 @@ public class Analizador
 					{
 						if (nodoAnterior.padre != null)
 						{
-							nodoAuxiliar = new NodoArbol(".");
-							nodoAnterior.padre.hijoDcho = null;
-							nodoAnterior.padre.insertarDcha(nodoAuxiliar);
-							nodoAuxiliar.insertarIzda(nodoAnterior);
-							nodoAuxiliar.insertarDcha(nodoActual);
-							nodoAnterior = nodoActual;
+							if (nodoAnterior.padre.cuantificador)
+							{
+								if (nodoAnterior.padre.padre != null && nodoAnterior.padre.padre.operacion)
+								{
+									nodoAuxiliar = new NodoArbol(".");
+									nodoAnterior.padre.padre.hijoDcho = null;
+									nodoAnterior.padre.padre.insertarDcha(nodoAuxiliar);
+									nodoAuxiliar.insertarIzda(nodoAnterior.padre);
+									nodoAuxiliar.insertarDcha(nodoActual);
+									nodoAnterior = nodoActual;
+								}
+								else
+								{
+									nodoAuxiliar = new NodoArbol(".");
+									nodoAuxiliar.insertarIzda(nodoAnterior.padre);
+									nodoAuxiliar.insertarDcha(nodoActual);
+									nodoAnterior = nodoActual;
+									raiz = nodoAuxiliar;
+								}
+							}
+							else
+							{
+								nodoAuxiliar = new NodoArbol(".");
+								nodoAnterior.padre.hijoDcho = null;
+								nodoAnterior.padre.insertarDcha(nodoAuxiliar);
+								nodoAuxiliar.insertarIzda(nodoAnterior);
+								nodoAuxiliar.insertarDcha(nodoActual);
+								nodoAnterior = nodoActual;
+							}
 						}
 						else
 						{
