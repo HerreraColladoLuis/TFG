@@ -392,392 +392,9 @@ public class Analizador
 		return lComp;
 	}
 	/**
-	 * Método que recibe una lista con los componentes de una 
-	 * expresión regular y devuelve un árbol sintáctico de la
-	 * misma
-	 * @param lExp Lista de componentes de una expresión regular
-	 * @return Árbol sintáctico de una expresión regular
-	 * @throws Exception 
-	 *//*
-	public NodoArbol crearArbol(List<String> lExp) throws Exception
-	{
-		// Variables auxiliares
-		NodoArbol arbol = null;
-		NodoArbol nodoAnterior = null;
-		NodoArbol nodoActual = null;
-		NodoArbol nodoAuxiliar = null;
-		boolean antRec = false;
-		boolean operacionOR = false;
-		List<String> lpar;
-		for (String n : lExp) // Recorremos la lista 
-		{
-			while (!parseado(n))
-			{
-				lpar = parsear(n);
-				n = lpar.get(0);
-			}
-			lpar = parsear(n);
-			if (lpar.size() == 1) // Caso base
-			{
-				nodoActual = new NodoArbol(lpar.get(0));
-			}
-			else // Caso recursivo
-			{
-				nodoActual = crearArbol(lpar);
-				if (nodoActual.operacion)
-					antRec = true;
-			}	
-			if (nodoAnterior == null) // Se trata del primer nodo del arbol
-			{
-				arbol = nodoActual;
-				nodoAnterior = nodoActual;
-			}
-			else // No es el primer nodo del arbol
-			{
-				if (nodoActual.cuantificador) // NODO CUANTIFICADOR
-				{
-					if (nodoActual.hijos == null || nodoActual.hijos.size() == 0) // X
-					{
-						if (nodoAnterior.hoja || nodoAnterior.operacion)
-						{
-							if (nodoAnterior.padre != null && nodoAnterior.padre.operacion) // nodoAnterior.padre
-							{
-								nodoAnterior.padre.borrarUltimoHijo();
-								nodoActual.padre = nodoAnterior.padre;
-								nodoActual.hijos.add(nodoAnterior);
-								nodoAnterior.padre.hijos.add(nodoActual);
-								nodoAnterior.padre = nodoActual;
-								nodoAnterior = nodoActual;
-							}
-							else
-							{
-								nodoAnterior.padre = nodoActual;
-								nodoActual.hijos.add(nodoAnterior);
-								arbol = nodoActual;
-								nodoAnterior = nodoActual;
-							}
-						}
-						else // XX
-						{
-							if (nodoAnterior.padre != null && nodoAnterior.padre.operacion)
-							{
-								nodoActual.padre = nodoAnterior.padre;
-								nodoAnterior.padre.hijos.add(nodoActual);
-								nodoAnterior = nodoActual; // CAMBIO (nodoAnterior = arbol)
-							}
-							else
-							{
-								nodoAuxiliar = new NodoArbol(".");
-								nodoAnterior.padre = nodoAuxiliar;
-								nodoActual.padre = nodoAuxiliar;
-								nodoAuxiliar.hijos.add(nodoAnterior);
-								nodoAuxiliar.hijos.add(nodoActual);
-								arbol = nodoAuxiliar;
-								nodoAnterior = nodoActual;
-							}
-						} // XX
-					} // X
-					else
-					{
-						if (nodoAnterior.operacion) // XXXXX
-						{
-							nodoActual.padre = nodoAnterior;
-							nodoAnterior.hijos.add(nodoActual);
-							arbol = nodoAnterior;
-							nodoAnterior = nodoActual;
-						}
-						else if (nodoAnterior.padre != null && nodoAnterior.padre.operacion)
-						{
-							nodoActual.padre = nodoAnterior.padre;
-							nodoAnterior.padre.hijos.add(nodoActual);
-							nodoAnterior = nodoActual; // CAMBIO (nodoAnterior = arbol)
-						}
-						else
-						{
-							nodoAuxiliar = new NodoArbol(".");
-							nodoAnterior.padre = nodoAuxiliar;
-							nodoActual.padre = nodoAuxiliar;
-							nodoAuxiliar.hijos.add(nodoAnterior);
-							nodoAuxiliar.hijos.add(nodoActual);
-							arbol = nodoAuxiliar;
-							nodoAnterior = nodoActual;
-						}
-					}
-				}
-				else if (nodoActual.hoja) // NODO HOJA
-				{
-					if (nodoAnterior.hoja || nodoAnterior.cuantificador)
-					{
-						if (nodoAnterior.padre != null && nodoAnterior.padre.operacion && nodoAnterior.padre.info.equals("."))
-						{
-							nodoActual.padre = nodoAnterior.padre;
-							nodoAnterior.padre.hijos.add(nodoActual);
-							nodoAnterior = nodoActual; // CAMBIO (nodoAnterior = arbol)
-						}
-						else if (nodoAnterior.padre != null && nodoAnterior.padre.operacion && nodoAnterior.padre.info.equals("|"))
-						{
-							nodoAuxiliar = new NodoArbol(".");
-							nodoAnterior.padre.borrarUltimoHijo();
-							nodoAuxiliar.hijos.add(nodoAnterior);
-							nodoAuxiliar.hijos.add(nodoActual);
-							nodoAnterior.padre.hijos.add(nodoAuxiliar);
-							nodoAuxiliar.padre = nodoAnterior.padre;
-							arbol = nodoAnterior.padre;
-							nodoAnterior.padre = nodoAuxiliar;
-							nodoActual.padre = nodoAuxiliar;
-							nodoAnterior = nodoActual;
-						}
-						else
-						{
-							nodoAuxiliar = new NodoArbol(".");
-							nodoAnterior.padre = nodoAuxiliar;
-							nodoActual.padre = nodoAuxiliar;
-							nodoAuxiliar.hijos.add(nodoAnterior);
-							nodoAuxiliar.hijos.add(nodoActual);
-							arbol = nodoAuxiliar;
-							nodoAnterior = nodoActual;
-						}
-					}
-					else
-					{
-						// CAMBIO
-						if (antRec)
-						{
-							if (nodoAnterior.padre != null && nodoAnterior.padre.operacion && nodoAnterior.padre.info.equals("."))
-							{
-								nodoActual.padre = nodoAnterior.padre;
-								nodoAnterior.padre.hijos.add(nodoActual);
-								nodoAnterior = nodoActual; 
-							}
-							else if (nodoAnterior.padre != null && nodoAnterior.padre.operacion && nodoAnterior.padre.info.equals("|"))
-							{
-								nodoAuxiliar = new NodoArbol(".");
-								nodoAnterior.padre.borrarUltimoHijo();
-								nodoAuxiliar.hijos.add(nodoAnterior);
-								nodoAuxiliar.hijos.add(nodoActual);
-								nodoAnterior.padre.hijos.add(nodoAuxiliar);
-								nodoAuxiliar.padre = nodoAnterior.padre;
-								arbol = nodoAnterior.padre;
-								nodoAnterior.padre = nodoAuxiliar;
-								nodoActual.padre = nodoAuxiliar;
-								nodoAnterior = nodoActual;
-							}
-							else if (nodoAnterior.padre == null)
-							{
-								nodoAuxiliar = new NodoArbol(".");
-								nodoAnterior.padre = nodoAuxiliar;
-								nodoActual.padre = nodoAuxiliar;
-								nodoAuxiliar.hijos.add(nodoAnterior);
-								nodoAuxiliar.hijos.add(nodoActual);
-								arbol = nodoAuxiliar;
-								nodoAnterior = nodoActual;
-							}
-							operacionOR = false; // AÑADIDO
-							antRec = false;
-						}
-						else
-						{
-							nodoActual.padre = nodoAnterior;
-							nodoAnterior.hijos.add(nodoActual);
-							arbol = nodoAnterior;
-							nodoAnterior = nodoActual;
-							operacionOR = false; //////////
-						}
-					}
-				}
-				else // NODO OPERACIÓN
-				{
-					if (nodoActual.hijos.size() > 0)
-					{
-						if (nodoAnterior.hoja || nodoAnterior.cuantificador)
-						{
-							if (nodoAnterior.padre != null && nodoAnterior.padre.operacion && nodoAnterior.padre.info.equals("."))
-							{
-								nodoActual.padre = nodoAnterior.padre;
-								nodoAnterior.padre.hijos.add(nodoActual);
-								nodoAnterior = nodoActual; 
-							}
-							else if (nodoAnterior.padre != null && nodoAnterior.padre.operacion && nodoAnterior.padre.info.equals("|"))
-							{
-								nodoAuxiliar = new NodoArbol(".");
-								nodoAnterior.padre.borrarUltimoHijo();
-								nodoAuxiliar.hijos.add(nodoAnterior);
-								nodoAuxiliar.hijos.add(nodoActual);
-								nodoAnterior.padre.hijos.add(nodoAuxiliar);
-								nodoAuxiliar.padre = nodoAnterior.padre;
-								arbol = nodoAnterior.padre;
-								nodoAnterior.padre = nodoAuxiliar;
-								nodoActual.padre = nodoAuxiliar;
-								nodoAnterior = nodoActual;
-							}
-							else
-							{
-								nodoAuxiliar = new NodoArbol(".");
-								nodoAnterior.padre = nodoAuxiliar;
-								nodoActual.padre = nodoAuxiliar;
-								nodoAuxiliar.hijos.add(nodoAnterior);
-								nodoAuxiliar.hijos.add(nodoActual);
-								arbol = nodoAuxiliar;
-								nodoAnterior = nodoActual; 
-							}
-						}
-						else
-						{
-							if (nodoAnterior.hijos.size() > 0) // AÑADIDO
-							{ // AÑADIDOX2
-								if (nodoAnterior.padre != null && nodoAnterior.padre.operacion && nodoAnterior.padre.info.equals("."))
-								{
-									nodoActual.padre = nodoAnterior.padre;
-									nodoAnterior.padre.hijos.add(nodoActual);
-									nodoAnterior = nodoActual; 
-								}
-								else if (nodoAnterior.padre != null && nodoAnterior.padre.operacion && nodoAnterior.padre.info.equals("|"))
-								{
-									nodoAuxiliar = new NodoArbol(".");
-									nodoAnterior.padre.borrarUltimoHijo();
-									nodoAuxiliar.hijos.add(nodoAnterior);
-									nodoAuxiliar.hijos.add(nodoActual);
-									nodoAnterior.padre.hijos.add(nodoAuxiliar);
-									nodoAuxiliar.padre = nodoAnterior.padre;
-									arbol = nodoAnterior.padre;
-									nodoAnterior.padre = nodoAuxiliar;
-									nodoActual.padre = nodoAuxiliar;
-									nodoAnterior = nodoActual;
-								}
-								else if (operacionOR)
-								{
-									nodoActual.padre = nodoAnterior;
-									nodoAnterior.hijos.add(nodoActual);
-									arbol = nodoAnterior;
-									nodoAnterior = nodoActual;
-									operacionOR = false;
-								}
-								else
-								{
-									nodoAuxiliar = new NodoArbol(".");
-									nodoAnterior.padre = nodoAuxiliar;
-									nodoActual.padre = nodoAuxiliar;
-									nodoAuxiliar.hijos.add(nodoAnterior);
-									nodoAuxiliar.hijos.add(nodoActual);
-									arbol = nodoAuxiliar;
-									nodoAnterior = nodoActual; 
-								}
-							}
-							else
-							{
-								nodoActual.padre = nodoAnterior;
-								nodoAnterior.hijos.add(nodoActual);
-								arbol = nodoAnterior;
-								nodoAnterior = nodoActual;
-							}
-						}
-					}
-					else
-					{
-						if (antRec && nodoAnterior.padre != null && nodoAnterior.padre.operacion && nodoAnterior.padre.info.equals("|"))
-						{
-							nodoAnterior = nodoAnterior.padre;
-							operacionOR = true; // AÑADIDO
-							antRec = false;
-						}
-						else if (antRec && nodoAnterior.padre != null && nodoAnterior.padre.operacion && nodoAnterior.padre.info.equals("."))
-						{
-							nodoActual.hijos.add(nodoAnterior.padre);
-							nodoAnterior.padre.padre = nodoActual;
-							arbol = nodoActual;
-							nodoAnterior = nodoActual;
-							antRec = false;
-							operacionOR = true;
-						}
-						else if (antRec && nodoAnterior.padre == null)
-						{
-							nodoAnterior.padre = nodoActual;
-							nodoActual.hijos.add(nodoAnterior);
-							arbol = nodoActual;
-							nodoAnterior = nodoActual; //
-							operacionOR = true; // AÑADIDO
-							antRec = false;
-						}
-						else
-						{
-							if (nodoAnterior.padre != null && nodoAnterior.padre.operacion && nodoAnterior.padre.info.equals(".")) // Añadido
-							{
-								if (nodoAnterior.padre.padre == null)
-								{
-									nodoAnterior.padre.padre = nodoActual;
-									nodoActual.hijos.add(nodoAnterior.padre);
-									arbol = nodoActual;
-									nodoAnterior = nodoActual;
-									operacionOR = true;
-								}
-								else
-								{
-									nodoAnterior = nodoAnterior.padre.padre;
-									operacionOR = true; ///////////////////
-								}
-								//nodoAnterior = nodoAnterior.padre;
-							}
-							else if (nodoAnterior.padre != null && nodoAnterior.padre.operacion && nodoAnterior.padre.info.equals("|"))
-							{
-								nodoAnterior = nodoAnterior.padre;
-								operacionOR = true;
-							}
-							else
-							{
-								nodoAnterior.padre = nodoActual;
-								nodoActual.hijos.add(nodoAnterior);
-								arbol = nodoActual;
-								nodoAnterior = nodoActual;
-								operacionOR = true;
-							}
-						}
-					}
-				}
-			}
-		}
-		return arbol;
-	}
-	*//**
-	 * Clase auxiliar para un nodo de un arbol
-	 * @author herre
-	 *
-	 *//*
-	public class NodoArbol
-	{
-		public boolean hoja = false;
-		public boolean cuantificador = false;
-		public boolean operacion = false;
-		public String info;
-		public List<NodoArbol> hijos;
-		public NodoArbol padre;
-		public int posicion = 0;
-		
-		*//**
-		 * Constructor para un nodo del arbol
-		 * @param info información que llevará el nodo
-		 *//*
-		public NodoArbol(String info)
-		{
-			this.info = info;
-			if (info.equals("+") || info.equals("*") || info.equals("?"))
-				this.cuantificador = true;
-			else if (info.equals("|") || info.equals("."))
-				this.operacion = true;
-			else
-				this.hoja = true;
-			if (!this.hoja)
-				this.hijos = new LinkedList<>();
-		}
-		*//**
-		 * Método para borrar el último hijo añadido a la 
-		 * lista de hijos de un nodo
-		 *//*
-		public void borrarUltimoHijo()
-		{
-			if (this.hijos != null)
-				this.hijos.remove(this.hijos.size()-1);
-		}
-	}*/
+	 * Método para recorrer un árbol binario en pre orden
+	 * @param nodo Nodo del árbol del que empezaremos a recorrer
+	 */
 	public void preOrden(NodoArbol nodo)
 	{
 		if (nodo != null)
@@ -787,7 +404,10 @@ public class Analizador
 			preOrden(nodo.hijoDcho);
 		}
 	}
-	
+	/**
+	 * Método para recorrer un árbol binario en in orden
+	 * @param nodo Nodo del arbol del que empezaremos a recorrer
+	 */
 	public void inOrden(NodoArbol nodo)
 	{
 		if (nodo != null)
@@ -797,7 +417,11 @@ public class Analizador
 			inOrden(nodo.hijoDcho);
 		}
 	}
-	
+	/**
+	 * Clase auxiliar para un árbol binario
+	 * @author herre
+	 *
+	 */
 	public class NodoArbol
 	{
 		public String info;
@@ -809,6 +433,10 @@ public class Analizador
 		public boolean operacion;
 		public boolean hoja;
 		
+		/**
+		 * Constructor para un nodo del árbol
+		 * @param info Información que llevará el nodo
+		 */
 		public NodoArbol(String info) 
 		{
 			super();
@@ -823,7 +451,11 @@ public class Analizador
 			this.hijoIzdo = null;
 			this.padre = null;
 		}
-
+		/**
+		 * Método para insertar un nodo como hijo derecho de otro nodo padre
+		 * @param nodo Nodo que insertaremos como hijo derecho 
+		 * @return Nodo hijo derecho
+		 */
 		public NodoArbol insertarDcha(NodoArbol nodo) 
 		{
 			NodoArbol nodoAuxiliar;
@@ -834,7 +466,11 @@ public class Analizador
 			nodoAuxiliar.hijoDcho.padre = this;
 			return nodoAuxiliar.hijoDcho;
 		}
-		
+		/**
+		 * Método para insertar un nodo como hijo izquierdo de otro nodo padre
+		 * @param nodo Nodo que insertaremos como hijo izquierdo
+		 * @return Nodo hijo izquierdo
+		 */
 		public NodoArbol insertarIzda(NodoArbol nodo) 
 		{
 			NodoArbol nodoAuxiliar;
@@ -846,7 +482,14 @@ public class Analizador
 			return nodoAuxiliar.hijoIzdo;
 		}
 	}
-	
+	/**
+	 * Método que recibe una lista con los componentes de una 
+	 * expresión regular y devuelve un árbol sintáctico binario 
+	 * de la misma
+	 * @param lExp Lista de componentes de una expresión regular
+	 * @return Árbol sintáctico binario de una expresión regular
+	 * @throws Exception 
+	 */
 	public NodoArbol crearArbol(List<String> lExp) throws Exception
 	{
 		NodoArbol raiz = null;
@@ -871,12 +514,12 @@ public class Analizador
 			{
 				nodoActual = crearArbol(lpar);
 			}	
-			if (raiz == null) // Se trata del primer nodo del arbol
+			if (raiz == null) // Se trata del primer nodo del arbol que tenemos que crear
 			{
 				raiz = nodoActual;
 				nodoAnterior = nodoActual;
 			}
-			else
+			else // Ya existe algún nodo creado anteriormente
 			{
 				if (nodoActual.hoja || (nodoActual.cuantificador && nodoActual.hijoIzdo != null))
 				{
@@ -1199,18 +842,23 @@ public class Analizador
 							{
 								if (nodoAnterior.padre.cuantificador)
 								{
-									if (nodoAnterior.padre.padre != null && nodoAnterior.padre.padre.operacion)
+									nodoAuxiliar1 = nodoAnterior.padre;
+									while (nodoAuxiliar1.padre != null)
+										nodoAuxiliar1 = nodoAuxiliar1.padre;
+									if (nodoAuxiliar1.info.equals("."))
 									{
-										nodoAnterior.padre.padre.hijoDcho = null;
-										nodoAnterior.padre.padre.insertarDcha(nodoActual);
-										nodoActual.insertarIzda(nodoAnterior.padre);
+										nodoActual.insertarIzda(nodoAuxiliar1);
 										nodoAnterior = nodoActual;
+										raiz = nodoActual;
 									}
 									else
 									{
-										nodoActual.insertarIzda(nodoAnterior.padre);
+										nodoAuxiliar = nodoAuxiliar1;
+										nodoAuxiliar1 = nodoAuxiliar1.hijoDcho;
+										nodoAuxiliar.hijoDcho = null;
+										nodoActual.insertarIzda(nodoAuxiliar1);
+										nodoAuxiliar.insertarDcha(nodoActual);
 										nodoAnterior = nodoActual;
-										raiz = nodoActual;
 									}
 								}
 								else if (nodoAnterior.padre.info.equals("|"))
@@ -1317,7 +965,7 @@ public class Analizador
 					}
 				}
 				else
-			{
+				{
 					if (nodoAnterior.hoja)
 					{
 						if (nodoAnterior.padre != null)
@@ -1339,10 +987,12 @@ public class Analizador
 							nodoAnterior.padre.hijoDcho = null;
 							nodoAnterior.padre.insertarDcha(nodoActual);
 							nodoActual.insertarIzda(nodoAnterior);
+							nodoAnterior = nodoActual;
 						}
 						else
 						{
 							nodoActual.insertarIzda(nodoAnterior);
+							nodoAnterior = nodoActual;
 							raiz = nodoActual;
 						}
 					}
