@@ -878,7 +878,7 @@ public class Analizador
 			}
 			else
 			{
-				if (nodoActual.hoja)
+				if (nodoActual.hoja || (nodoActual.cuantificador && nodoActual.hijoIzdo != null))
 				{
 					if (nodoAnterior.info.equals("|"))
 					{
@@ -936,7 +936,7 @@ public class Analizador
 							}	
 						}	
 					}
-					else if (nodoAnterior.hoja)
+					else if (nodoAnterior.hoja || nodoAnterior.cuantificador)
 					{
 						if (nodoAnterior.padre != null)
 						{
@@ -1025,7 +1025,7 @@ public class Analizador
 				}
 				else if (nodoActual.info.equals("|"))
 				{
-					if (nodoAnterior.hoja)
+					if (nodoAnterior.hoja || nodoAnterior.cuantificador)
 					{
 						if (nodoAnterior.padre != null)
 						{
@@ -1218,9 +1218,24 @@ public class Analizador
 								}
 								else if (nodoAnterior.padre.info.equals("."))
 								{
-									nodoActual.insertarIzda(nodoAnterior.padre);
-									nodoAnterior = nodoActual;
-									raiz = nodoActual;
+									nodoAuxiliar1 = nodoAnterior.padre;
+									while (nodoAuxiliar1.padre != null)
+										nodoAuxiliar1 = nodoAuxiliar1.padre;
+									if (nodoAuxiliar1.info.equals("."))
+									{
+										nodoActual.insertarIzda(nodoAuxiliar1);
+										nodoAnterior = nodoActual;
+										raiz = nodoActual;
+									}
+									else
+									{
+										nodoAuxiliar = nodoAuxiliar1;
+										nodoAuxiliar1 = nodoAuxiliar1.hijoDcho;
+										nodoAuxiliar.hijoDcho = null;
+										nodoActual.insertarIzda(nodoAuxiliar1);
+										nodoAuxiliar.insertarDcha(nodoActual);
+										nodoAnterior = nodoActual;
+									}
 								}
 							}
 						}
@@ -1298,7 +1313,7 @@ public class Analizador
 					}
 				}
 				else
-				{
+			{
 					if (nodoAnterior.hoja)
 					{
 						if (nodoAnterior.padre != null)

@@ -50,12 +50,19 @@ public class Principal {
 		    for (String cadena : auxregex)
 		    {
 		    	out = aux.traducir(cadena);
-		    	System.out.println("ER: " + out);
+		    	System.out.println("ER traducida: " + out);
 		    	lParseada = aux.parsear(out);
+		    	System.out.print("ER parseada: ");
+		        for (String n : lParseada)
+		        	System.out.print(n + " ");
 		    	arbol = aux.crearArbol(lParseada);
-		    	System.out.print("ARBOL: ");
-		    	for (String e : aux.recorrerArbol(arbol))
-		    		System.out.print(e + " ");
+		        System.out.println();
+		        System.out.println();
+		        System.out.print("Arbol inOrden: ");
+		        aux.inOrden(arbol);
+		        System.out.println();
+		        System.out.print("Arbol preOrden: ");
+		        aux.preOrden(arbol);
 		    	System.out.println();
 		    	System.out.println();
 		    }*/
@@ -68,8 +75,8 @@ public class Principal {
 	        aux.listaER = lER;
 	        aux.listaM = lM;
 	        
-	        //String out = aux.traducir("([A5tg]+ (\"abd\"))  ({Auxiliar}* [hola]?)");
-	        String out1 = aux.traducir("(a b) (c d) (e f) | t");
+	        //String out = aux.traducir("([A5tg]+ (\"abd\")) ({Auxiliar}* [hola]?)");
+	        String out1 = aux.traducir("(a+) (y+) | t (i+) | (u+) y | (j*)");
 	        System.out.println("ER traducida: " + out1);
 	        
 	        List<String> salida = aux.parsear(out1);
