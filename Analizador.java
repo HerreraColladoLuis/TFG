@@ -1079,19 +1079,23 @@ public class Analizador
 										}
 										else
 										{
-											if (nodoAnterior.padre.padre.padre != null)
+											nodoAuxiliar1 = nodoAnterior.padre;
+											while (nodoAuxiliar1.padre != null)
+												nodoAuxiliar1 = nodoAuxiliar1.padre;
+											if (nodoAuxiliar1.info.equals("."))
 											{
-												nodoAuxiliar = nodoAnterior.padre.padre.padre;
-												nodoAuxiliar.hijoDcho = null;
-												nodoActual.insertarIzda(nodoAnterior.padre.padre);
-												nodoAuxiliar.insertarDcha(nodoActual);
+												nodoActual.insertarIzda(nodoAuxiliar1);
 												nodoAnterior = nodoActual;
+												raiz = nodoActual;
 											}
 											else
 											{
-												nodoActual.insertarIzda(nodoAnterior.padre.padre);
+												nodoAuxiliar = nodoAuxiliar1;
+												nodoAuxiliar1 = nodoAuxiliar1.hijoDcho;
+												nodoAuxiliar.hijoDcho = null;
+												nodoActual.insertarIzda(nodoAuxiliar1);
+												nodoAuxiliar.insertarDcha(nodoActual);
 												nodoAnterior = nodoActual;
-												raiz = nodoActual;
 											}
 										}
 									}
