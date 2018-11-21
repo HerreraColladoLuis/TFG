@@ -418,6 +418,133 @@ public class Analizador
 		}
 	}
 	/**
+	 * Método para aumentar un árbol de una expresión regular
+	 * @param nodo Raíz del árbol a aumentar
+	 * @return Árbol aumentado
+	 */
+	public NodoArbol aumentar(NodoArbol nodo)
+	{
+		NodoArbol nodoAuxiliar = new NodoArbol(".");
+		nodoAuxiliar.insertarIzda(nodo);
+		nodoAuxiliar.insertarDcha(new NodoArbol("#"));
+		return nodoAuxiliar;
+	}
+	/**
+	 * Método para numerar las hojas de un arbol sintáctico
+	 * en el orden de aparición en el mismo
+	 * @param nodo Nodo inicial del arbol
+	 * @param pos contador 
+	 * @return última posición asignada
+	 */
+	public int numerar(NodoArbol nodo, int pos)
+	{
+		int p = pos;
+		if (nodo != null)
+		{
+			if (nodo.esHoja())
+			{
+				nodo.posicion = pos+1;
+				return p+1;
+			}
+			else
+			{
+				p = numerar(nodo.hijoIzdo,p);
+				p = numerar(nodo.hijoDcho,p);
+			}
+		}
+		return p;
+	}
+	/**
+	 * Método anulable que devuelve verdadero o falso
+	 * @param nodo Nodo a analizar
+	 * @return verdadero o falso
+	 */
+	public boolean anulable(NodoArbol nodo)
+	{
+		if (nodo.esHoja())
+			return false;
+		else if (nodo.info.equals("."))
+			return (anulable(nodo.hijoIzdo) && anulable(nodo.hijoDcho));
+		else if (nodo.info.equals("|"))
+			return (anulable(nodo.hijoIzdo) || anulable(nodo.hijoDcho));
+		else if (nodo.info.equals("*"))
+			return true;
+		else if (nodo.info.equals("+"))
+			return anulable(nodo.hijoIzdo);
+		else // nodo.info.equals("?")
+			return true;
+	}
+	/**
+	 * Método primeraPos que devuelve una lista de posiciones
+	 * @param nodo Nodo a analizar
+	 * @return Lista de posiciones
+	 */
+	public List<Integer> primeraPos(NodoArbol nodo)
+	{
+		List<Integer> out = new LinkedList<>();
+		if (nodo.esHoja())
+		{
+			out.add(nodo.posicion);
+		}	
+		else if (nodo.info.equals("."))
+		{
+			if (anulable(nodo.hijoIzdo))
+			{
+				out.addAll(primeraPos(nodo.hijoIzdo));
+				out.addAll(primeraPos(nodo.hijoDcho));
+			}
+			else
+			{
+				out.addAll(primeraPos(nodo.hijoIzdo));
+			}
+		}
+		else if (nodo.info.equals("|"))
+		{
+			out.addAll(primeraPos(nodo.hijoIzdo));
+			out.addAll(primeraPos(nodo.hijoDcho));
+		}
+		else
+		{
+			out.addAll(primeraPos(nodo.hijoIzdo));
+		}
+		return out;
+	}
+	/**
+	 * Método ultimaPos que devuelve una lista de posiciones
+	 * @param nodo Nodo a analizar
+	 * @return Lista de posiciones
+	 */
+	public List<Integer> ultimaPos(NodoArbol nodo)
+	{
+		List<Integer> out = new LinkedList<>();
+		if (nodo.esHoja())
+		{
+			out.add(nodo.posicion);
+		}	
+		else if (nodo.info.equals("."))
+		{
+			if (anulable(nodo.hijoIzdo))
+			{	
+				out.addAll(ultimaPos(nodo.hijoDcho));
+				out.addAll(ultimaPos(nodo.hijoIzdo));
+			}
+			else
+			{
+				out.addAll(ultimaPos(nodo.hijoDcho));
+			}
+		}
+		else if (nodo.info.equals("|"))
+		{	
+			out.addAll(ultimaPos(nodo.hijoDcho));
+			out.addAll(ultimaPos(nodo.hijoIzdo));
+		}
+		else
+		{
+			out.addAll(ultimaPos(nodo.hijoIzdo));
+		}
+		return out;
+	}
+	/**
 	 * Clase auxiliar para un árbol binario
 	 * @author herre
 	 *
@@ -450,6 +577,15 @@ public class Analizador
 			this.hijoDcho = null;
 			this.hijoIzdo = null;
 			this.padre = null;
+		}
+		/**
+		 * Método que devuelve si un nodo es una hoja
+		 * @param nodo Nodo que evaluaremos
+		 * @return verdadero si es una hoja
+		 */
+		public boolean esHoja()
+		{
+			return (this.hijoIzdo == null && this.hijoDcho == null);
 		}
 		/**
 		 * Método para insertar un nodo como hijo derecho de otro nodo padre
