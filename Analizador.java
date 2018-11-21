@@ -523,7 +523,7 @@ public class Analizador
 		}	
 		else if (nodo.info.equals("."))
 		{
-			if (anulable(nodo.hijoIzdo))
+			if (anulable(nodo.hijoDcho))
 			{	
 				out.addAll(ultimaPos(nodo.hijoDcho));
 				out.addAll(ultimaPos(nodo.hijoIzdo));
@@ -541,6 +541,43 @@ public class Analizador
 		else
 		{
 			out.addAll(ultimaPos(nodo.hijoIzdo));
+		}
+		return out;
+	}
+	/**
+	 * Método siguientePos que se calcula sobre los nodos hoja
+	 * @param nodo Nodo desde el que recorreremos el árbol
+	 * @param pos Posición de la hoja a analizar
+	 * @return Lista de posiciones
+	 */
+	public List<Integer> siguientePos(NodoArbol nodo, int pos)
+	{
+		List<Integer> out = new LinkedList<>();
+		if (nodo != null)
+		{
+			if (nodo.info.equals("."))
+			{
+				for (int p : ultimaPos(nodo.hijoIzdo))
+				{
+					if (pos == p)
+					{
+						out.addAll(primeraPos(nodo.hijoDcho));
+						break;
+					}
+				}
+			}
+			else if (nodo.info.equals("*"))
+			{
+				for (int p : ultimaPos(nodo))
+				{
+					if (pos == p)
+					{
+						out.addAll(primeraPos(nodo));
+					}
+				}
+			}
+			out.addAll(siguientePos(nodo.hijoIzdo,pos));
+			out.addAll(siguientePos(nodo.hijoDcho,pos));
 		}
 		return out;
 	}

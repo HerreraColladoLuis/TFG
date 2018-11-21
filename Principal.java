@@ -94,6 +94,12 @@ public class Principal {
 	        System.out.print("Arbol preOrden: ");
 	        aux.preOrden(arbol);
 	        
+	        System.out.println();
+	        System.out.println();
+	        for (int n : aux.siguientePos(arbol,1))
+	        {
+	        	System.out.print(n + " ");
+	        }
 	        /*List<String> lExp = new LinkedList<>();
 	        lExp.add("A");
 	        lExp.add("+");
