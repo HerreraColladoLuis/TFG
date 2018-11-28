@@ -96,10 +96,8 @@ public class Principal {
 	        
 	        System.out.println();
 	        System.out.println();
-	        for (int n : aux.siguientePos(arbol,4))
-	        {
-	        	System.out.print(n + " ");
-	        }
+	        List<Analizador.Transicion> li = aux.crearAutomata(arbol);
+	        System.out.println();
 	        /*List<String> lExp = new LinkedList<>();
 	        lExp.add("A");
 	        lExp.add("+");

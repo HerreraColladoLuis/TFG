@@ -669,6 +669,93 @@ public class Analizador
 			return nodoAuxiliar.hijoIzdo;
 		}
 	}
+	
+	public class Estado
+	{
+		public List<Integer> lposiciones;
+		public boolean marcado;
+		
+		public Estado(List<Integer> l)
+		{
+			this.lposiciones = new LinkedList<>();
+			this.lposiciones.addAll(l);
+			this.marcado = false;
+		}
+	}
+	
+	public class Transicion
+	{
+		public Estado estadoInicial;
+		public int terminal;
+		public Estado estadoFinal;
+		
+		public Transicion(Estado ei, int t, Estado ef)
+		{
+			this.estadoInicial = ei;
+			this.terminal = t;
+			this.estadoFinal = ef;
+		}
+	}
+	
+	public List<Transicion> crearAutomata(NodoArbol arbol)
+	{
+		List<Transicion> ltrans = new LinkedList<>();
+		List<Estado> lest = new LinkedList<>();
+		List<Integer> conjunto = new LinkedList<>();
+		List<Estado> laux = new LinkedList<>();
+		boolean esta = false;
+		int noMarcado = 1;
+		// Añadimos el estado inicial para el automata
+		Estado einicial = new Estado(primeraPos(arbol));
+		Estado nuevo;
+		lest.add(einicial);
+		laux.add(einicial);
+		// Iniciamos el algoritmo de creación del autómata
+		while (noMarcado > 0)
+		{
+			for (Estado actual : lest)
+			{
+				if (!actual.marcado)
+				{
+					actual.marcado = true;
+					noMarcado--;
+					for (int i = 1;i < arbol.hijoDcho.posicion;i++)
+					{
+						if (actual.lposiciones.contains(i))
+						{
+							conjunto.addAll(siguientePos(arbol,i));
+						}
+						if (!conjunto.isEmpty())
+						{
+							nuevo = new Estado(conjunto);
+							for (Estado aux : laux)
+							{
+								if (aux.lposiciones.equals(conjunto))
+								{
+									esta = true;
+									nuevo = aux; // Mirar
+									break;
+								}
+							}
+							if (!esta)
+							{
+								laux.add(nuevo);
+								noMarcado++;
+							}
+							else
+								esta = false;
+							Transicion t = new Transicion(actual,i,nuevo);
+							ltrans.add(t);
+							conjunto.clear();
+						}
+					}
+				}
+			}
+			lest.clear();
+			lest.addAll(laux);
+		}
+		return ltrans;
+	}
 	/**
 	 * Método que recibe una lista con los componentes de una 
 	 * expresión regular y devuelve un árbol sintáctico binario 
