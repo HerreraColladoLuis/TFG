@@ -1,6 +1,10 @@
 import java.util.LinkedList;
 import java.util.List;
-
+/**
+ * Clase central de la aplicación, donde introduciré toda la lógica
+ * @author herre
+ *
+ */
 public class Analizador 
 {
 	List<String> listaM;
@@ -516,6 +520,7 @@ public class Analizador
 	 */
 	public List<Integer> ultimaPos(NodoArbol nodo)
 	{
+		NodoArbol aux = nodo.padre;
 		List<Integer> out = new LinkedList<>();
 		if (nodo.esHoja())
 		{
@@ -537,6 +542,15 @@ public class Analizador
 		{	
 			out.addAll(ultimaPos(nodo.hijoDcho));
 			out.addAll(ultimaPos(nodo.hijoIzdo));
+		}
+		else if (nodo.info.equals("?"))
+		{
+			out.addAll(ultimaPos(nodo.hijoIzdo));
+			while (!aux.info.equals("."))
+			{
+				aux = aux.padre;
+			}
+			out.addAll(ultimaPos(aux.hijoDcho));
 		}
 		else
 		{
