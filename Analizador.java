@@ -546,11 +546,14 @@ public class Analizador
 		else if (nodo.info.equals("?"))
 		{
 			out.addAll(ultimaPos(nodo.hijoIzdo));
-			while (!aux.info.equals("."))
+			if (aux.hijoIzdo.equals(nodo))
 			{
-				aux = aux.padre;
+				while (!aux.info.equals("."))
+				{
+					aux = aux.padre;
+				}
+				out.addAll(ultimaPos(aux.hijoDcho));
 			}
-			out.addAll(ultimaPos(aux.hijoDcho));
 		}
 		else
 		{
@@ -669,12 +672,22 @@ public class Analizador
 			return nodoAuxiliar.hijoIzdo;
 		}
 	}
-	
+	/**
+	 * Clase auxiliar para definir un estado del autómata
+	 * @author herre
+	 *
+	 */
 	public class Estado
 	{
 		public List<Integer> lposiciones;
 		public boolean marcado;
-		
+		public int n;
+		public boolean esfinal = false;
+		public boolean esinicial = false;
+		/**
+		 * Constructor principal
+		 * @param l Lista de posiciones
+		 */
 		public Estado(List<Integer> l)
 		{
 			this.lposiciones = new LinkedList<>();
@@ -682,21 +695,53 @@ public class Analizador
 			this.marcado = false;
 		}
 	}
-	
+	/**
+	 * Clase auxiliar para definir una transición en un autómata
+	 * @author herre
+	 *
+	 */
 	public class Transicion
 	{
 		public Estado estadoInicial;
 		public int terminal;
 		public Estado estadoFinal;
-		
+		/**
+		 * Constructor principal
+		 * @param ei Estado inicial
+		 * @param t Identificador del símbolo de la transición
+		 * @param ef Estado final
+		 */
 		public Transicion(Estado ei, int t, Estado ef)
 		{
 			this.estadoInicial = ei;
 			this.terminal = t;
 			this.estadoFinal = ef;
 		}
+		/**
+		 * Metodo para imprimir por pantalla los valores de una transición
+		 */
+		public void imprimir()
+		{
+			if (this.estadoInicial.esinicial)
+				System.out.print("INICIAL ");
+			if (this.estadoInicial.esfinal)
+				System.out.print("FINAL ");
+			System.out.println("Estado base: "+this.estadoInicial.n);
+			System.out.println("Transicion: "+this.terminal);
+			if (this.estadoFinal.esinicial)
+				System.out.print("INICIAL ");
+			if (this.estadoFinal.esfinal)
+				System.out.print("FINAL ");
+			System.out.println("Estado Final: "+this.estadoFinal.n);
+		}
 	}
-	
+	/**
+	 * Método para crear un autómata a partir de un árbol binario de una
+	 * expresión regular. Se devolverá una lista de transiciones entre los
+	 * estados del autómata.
+	 * @param arbol Árbol binario de la expresión regular
+	 * @return Lista de transiciones
+	 */
 	public List<Transicion> crearAutomata(NodoArbol arbol)
 	{
 		List<Transicion> ltrans = new LinkedList<>();
@@ -705,8 +750,12 @@ public class Analizador
 		List<Estado> laux = new LinkedList<>();
 		boolean esta = false;
 		int noMarcado = 1;
+		int naux = 0;
 		// Añadimos el estado inicial para el automata
 		Estado einicial = new Estado(primeraPos(arbol));
+		einicial.n = naux;
+		einicial.esinicial = true;
+		naux++;
 		Estado nuevo;
 		lest.add(einicial);
 		laux.add(einicial);
@@ -739,6 +788,10 @@ public class Analizador
 							}
 							if (!esta)
 							{
+								nuevo.n = naux;
+								naux++;
+								if (conjunto.contains(arbol.hijoDcho.posicion))
+									nuevo.esfinal = true;
 								laux.add(nuevo);
 								noMarcado++;
 							}
