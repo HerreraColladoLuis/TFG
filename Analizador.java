@@ -672,6 +672,49 @@ public class Analizador
 			return nodoAuxiliar.hijoIzdo;
 		}
 	}
+	
+	String devolverTerminal(NodoArbol nodo, int posicion)
+	{
+		String res = "";
+		if (nodo != null)
+		{
+			if (nodo.posicion == posicion)
+			{
+				res = nodo.info;
+			}
+			else
+			{
+				res += devolverTerminal(nodo.hijoIzdo,posicion);
+				res += devolverTerminal(nodo.hijoDcho,posicion);
+			}
+		}
+		return res;
+	}
+	
+	boolean esConjunto(String cadena)
+	{
+		char ant = ' ';
+		int i = -1;
+		if (cadena.length() == 1)
+			return false;
+		for (char c : cadena.toCharArray())
+		{
+			i++;
+			if (i == 0 || i == cadena.length()-1)
+				continue;
+			if (i == 1)
+				ant = c;
+			else
+			{
+				int a1 = (int) ant;
+				int a2 = (int) c;
+				if (a1+1 != a2)
+					return false;
+				ant = c;
+			}
+		}
+		return true;
+	}
 	/**
 	 * Clase auxiliar para definir un estado del autómata
 	 * @author herre
@@ -694,6 +737,11 @@ public class Analizador
 			this.lposiciones.addAll(l);
 			this.marcado = false;
 		}
+		
+		public void imprimir()
+		{
+			System.out.println("Estado "+this.n);
+		}
 	}
 	/**
 	 * Clase auxiliar para definir una transición en un autómata
@@ -703,7 +751,7 @@ public class Analizador
 	public class Transicion
 	{
 		public Estado estadoInicial;
-		public int terminal;
+		public String terminal;
 		public Estado estadoFinal;
 		/**
 		 * Constructor principal
@@ -711,7 +759,7 @@ public class Analizador
 		 * @param t Identificador del símbolo de la transición
 		 * @param ef Estado final
 		 */
-		public Transicion(Estado ei, int t, Estado ef)
+		public Transicion(Estado ei, String t, Estado ef)
 		{
 			this.estadoInicial = ei;
 			this.terminal = t;
@@ -734,6 +782,44 @@ public class Analizador
 				System.out.print("FINAL ");
 			System.out.println("Estado Final: "+this.estadoFinal.n);
 		}
+	}
+	
+	Estado comprobarEntrada(String c, List<Transicion> automata, Estado e)
+	{
+		boolean encontrado = false;
+		Estado e1 = null;
+		if (e == null)
+		{
+			e = automata.get(0).estadoInicial;
+		}
+		for (Transicion tr : automata)
+		{
+			if (tr.estadoInicial.equals(e))
+			{
+				if (this.esConjunto(tr.terminal))
+				{
+					for (char t : tr.terminal.toCharArray())
+					{
+						if (String.valueOf(t).equals(c))
+						{
+							encontrado = true;
+							break;
+						}
+					}
+				}
+				else
+				{
+					if (tr.terminal.equals("\""+c+"\""))
+						encontrado = true;
+				}
+			}
+			if (encontrado)
+			{
+				e1 = tr.estadoFinal;
+				break;
+			}
+		}
+		return e1;
 	}
 	/**
 	 * Método para crear un autómata a partir de un árbol binario de una
@@ -782,7 +868,7 @@ public class Analizador
 								if (aux.lposiciones.equals(conjunto))
 								{
 									esta = true;
-									nuevo = aux; // Mirar
+									nuevo = aux;
 									break;
 								}
 							}
@@ -797,7 +883,8 @@ public class Analizador
 							}
 							else
 								esta = false;
-							Transicion t = new Transicion(actual,i,nuevo);
+							String terminal = this.devolverTerminal(arbol, i);
+							Transicion t = new Transicion(actual,terminal,nuevo);
 							ltrans.add(t);
 							conjunto.clear();
 						}

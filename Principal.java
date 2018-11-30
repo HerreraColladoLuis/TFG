@@ -76,7 +76,7 @@ public class Principal {
 	        aux.listaM = lM;
 	        
 	        //String out = aux.traducir("([A5tg]+ (\"abd\")) ({Auxiliar}* [hola]?)");
-	        String out1 = aux.traducir("(a? b)* e? | t");
+	        String out1 = aux.traducir("[a-f] [0-9]");
 	        System.out.println("ER traducida: " + out1);
 	        
 	        List<String> salida = aux.parsear(out1);
@@ -102,6 +102,11 @@ public class Principal {
 	        	tr.imprimir();
 	        	System.out.println();
 	        }
+	        Analizador.Estado es = aux.comprobarEntrada("a",li,null);
+	        if (es != null)
+	        	es.imprimir();
+	        else
+	        	System.out.println("Sin transicion");
 	        /*List<String> lExp = new LinkedList<>();
 	        lExp.add("A");
 	        lExp.add("+");
