@@ -178,7 +178,7 @@ public class Analizador
 						i = i+1;
 					}	
 				}
-				cadena += "\"";
+				cadena += "^##\""; // Añadir algo para saber que es un set
 			}
 			// Entramos en el caso en el que se abre una macro
 			else if (rech[i] == '{')
@@ -253,6 +253,10 @@ public class Analizador
 			else if (rech[i] == '+' || rech[i] == '*' || rech[i] == '?')
 			{
 				cadena += (String.valueOf(rech[i]));
+			}
+			else if (rech[i] == '.')
+			{
+				cadena += "\"" + rech[i] + "\"" + "*";
 			}
 			// Cualquier otro caracter
 			else
@@ -672,7 +676,13 @@ public class Analizador
 			return nodoAuxiliar.hijoIzdo;
 		}
 	}
-	
+	/**
+	 * Método que devuelve, en forma de string, la información
+	 * de un nodo hoja determinado por su posición.
+	 * @param nodo Arbol a recorrer
+	 * @param posicion Posición del nodo hoja a evaluar
+	 * @return Información del nodo hoja en forma de string
+	 */
 	String devolverTerminal(NodoArbol nodo, int posicion)
 	{
 		String res = "";
@@ -690,19 +700,28 @@ public class Analizador
 		}
 		return res;
 	}
-	
+	/**
+	 * Método que devuelve si una cadena es un conjunto. Es decir,
+	 * "abcdef" sería un conjunto determinado por a-f.
+	 * @param cadena Cadena a evaluar
+	 * @return Verdadero si es un conjunto
+	 */
 	boolean esConjunto(String cadena)
 	{
 		char ant = ' ';
 		int i = -1;
-		if (cadena.length() == 1)
+		if (cadena.length() == 3)
 			return false;
 		for (char c : cadena.toCharArray())
 		{
 			i++;
 			if (i == 0 || i == cadena.length()-1)
 				continue;
-			if (i == 1)
+			else if (i == 1 && c == '^')
+				continue;
+			else if (i == 1)
+				ant = c;
+			else if (i == 2 && ant == ' ')
 				ant = c;
 			else
 			{
@@ -714,6 +733,56 @@ public class Analizador
 			}
 		}
 		return true;
+	}
+	/**
+	 * Método que comprueba si dos cadenas son equivalentes para
+	 * su aceptación en el autómata.
+	 * @param c1 Cadena principal
+	 * @param c2 Cadena que comprobaremos con la principal
+	 * @return Verdadero si son equivalentes
+	 */
+	boolean comprobarTerminal(String c1, String c2)
+	{
+		boolean encontrado = false;
+		boolean set = false;
+		boolean neg = false;
+		int i = -1;
+		if (c1.charAt(1) == '^')
+			neg = true;
+		if ((c1.charAt(c1.length()-2) == '#') && (c1.charAt(c1.length()-3) == '#') && (c1.charAt(c1.length()-4) == '^'))
+			set = true;
+		if (this.esConjunto(c1) || set)
+		{
+			for (char t : c1.toCharArray())
+			{
+				i++;
+				if (i == 0 || i == c1.length()-1)
+					continue;
+				if (set && (i == c1.length()-2) || (i == c1.length()-3) || (i == c1.length()-4))
+					continue;
+				if (neg && i == 1)
+					continue;
+				if (String.valueOf(t).equals(c2))
+				{
+					encontrado = true;
+					break;
+				}
+			}
+		}
+		else
+		{
+			if ((c1.equals("\""+c2+"\"")) || (c1.equals("\".\"")))
+				encontrado = true;
+		}
+		if (!neg)
+			return encontrado;
+		else
+		{
+			if (encontrado)
+				return false;
+			else
+				return true;
+		}
 	}
 	/**
 	 * Clase auxiliar para definir un estado del autómata
@@ -783,43 +852,29 @@ public class Analizador
 			System.out.println("Estado Final: "+this.estadoFinal.n);
 		}
 	}
-	
+	/**
+	 * Método que, dada una entrada en forma de string, un autómata
+	 * en forma de lista de transiciones y un estado incial, comprueba
+	 * si a partir de dicho estado se puede transitar a otro con la 
+	 * entrada dada. En ese caso, devuelve el estado final transitado.
+	 * @param c Entrada en forma de string
+	 * @param automata Lista de transiciones
+	 * @param e Estado inicial (el primero si este parámetro es null)
+	 * @return Estado transitado o null si no se puede transitar
+	 */
 	Estado comprobarEntrada(String c, List<Transicion> automata, Estado e)
 	{
-		boolean encontrado = false;
-		Estado e1 = null;
 		if (e == null)
-		{
 			e = automata.get(0).estadoInicial;
-		}
 		for (Transicion tr : automata)
 		{
 			if (tr.estadoInicial.equals(e))
 			{
-				if (this.esConjunto(tr.terminal))
-				{
-					for (char t : tr.terminal.toCharArray())
-					{
-						if (String.valueOf(t).equals(c))
-						{
-							encontrado = true;
-							break;
-						}
-					}
-				}
-				else
-				{
-					if (tr.terminal.equals("\""+c+"\""))
-						encontrado = true;
-				}
-			}
-			if (encontrado)
-			{
-				e1 = tr.estadoFinal;
-				break;
+				if (this.comprobarTerminal(tr.terminal, c))
+					return tr.estadoFinal;
 			}
 		}
-		return e1;
+		return null;
 	}
 	/**
 	 * Método para crear un autómata a partir de un árbol binario de una

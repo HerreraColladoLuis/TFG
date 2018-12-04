@@ -55,7 +55,8 @@ public class Principal {
 		    	System.out.print("ER parseada: ");
 		        for (String n : lParseada)
 		        	System.out.print(n + " ");
-		    	arbol = aux.crearArbol(lParseada);
+		    	arbol = aux.aumentar(aux.crearArbol(lParseada));
+		    	aux.numerar(arbol, 0);
 		        System.out.println();
 		        System.out.println();
 		        System.out.print("Arbol inOrden: ");
@@ -64,6 +65,14 @@ public class Principal {
 		        System.out.print("Arbol preOrden: ");
 		        aux.preOrden(arbol);
 		    	System.out.println();
+		    	System.out.println();
+		        List<Analizador.Transicion> li = aux.crearAutomata(arbol);
+		        for (Analizador.Transicion tr : li)
+		        {
+		        	tr.imprimir();
+		        	System.out.println();
+		        }
+		        System.out.println();
 		    	System.out.println();
 		    }*/
 	        List<String> lER = new LinkedList<>();
@@ -76,7 +85,7 @@ public class Principal {
 	        aux.listaM = lM;
 	        
 	        //String out = aux.traducir("([A5tg]+ (\"abd\")) ({Auxiliar}* [hola]?)");
-	        String out1 = aux.traducir("[a-f] [0-9]");
+	        String out1 = aux.traducir("([A5tg]+ (\"abd\")) ({Auxiliar}* [hola]?)");
 	        System.out.println("ER traducida: " + out1);
 	        
 	        List<String> salida = aux.parsear(out1);
@@ -102,12 +111,12 @@ public class Principal {
 	        	tr.imprimir();
 	        	System.out.println();
 	        }
-	        Analizador.Estado es = aux.comprobarEntrada("a",li,null);
+	        Analizador.Estado es = aux.comprobarEntrada("^",li,null);
 	        if (es != null)
 	        	es.imprimir();
 	        else
 	        	System.out.println("Sin transicion");
-	        /*List<String> lExp = new LinkedList<>();
+	       /* List<String> lExp = new LinkedList<>();
 	        lExp.add("A");
 	        lExp.add("+");
 	        lExp.add("|");
