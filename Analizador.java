@@ -126,6 +126,7 @@ public class Analizador
 		String cadAux;
 		String aux1;
 		String cadena = "";
+		boolean n = false;
 		char[] rech = exp.toCharArray();
 		int i = 0;
 		int j;
@@ -140,6 +141,8 @@ public class Analizador
 				{
 					cadena+= rech[i+1]; // aux += ^
 					i = i+1; // Apuntamos a la negación
+					if (rech[i+1] == ']')
+						n = true;
 				}
 				i = i+1; // Apuntamos al primer caracter del set
 				while (true)
@@ -178,7 +181,12 @@ public class Analizador
 						i = i+1;
 					}	
 				}
-				cadena += "^##\""; // Añadir algo para saber que es un set
+				cadena += "^##\""; // Añadir algo para saber que es un set ^##
+				if (n)
+				{
+					n = false;
+					cadena += "*";
+				}
 			}
 			// Entramos en el caso en el que se abre una macro
 			else if (rech[i] == '{')
@@ -806,7 +814,9 @@ public class Analizador
 			this.lposiciones.addAll(l);
 			this.marcado = false;
 		}
-		
+		/**
+		 * Método para imprimir por pantalla la información de un estado
+		 */
 		public void imprimir()
 		{
 			System.out.println("Estado "+this.n);

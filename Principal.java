@@ -40,13 +40,15 @@ public class Principal {
 	          e.printStackTrace();
 	        }
 	        Analizador aux = new Analizador();
-	        /*List<String> auxmacro = aux.translateMacro(scanner.macrosList);
+	        List<String> auxmacro = aux.translateMacro(scanner.macrosList);
 		    List<String> auxregex = aux.translateRegex(scanner.regexList);
 		    aux.listaER = auxregex;
 		    aux.listaM = auxmacro;
 		    String out;
 		    List<String> lParseada;
 		    Analizador.NodoArbol arbol;
+		    List<Analizador.Transicion> li;
+		    List<List<Analizador.Transicion>> lAut = new LinkedList<>();
 		    for (String cadena : auxregex)
 		    {
 		    	out = aux.traducir(cadena);
@@ -66,7 +68,8 @@ public class Principal {
 		        aux.preOrden(arbol);
 		    	System.out.println();
 		    	System.out.println();
-		        List<Analizador.Transicion> li = aux.crearAutomata(arbol);
+		        li = aux.crearAutomata(arbol);
+	        	lAut.add(li);
 		        for (Analizador.Transicion tr : li)
 		        {
 		        	tr.imprimir();
@@ -74,8 +77,8 @@ public class Principal {
 		        }
 		        System.out.println();
 		    	System.out.println();
-		    }*/
-	        List<String> lER = new LinkedList<>();
+		    }
+	        /*List<String> lER = new LinkedList<>();
 	        lER.add("([A-F]+ | er+)");
 	        lER.add("{Auxiliar}");
 	        List<String> lM = new LinkedList<>();
@@ -85,7 +88,7 @@ public class Principal {
 	        aux.listaM = lM;
 	        
 	        //String out = aux.traducir("([A5tg]+ (\"abd\")) ({Auxiliar}* [hola]?)");
-	        String out1 = aux.traducir("([A5tg]+ (\"abd\")) ({Auxiliar}* [hola]?)");
+	        String out1 = aux.traducir("[^]");
 	        System.out.println("ER traducida: " + out1);
 	        
 	        List<String> salida = aux.parsear(out1);
@@ -111,11 +114,11 @@ public class Principal {
 	        	tr.imprimir();
 	        	System.out.println();
 	        }
-	        Analizador.Estado es = aux.comprobarEntrada("^",li,null);
+	        Analizador.Estado es = aux.comprobarEntrada("h",li,null);
 	        if (es != null)
 	        	es.imprimir();
 	        else
-	        	System.out.println("Sin transicion");
+	        	System.out.println("Sin transicion");*/
 	       /* List<String> lExp = new LinkedList<>();
 	        lExp.add("A");
 	        lExp.add("+");
