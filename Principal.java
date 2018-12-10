@@ -78,6 +78,11 @@ public class Principal {
 		        System.out.println();
 		    	System.out.println();
 		    }
+		    List<Analizador.Estado> lE = new LinkedList<>();
+		    List<String> lS = new LinkedList<>();
+		    List<Analizador.Estado> lES;
+		    lES = aux.siguienteToken("a", lAut, lE, lS);
+		    System.out.println();
 	        /*List<String> lER = new LinkedList<>();
 	        lER.add("([A-F]+ | er+)");
 	        lER.add("{Auxiliar}");

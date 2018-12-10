@@ -862,6 +862,11 @@ public class Analizador
 			System.out.println("Estado Final: "+this.estadoFinal.n);
 		}
 	}
+	public class EstadoBase
+	{
+		public Estado estado;
+		public String entrada;
+	}
 	/**
 	 * Método que, dada una entrada en forma de string, un autómata
 	 * en forma de lista de transiciones y un estado incial, comprueba
@@ -885,6 +890,45 @@ public class Analizador
 			}
 		}
 		return null;
+	}
+	
+	List<Estado> siguienteToken(String tok, List<List<Transicion>> lAut, List<Estado> lAux, List<String> lCad)
+	{
+		List<Estado> lEst = new LinkedList<>();
+		Estado est = null;
+		String cad;
+		int i = -1;
+		if (lAux.isEmpty())
+		{
+			for (List<Transicion> l : lAut)
+			{
+				est = this.comprobarEntrada(tok, l, null);
+				lEst.add(est);
+				if (est != null)
+					lCad.add(tok);
+				else
+					lCad.add(null);
+			}
+		}
+		else
+		{
+			for (Estado e : lAux)
+			{
+				i++;
+				if (e == null)
+				{
+					if (lCad.get(i) != null)
+						cad = tok.substring(lCad.get(i).length()-1); // Cogemos de entrada desde lo último aceptado
+					else
+						cad = tok;
+				}
+				else
+					cad = tok.substring(tok.length()-1); // Cogemos el último caracter
+				est = this.comprobarEntrada(cad, lAut.get(i), e);
+				lEst.add(est);
+			}
+		}
+		return lEst;
 	}
 	/**
 	 * Método para crear un autómata a partir de un árbol binario de una
