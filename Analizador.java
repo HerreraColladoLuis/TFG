@@ -925,6 +925,8 @@ public class Analizador
 				else
 					cad = tok.substring(tok.length()-1); // Cogemos el último caracter
 				est = this.comprobarEntrada(cad, lAut.get(i), e);
+				if (est != null)
+					lCad.set(i, cad);
 				lEst.add(est);
 			}
 		}
@@ -947,6 +949,7 @@ public class Analizador
 		int noMarcado = 1;
 		int naux = 0;
 		// Añadimos el estado inicial para el automata
+		List<Integer> la = primeraPos(arbol);
 		Estado einicial = new Estado(primeraPos(arbol));
 		einicial.n = naux;
 		einicial.esinicial = true;
