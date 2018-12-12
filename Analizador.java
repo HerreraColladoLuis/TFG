@@ -555,7 +555,7 @@ public class Analizador
 			out.addAll(ultimaPos(nodo.hijoDcho));
 			out.addAll(ultimaPos(nodo.hijoIzdo));
 		}
-		else if (nodo.info.equals("?"))
+		else if (nodo.info.equals("?")) // CAMBIO AQUÍ RESPECTO DOCUMENTACION
 		{
 			out.addAll(ultimaPos(nodo.hijoIzdo));
 			if (aux.hijoIzdo.equals(nodo))
@@ -595,7 +595,7 @@ public class Analizador
 					}
 				}
 			}
-			else if (nodo.info.equals("*"))
+			else if (nodo.info.equals("*") || nodo.info.equals("+")) // CAMBIO AQUÍ RESPECTO DOCUMENTACION
 			{
 				for (int p : ultimaPos(nodo))
 				{
@@ -892,7 +892,7 @@ public class Analizador
 		return null;
 	}
 	
-	List<Estado> siguienteToken(String tok, List<List<Transicion>> lAut, List<Estado> lAux, List<String> lCad)
+	List<Estado> siguienteToken(String tok, List<List<Transicion>> lAut, List<Estado> lAux, List<String> lCad, List<Integer> lAcep)
 	{
 		List<Estado> lEst = new LinkedList<>();
 		Estado est = null;
@@ -905,9 +905,15 @@ public class Analizador
 				est = this.comprobarEntrada(tok, l, null);
 				lEst.add(est);
 				if (est != null)
+				{
 					lCad.add(tok);
+					lAcep.add(1);
+				}	
 				else
+				{
 					lCad.add(null);
+					lAcep.add(0);
+				}
 			}
 		}
 		else
@@ -918,16 +924,33 @@ public class Analizador
 				if (e == null)
 				{
 					if (lCad.get(i) != null)
-						cad = tok.substring(lCad.get(i).length()-1); // Cogemos de entrada desde lo último aceptado
+						cad = tok.substring(lCad.get(i).length()); // !!Cogemos de entrada desde lo último aceptado
 					else
 						cad = tok;
+					est = this.comprobarEntrada(cad, lAut.get(i), e);
+					if (est != null)
+					{
+						lCad.set(i, cad);
+						lAcep.set(i, 1);
+					}
+					lEst.add(est);
 				}
 				else
+				{
 					cad = tok.substring(tok.length()-1); // Cogemos el último caracter
-				est = this.comprobarEntrada(cad, lAut.get(i), e);
-				if (est != null)
-					lCad.set(i, cad);
-				lEst.add(est);
+					est = this.comprobarEntrada(cad, lAut.get(i), e);
+					if (est != null)
+					{
+						lCad.set(i, cad);
+						lEst.add(est);
+						lAcep.set(i, 1);
+					}
+					else
+					{
+						lEst.add(e);
+						lAcep.set(i, 0);
+					}
+				}	
 			}
 		}
 		return lEst;
@@ -953,6 +976,8 @@ public class Analizador
 		Estado einicial = new Estado(primeraPos(arbol));
 		einicial.n = naux;
 		einicial.esinicial = true;
+		if (la.contains(arbol.hijoDcho.posicion))
+			einicial.esfinal = true;
 		naux++;
 		Estado nuevo;
 		lest.add(einicial);
