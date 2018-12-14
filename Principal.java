@@ -86,19 +86,24 @@ public class Principal {
 		    char c = lector.next().charAt(0);
 		    String s = String.valueOf(c);*/
 		    List<Analizador.Estado> lE = new LinkedList<>();
-		    List<String> lS = new LinkedList<>();
 		    List<Integer> lAcep = new LinkedList<>();
 		    while (true)
 		    {
 		    	BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		    	String cad = reader.readLine();
-		    	lE = aux.siguienteToken(cad, lAut, lE, lS, lAcep);
+		    	lE = aux.siguienteToken(cad, lAut, lE, lAcep);
 		    	int cont = -1;
 		    	for (int ac : lAcep)
 		    	{
 		    		cont++;
 		    		if (ac == 1)
-		    			System.out.println(auxregex.get(cont));
+		    		{
+		    			if (cont >= auxmacro.size())
+		    				System.out.println(auxregex.get(cont));
+		    			else
+		    				System.out.println(auxmacro.get(cont));
+		    		}
+		    			
 		    	}
 		    	System.out.println();
 		    }

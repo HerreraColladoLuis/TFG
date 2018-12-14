@@ -243,16 +243,14 @@ public class Analizador
 			// Se encuentra un "
 			else if (rech[i] == '\"')
 			{
-				cadena += rech[i];
 				i = i+1;
 				while (true)
 				{
 					if (rech[i] == '\"')
 						break;
-					cadena += rech[i];
+					cadena += "\"" + rech[i] + "\"";
 					i = i+1;
 				}
-				cadena += "\"";
 			}
 			else if (rech[i] == ' ')
 			{
@@ -269,7 +267,7 @@ public class Analizador
 			// Cualquier otro caracter
 			else
 			{
-				cadena += "\"";
+				//cadena += "\"";
 				while (true)
 				{
 					if (i == rech.length || rech[i] == '+' || rech[i] == '*' || rech[i] == '?' || rech[i] == ' ' || rech[i] == ')' || rech[i] == '|' || rech[i] == '(')
@@ -277,10 +275,10 @@ public class Analizador
 						i = i-1;
 						break;
 					}
-					cadena += rech[i];
+					cadena += "\"" + rech[i] + "\"";
 					i = i+1;
 				}
-				cadena += "\"";
+				//cadena += "\"";
 			}
 			i = i+1;
 		}
@@ -891,8 +889,21 @@ public class Analizador
 		}
 		return null;
 	}
-	
-	List<Estado> siguienteToken(String tok, List<List<Transicion>> lAut, List<Estado> lAux, List<String> lCad, List<Integer> lAcep)
+	/**
+	 * Método que dada una entrada en forma de string (que será un caracter),
+	 * una lista de autómatas, una lista de estados (inicialmente a null) y 
+	 * una lista de aceptaciones, comprueba en cada autómata de la lista de autómatas
+	 * si a partir del estado dado en la lista de estados y con la entrada suministrada
+	 * se puede transitar a otro estado. Si es así, guarda dicho estado en la lista de 
+	 * estados, si no, pone ese slot a null. Finalmente se modifica la lista de aceptaciones
+	 * con unos y ceros dependiendo si hemos transitado en el autómata correspondiente o no.
+	 * @param tok Caracter a leer
+	 * @param lAut Lista de autómatas 
+	 * @param lAux Lista de estados
+	 * @param lAcep Lista de aceptaciones
+	 * @return Lista de estados modificados
+	 */
+	List<Estado> siguienteToken(String tok, List<List<Transicion>> lAut, List<Estado> lAux, List<Integer> lAcep)
 	{
 		List<Estado> lEst = new LinkedList<>();
 		Estado est = null;
@@ -906,12 +917,10 @@ public class Analizador
 				lEst.add(est);
 				if (est != null)
 				{
-					lCad.add(tok);
 					lAcep.add(1);
 				}	
 				else
 				{
-					lCad.add(null);
 					lAcep.add(0);
 				}
 			}
@@ -921,35 +930,17 @@ public class Analizador
 			for (Estado e : lAux)
 			{
 				i++;
-				if (e == null)
+				cad = tok.substring(tok.length()-1); // Cogemos el último caracter
+				est = this.comprobarEntrada(cad, lAut.get(i), e);
+				if (est != null)
 				{
-					if (lCad.get(i) != null)
-						cad = tok.substring(lCad.get(i).length()); // !!Cogemos de entrada desde lo último aceptado
-					else
-						cad = tok;
-					est = this.comprobarEntrada(cad, lAut.get(i), e);
-					if (est != null)
-					{
-						lCad.set(i, cad);
-						lAcep.set(i, 1);
-					}
 					lEst.add(est);
+					lAcep.set(i, 1);
 				}
 				else
 				{
-					cad = tok.substring(tok.length()-1); // Cogemos el último caracter
-					est = this.comprobarEntrada(cad, lAut.get(i), e);
-					if (est != null)
-					{
-						lCad.set(i, cad);
-						lEst.add(est);
-						lAcep.set(i, 1);
-					}
-					else
-					{
-						lEst.add(e);
-						lAcep.set(i, 0);
-					}
+					lEst.add(e);
+					lAcep.set(i, 0);
 				}	
 			}
 		}
