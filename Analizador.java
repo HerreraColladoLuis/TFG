@@ -901,7 +901,7 @@ public class Analizador
 	 * @param lAut Lista de autómatas 
 	 * @param lAux Lista de estados
 	 * @param lAcep Lista de aceptaciones
-	 * @return Lista de estados modificados
+	 * @return lista de estados modificada
 	 */
 	List<Estado> siguienteToken(String tok, List<List<Transicion>> lAut, List<Estado> lAux, List<Integer> lAcep)
 	{
@@ -913,15 +913,16 @@ public class Analizador
 		{
 			for (List<Transicion> l : lAut)
 			{
+				i++;
 				est = this.comprobarEntrada(tok, l, null);
-				lEst.add(est);
+				lEst.add(i,est);
 				if (est != null)
 				{
-					lAcep.add(1);
+					lAcep.add(i,1);
 				}	
 				else
 				{
-					lAcep.add(0);
+					lAcep.add(i,0);
 				}
 			}
 		}
@@ -931,15 +932,18 @@ public class Analizador
 			{
 				i++;
 				cad = tok.substring(tok.length()-1); // Cogemos el último caracter
-				est = this.comprobarEntrada(cad, lAut.get(i), e);
+				if (lAcep.get(i) == 1)
+					est = this.comprobarEntrada(cad, lAut.get(i), e);
+				else 
+					est = null;
 				if (est != null)
 				{
-					lEst.add(est);
+					lEst.add(i,est);
 					lAcep.set(i, 1);
 				}
 				else
 				{
-					lEst.add(e);
+					lEst.add(i,e);
 					lAcep.set(i, 0);
 				}	
 			}
