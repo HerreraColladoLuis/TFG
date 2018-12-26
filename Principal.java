@@ -50,48 +50,66 @@ public class Principal {
 		    String out;
 		    List<String> lParseada;
 		    Analizador.NodoArbol arbol;
-		    List<Analizador.Transicion> li;
-		    List<List<Analizador.Transicion>> lAut = new LinkedList<>();
-		    for (String cadena : auxregex)
+		    List<List<Analizador.Estado>> li;
+		    String fcad = auxregex.get(0);
+		    for (int x = 1; x < auxregex.size(); x++)
 		    {
-		    	out = aux.traducir(cadena);
-		    	System.out.println("ER traducida: " + out);
-		    	lParseada = aux.parsear(out);
-		    	System.out.print("ER parseada: ");
-		        for (String n : lParseada)
-		        	System.out.print(n + " ");
-		    	arbol = aux.aumentar(aux.crearArbol(lParseada));
-		    	aux.numerar(arbol, 0);
-		        System.out.println();
-		        System.out.println();
-		        System.out.print("Arbol inOrden: ");
-		        aux.inOrden(arbol);
-		        System.out.println();
-		        System.out.print("Arbol preOrden: ");
-		        aux.preOrden(arbol);
-		    	System.out.println();
-		    	System.out.println();
-		        li = aux.crearAutomata(arbol);
-	        	lAut.add(li);
-		        for (Analizador.Transicion tr : li)
-		        {
-		        	tr.imprimir();
-		        	System.out.println();
-		        }
-		        System.out.println();
-		    	System.out.println();
+		    	fcad += "|" + auxregex.get(x);
 		    }
-		    /*System.out.print("Introduzca un caracter: ");
-		    Scanner lector = new Scanner(System.in);
-		    char c = lector.next().charAt(0);
-		    String s = String.valueOf(c);*/
+		    
+	    	out = aux.traducir(fcad);
+	    	System.out.println("ER traducida: " + out);
+	    	lParseada = aux.parsear(out);
+	    	System.out.print("ER parseada: ");
+	        for (String n : lParseada)
+	        	System.out.print(n + " ");
+	    	arbol = aux.aumentar(aux.crearArbol(lParseada));
+	    	aux.numerar(arbol, 0);
+	        System.out.println();
+	        System.out.println();
+	        System.out.print("Arbol inOrden: ");
+	        aux.inOrden(arbol);
+	        System.out.println();
+	        System.out.print("Arbol preOrden: ");
+	        aux.preOrden(arbol);
+	    	System.out.println();
+	    	System.out.println();
+	        li = aux.crearAutomata(arbol);
+	        int nEst = -1;
+	        for (List<Analizador.Estado> l : li)
+	        {
+	        	nEst++;
+	        	System.out.print(nEst + "  ");
+	        	for (Analizador.Estado e : l)
+	        	{
+	        		if (e.n == 0)
+	        			System.out.print("NNN  ");
+	        		else
+	        		{	
+	        			if (e.esinicial)
+	        				System.out.print("I");
+	        			else
+	        				System.out.print("-");
+	        			if (e.esfinal)
+	        				System.out.print("F");
+	        			else 
+	        				System.out.print("-");
+	        			System.out.print(e.n + "  ");
+	        		}
+	        			
+	        	}
+	        	System.out.println();
+	        }
+	        System.out.println();
+	    	System.out.println();
+		    	
 		    List<Analizador.Estado> lE = new LinkedList<>();
 		    List<Integer> lAcep = new LinkedList<>();
 		    while (true)
 		    {
 		    	BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		    	String cad = reader.readLine();
-		    	lE = aux.siguienteToken(cad, lAut, lE, lAcep);
+		    	//lE = aux.siguienteToken(cad, lAut, lE, lAcep);
 		    	int cont = -1;
 		    	for (int ac : lAcep)
 		    	{

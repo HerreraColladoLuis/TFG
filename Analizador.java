@@ -809,7 +809,8 @@ public class Analizador
 		public Estado(List<Integer> l)
 		{
 			this.lposiciones = new LinkedList<>();
-			this.lposiciones.addAll(l);
+			if (l != null)
+				this.lposiciones.addAll(l);
 			this.marcado = false;
 		}
 		/**
@@ -943,7 +944,7 @@ public class Analizador
 				}
 				else
 				{
-					lEst.add(i,e);
+					lEst.add(i,est);
 					lAcep.set(i, 0);
 				}	
 			}
@@ -957,9 +958,9 @@ public class Analizador
 	 * @param arbol Árbol binario de la expresión regular
 	 * @return Lista de transiciones
 	 */
-	public List<Transicion> crearAutomata(NodoArbol arbol)
+	public List<List<Estado>> crearAutomata(NodoArbol arbol)
 	{
-		List<Transicion> ltrans = new LinkedList<>();
+		List<List<Estado>> tabla = new LinkedList<>();
 		List<Estado> lest = new LinkedList<>();
 		List<Integer> conjunto = new LinkedList<>();
 		List<Estado> laux = new LinkedList<>();
@@ -984,6 +985,12 @@ public class Analizador
 			{
 				if (!actual.marcado)
 				{
+					tabla.add(new LinkedList<>());
+					int j = tabla.size()-1;
+					for (int x = 0; x < arbol.hijoDcho.posicion-1; x++)
+					{
+						tabla.get(tabla.size()-1).add(new Estado(null));
+					}
 					actual.marcado = true;
 					noMarcado--;
 					for (int i = 1;i < arbol.hijoDcho.posicion;i++)
@@ -1015,9 +1022,10 @@ public class Analizador
 							}
 							else
 								esta = false;
-							String terminal = this.devolverTerminal(arbol, i);
+							tabla.get(actual.n).set(i-1, nuevo);
+							/*String terminal = this.devolverTerminal(arbol, i);
 							Transicion t = new Transicion(actual,terminal,nuevo);
-							ltrans.add(t);
+							ltrans.add(t);*/
 							conjunto.clear();
 						}
 					}
@@ -1026,7 +1034,7 @@ public class Analizador
 			lest.clear();
 			lest.addAll(laux);
 		}
-		return ltrans;
+		return tabla;
 	}
 	/**
 	 * Método que recibe una lista con los componentes de una 
