@@ -55,8 +55,7 @@ public class Principal {
 		    for (int x = 1; x < auxregex.size(); x++)
 		    {
 		    	fcad += "|" + auxregex.get(x);
-		    }
-		    
+		    } 
 	    	out = aux.traducir(fcad);
 	    	System.out.println("ER traducida: " + out);
 	    	lParseada = aux.parsear(out);

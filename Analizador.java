@@ -861,102 +861,37 @@ public class Analizador
 			System.out.println("Estado Final: "+this.estadoFinal.n);
 		}
 	}
-	public class EstadoBase
-	{
-		public Estado estado;
-		public String entrada;
-	}
 	/**
-	 * Método que, dada una entrada en forma de string, un autómata
-	 * en forma de lista de transiciones y un estado incial, comprueba
-	 * si a partir de dicho estado se puede transitar a otro con la 
-	 * entrada dada. En ese caso, devuelve el estado final transitado.
-	 * @param c Entrada en forma de string
-	 * @param automata Lista de transiciones
-	 * @param e Estado inicial (el primero si este parámetro es null)
-	 * @return Estado transitado o null si no se puede transitar
+	 * Método que dada una entrada en forma de String y un estado del autómata,
+	 * comprueba si con dicho terminal se puede avanzar a otro(s) estado(s). En
+	 * ese caso, los va introduciendo en una lista de enteros que representan el
+	 * estado.
+	 * @param terminal
+	 * @param estado
+	 * @param tabla
+	 * @param arbol
+	 * @return Lista de estados
 	 */
-	Estado comprobarEntrada(String c, List<Transicion> automata, Estado e)
+	public List<Integer> siguienteToken(String tok, int est, List<List<Estado>> tabla, NodoArbol arbol)
 	{
-		if (e == null)
-			e = automata.get(0).estadoInicial;
-		for (Transicion tr : automata)
+		List<Integer> lEst = new LinkedList<>();
+		List<Estado> lAux = tabla.get(est);
+		for (int i = 0; i < lAux.size(); i++)
 		{
-			if (tr.estadoInicial.equals(e))
+			if (this.devolverTerminal(arbol,i).equals(tok))
 			{
-				if (this.comprobarTerminal(tr.terminal, c))
-					return tr.estadoFinal;
+				if (lAux.get(i).n != 0)
+					lEst.add(lAux.get(i).n);
 			}
-		}
-		return null;
-	}
-	/**
-	 * Método que dada una entrada en forma de string (que será un caracter),
-	 * una lista de autómatas, una lista de estados (inicialmente a null) y 
-	 * una lista de aceptaciones, comprueba en cada autómata de la lista de autómatas
-	 * si a partir del estado dado en la lista de estados y con la entrada suministrada
-	 * se puede transitar a otro estado. Si es así, guarda dicho estado en la lista de 
-	 * estados, si no, pone ese slot a null. Finalmente se modifica la lista de aceptaciones
-	 * con unos y ceros dependiendo si hemos transitado en el autómata correspondiente o no.
-	 * @param tok Caracter a leer
-	 * @param lAut Lista de autómatas 
-	 * @param lAux Lista de estados
-	 * @param lAcep Lista de aceptaciones
-	 * @return lista de estados modificada
-	 */
-	List<Estado> siguienteToken(String tok, List<List<Transicion>> lAut, List<Estado> lAux, List<Integer> lAcep)
-	{
-		List<Estado> lEst = new LinkedList<>();
-		Estado est = null;
-		String cad;
-		int i = -1;
-		if (lAux.isEmpty())
-		{
-			for (List<Transicion> l : lAut)
-			{
-				i++;
-				est = this.comprobarEntrada(tok, l, null);
-				lEst.add(i,est);
-				if (est != null)
-				{
-					lAcep.add(i,1);
-				}	
-				else
-				{
-					lAcep.add(i,0);
-				}
-			}
-		}
-		else
-		{
-			for (Estado e : lAux)
-			{
-				i++;
-				cad = tok.substring(tok.length()-1); // Cogemos el último caracter
-				if (lAcep.get(i) == 1)
-					est = this.comprobarEntrada(cad, lAut.get(i), e);
-				else 
-					est = null;
-				if (est != null)
-				{
-					lEst.add(i,est);
-					lAcep.set(i, 1);
-				}
-				else
-				{
-					lEst.add(i,est);
-					lAcep.set(i, 0);
-				}	
-			}
-		}
+		}	
 		return lEst;
 	}
 	/**
 	 * Método para crear un autómata a partir de un árbol binario de una
-	 * expresión regular. Se devolverá una lista de transiciones entre los
-	 * estados del autómata.
+	 * expresión regular. Se devolverá una tabla representando las transiciones
+	 * desde cada estado con cada símbolo de entrada posible.
 	 * @param arbol Árbol binario de la expresión regular
-	 * @return Lista de transiciones
+	 * @return Tabla de transiciones
 	 */
 	public List<List<Estado>> crearAutomata(NodoArbol arbol)
 	{
@@ -986,7 +921,6 @@ public class Analizador
 				if (!actual.marcado)
 				{
 					tabla.add(new LinkedList<>());
-					int j = tabla.size()-1;
 					for (int x = 0; x < arbol.hijoDcho.posicion-1; x++)
 					{
 						tabla.get(tabla.size()-1).add(new Estado(null));
@@ -1023,9 +957,6 @@ public class Analizador
 							else
 								esta = false;
 							tabla.get(actual.n).set(i-1, nuevo);
-							/*String terminal = this.devolverTerminal(arbol, i);
-							Transicion t = new Transicion(actual,terminal,nuevo);
-							ltrans.add(t);*/
 							conjunto.clear();
 						}
 					}
