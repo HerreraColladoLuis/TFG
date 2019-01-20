@@ -623,6 +623,7 @@ public class Analizador
 		public boolean cuantificador;
 		public boolean operacion;
 		public boolean hoja;
+		public int expReg;
 		
 		/**
 		 * Constructor para un nodo del árbol
@@ -967,8 +968,15 @@ public class Analizador
 		}
 		return tabla;
 	}
-	
-	public NodoArbol sumarArbol(NodoArbol r1, NodoArbol r2, String op)
+	/**
+	 * Método para unir dos árboles mediante un nodo operación que 
+	 * se pasa por parámetro.
+	 * @param arbol1 Arbol 1 a unir
+	 * @param arbol2 Arbol 2 a unir
+	 * @param op String para representar el nodo raiz
+	 * @return raiz
+	 */
+	public NodoArbol unirArbol(NodoArbol r1, NodoArbol r2, String op)
 	{
 		NodoArbol raiz = new NodoArbol(op);
 		raiz.insertarIzda(r1);
@@ -980,10 +988,11 @@ public class Analizador
 	 * expresión regular y devuelve un árbol sintáctico binario 
 	 * de la misma
 	 * @param lExp Lista de componentes de una expresión regular
+	 * @param posicion 
 	 * @return Árbol sintáctico binario de una expresión regular
 	 * @throws Exception 
 	 */
-	public NodoArbol crearArbol(List<String> lExp) throws Exception
+	public NodoArbol crearArbol(List<String> lExp, int posicion) throws Exception
 	{
 		NodoArbol raiz = null;
 		NodoArbol nodoAnterior = null;
@@ -1005,7 +1014,7 @@ public class Analizador
 			}
 			else // Caso recursivo
 			{
-				nodoActual = crearArbol(lpar);
+				nodoActual = crearArbol(lpar,posicion);
 			}	
 			if (raiz == null) // Se trata del primer nodo del arbol que tenemos que crear
 			{
@@ -1014,6 +1023,10 @@ public class Analizador
 			}
 			else // Ya existe algún nodo creado anteriormente
 			{
+				if (nodoActual.hoja) // Comprobamos si es una hoja y añadimos la expresión regular que representa
+				{
+					nodoActual.expReg = posicion;
+				}
 				if (nodoActual.hoja || (nodoActual.cuantificador && nodoActual.hijoIzdo != null))
 				{
 					if (nodoAnterior.info.equals("|"))

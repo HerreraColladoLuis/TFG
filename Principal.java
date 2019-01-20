@@ -56,13 +56,13 @@ public class Principal {
 		    String fcad = auxregex.get(0);
 		    outAux = aux.traducir(auxregex.get(0)); 
 		    lParseadaAux = aux.parsear(outAux);
-		    arbol = aux.crearArbol(lParseadaAux);
+		    arbol = aux.crearArbol(lParseadaAux,0);
 		    for (int x = 1; x < auxregex.size(); x++)
 		    {
 		    	outAux = aux.traducir(auxregex.get(x));
 			    lParseadaAux = aux.parsear(outAux);
-			    arbolAux = aux.crearArbol(lParseadaAux);
-			    arbol = aux.sumarArbol(arbol, arbolAux, "|");
+			    arbolAux = aux.crearArbol(lParseadaAux,x);
+			    arbol = aux.unirArbol(arbol, arbolAux, "|");
 		    	fcad += "|" + auxregex.get(x);
 		    } 
 	    	out = aux.traducir(fcad);
