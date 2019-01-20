@@ -858,7 +858,7 @@ public class Analizador
 				System.out.print("INICIAL ");
 			if (this.estadoFinal.esfinal)
 				System.out.print("FINAL ");
-			System.out.println("Estado Final: "+this.estadoFinal.n);
+			System.out.println("Estado Final: "+ this.estadoFinal.n);
 		}
 	}
 	/**
@@ -966,6 +966,14 @@ public class Analizador
 			lest.addAll(laux);
 		}
 		return tabla;
+	}
+	
+	public NodoArbol sumarArbol(NodoArbol r1, NodoArbol r2, String op)
+	{
+		NodoArbol raiz = new NodoArbol(op);
+		raiz.insertarIzda(r1);
+		raiz.insertarDcha(r2);
+		return raiz;
 	}
 	/**
 	 * Método que recibe una lista con los componentes de una 

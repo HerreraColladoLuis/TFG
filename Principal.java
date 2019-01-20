@@ -42,18 +42,27 @@ public class Principal {
 	          System.out.println("Unexpected exception:");
 	          e.printStackTrace();
 	        }
+	        // DECLARACIÓN DE VARIABLES A UTILIZAR
 	        Analizador aux = new Analizador();
 	        List<String> auxmacro = aux.translateMacro(scanner.macrosList);
 		    List<String> auxregex = aux.translateRegex(scanner.regexList);
 		    aux.listaER = auxregex;
 		    aux.listaM = auxmacro;
-		    String out;
-		    List<String> lParseada;
-		    Analizador.NodoArbol arbol;
+		    String out, outAux;
+		    List<String> lParseada, lParseadaAux;
+		    Analizador.NodoArbol arbol, arbolAux;
 		    List<List<Analizador.Estado>> li;
+		    // EMPEZAMOS A CREAR EL ÁRBOL DE TODAS LAS EXPRESIONES REGULARES QUE ENCONTREMOS
 		    String fcad = auxregex.get(0);
+		    outAux = aux.traducir(auxregex.get(0)); 
+		    lParseadaAux = aux.parsear(outAux);
+		    arbol = aux.crearArbol(lParseadaAux);
 		    for (int x = 1; x < auxregex.size(); x++)
 		    {
+		    	outAux = aux.traducir(auxregex.get(x));
+			    lParseadaAux = aux.parsear(outAux);
+			    arbolAux = aux.crearArbol(lParseadaAux);
+			    arbol = aux.sumarArbol(arbol, arbolAux, "|");
 		    	fcad += "|" + auxregex.get(x);
 		    } 
 	    	out = aux.traducir(fcad);
@@ -62,7 +71,7 @@ public class Principal {
 	    	System.out.print("ER parseada: ");
 	        for (String n : lParseada)
 	        	System.out.print(n + " ");
-	    	arbol = aux.aumentar(aux.crearArbol(lParseada));
+	    	arbol = aux.aumentar(arbol);
 	    	aux.numerar(arbol, 0);
 	        System.out.println();
 	        System.out.println();
