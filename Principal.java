@@ -83,6 +83,9 @@ public class Principal {
 	    	System.out.println();
 	    	System.out.println();
 	        li = aux.crearAutomata(arbol);
+	        List<Analizador.Estado> lEstAux = new LinkedList<>();
+	        int cnER = 0;
+	        List<Integer> nER = null;
 	        int nEst = -1;
 	        for (List<Analizador.Estado> l : li)
 	        {
@@ -90,6 +93,7 @@ public class Principal {
 	        	System.out.print(nEst + "  ");
 	        	for (Analizador.Estado e : l)
 	        	{
+	        		cnER++;
 	        		if (e.n == 0)
 	        			System.out.print("NNN  ");
 	        		else
@@ -104,7 +108,6 @@ public class Principal {
 	        				System.out.print("-");
 	        			System.out.print(e.n + "  ");
 	        		}
-	        			
 	        	}
 	        	System.out.println();
 	        }

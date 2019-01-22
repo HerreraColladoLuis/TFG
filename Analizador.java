@@ -623,7 +623,7 @@ public class Analizador
 		public boolean cuantificador;
 		public boolean operacion;
 		public boolean hoja;
-		public int expReg;
+		public int expReg = -1;
 		
 		/**
 		 * Constructor para un nodo del árbol
@@ -706,6 +706,30 @@ public class Analizador
 			}
 		}
 		return res;
+	}
+	/**
+	 * Método que devuelve la posición de la expresión regular que
+	 * tiene un nodo en su información.
+	 * @param nodo Árbol a recorrer
+	 * @param posicion Posición del nodo hoja a recorrer
+	 * @return Posición en la lista de ER
+	 */
+	int devolverNER(NodoArbol nodo, int posicion)
+	{
+		int i = 0;
+		if (nodo != null)
+		{
+			if (nodo.posicion == posicion)
+			{
+				i = nodo.expReg;
+			}
+			else
+			{
+				i += devolverNER(nodo.hijoIzdo,posicion);
+				i += devolverNER(nodo.hijoDcho,posicion);
+			}
+		}
+		return i;
 	}
 	/**
 	 * Método que devuelve si una cadena es un conjunto. Es decir,
@@ -803,6 +827,8 @@ public class Analizador
 		public int n;
 		public boolean esfinal = false;
 		public boolean esinicial = false;
+		public List<Integer> expRegs = new LinkedList<>();
+		
 		/**
 		 * Constructor principal
 		 * @param l Lista de posiciones
@@ -903,6 +929,7 @@ public class Analizador
 		boolean esta = false;
 		int noMarcado = 1;
 		int naux = 0;
+		int nER;
 		// Añadimos el estado inicial para el automata
 		List<Integer> la = primeraPos(arbol);
 		Estado einicial = new Estado(primeraPos(arbol));
@@ -937,11 +964,14 @@ public class Analizador
 						if (!conjunto.isEmpty())
 						{
 							nuevo = new Estado(conjunto);
+							nER = this.devolverNER(arbol,i); // EN PRUEBA
+							nuevo.expRegs.add(nER); // EN PRUEBA
 							for (Estado aux : laux)
 							{
 								if (aux.lposiciones.equals(conjunto))
 								{
 									esta = true;
+									aux.expRegs.add(nER); // EN PRUEBA
 									nuevo = aux;
 									break;
 								}
@@ -1018,6 +1048,10 @@ public class Analizador
 			}	
 			if (raiz == null) // Se trata del primer nodo del arbol que tenemos que crear
 			{
+				if (nodoActual.hoja) // Comprobamos si es una hoja y añadimos la expresión regular que representa
+				{
+					nodoActual.expReg = posicion;
+				}
 				raiz = nodoActual;
 				nodoAnterior = nodoActual;
 			}
