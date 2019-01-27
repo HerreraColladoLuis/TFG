@@ -827,7 +827,8 @@ public class Analizador
 		public int n;
 		public boolean esfinal = false;
 		public boolean esinicial = false;
-		public List<String> expRegs = new LinkedList<>();
+		public List<Integer> expRegs = new LinkedList<>();
+		public List<Integer> lTerm = new LinkedList<>();
 		
 		/**
 		 * Constructor principal
@@ -899,18 +900,42 @@ public class Analizador
 	 * @param arbol
 	 * @return Lista de estados
 	 */
-	public List<Integer> siguienteToken(String tok, int est, List<List<Estado>> tabla, NodoArbol arbol)
+	public List<Estado> siguienteToken(String tok, List<Estado> lIni, List<List<Estado>> tabla, NodoArbol arbol)
 	{
-		List<Integer> lEst = new LinkedList<>();
-		List<Estado> lAux = tabla.get(est);
-		for (int i = 0; i < lAux.size(); i++)
+		List<Estado> lEst = new LinkedList<>();
+		List<Estado> lAux;
+		String cad;
+		int i = 0;
+		if (lIni.isEmpty())
 		{
-			if (this.devolverTerminal(arbol,i).equals(tok))
+			lAux = tabla.get(0);
+			for (Estado e : lAux)
 			{
-				if (lAux.get(i).n != 0)
-					lEst.add(lAux.get(i).n);
+				i++;
+				if (e.n == 0)
+					continue;
+				cad = this.devolverTerminal(arbol,i);
+				if (this.comprobarTerminal(cad,tok))
+					lEst.add(e);
 			}
-		}	
+		}
+		else
+		{
+			for (Estado est : lIni)
+			{
+				i = 0;
+				lAux = tabla.get(est.n);
+				for (Estado e : lAux)
+				{
+					i++;
+					if (e.n == 0)
+						continue;
+					cad = this.devolverTerminal(arbol,i);
+					if (this.comprobarTerminal(cad,tok))
+						lEst.add(e);
+				}
+			}
+		}
 		return lEst;
 	}
 	/**
@@ -965,13 +990,15 @@ public class Analizador
 						{
 							nuevo = new Estado(conjunto);
 							nER = this.devolverNER(arbol,i); // EN PRUEBA
-							nuevo.expRegs.add(Integer.toString(nER) + "-" + Integer.toString(i)); // EN PRUEBA
+							nuevo.expRegs.add(nER); // EN PRUEBA
+							nuevo.lTerm.add(i);
 							for (Estado aux : laux)
 							{
 								if (aux.lposiciones.equals(conjunto))
 								{
 									esta = true;
-									aux.expRegs.add(Integer.toString(nER) + "-" + Integer.toString(i)); // EN PRUEBA
+									aux.expRegs.add(nER); // EN PRUEBA
+									aux.lTerm.add(i);
 									nuevo = aux;
 									break;
 								}

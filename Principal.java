@@ -109,13 +109,17 @@ public class Principal {
 	        			System.out.print(e.n + "  ");
 	        		}
 	        	}
+	        	int cc;
 	        	for (Analizador.Estado estado : lEstAux) // EN PRUEBA
 	        	{
+	        		cc = -1;
 	        		if (estado.n == nEst)
 	        		{
-	        			for (String a : estado.expRegs)
+	        			for (int a : estado.expRegs)
 	        			{
-	        				System.out.print(a + " ");
+	        				cc++;
+	        				System.out.print(a + "-");
+	        				System.out.print(estado.lTerm.get(cc) + " ");
 	        			}
 	        		}
 	        	}
@@ -125,24 +129,24 @@ public class Principal {
 	    	System.out.println();
 		    	
 		    List<Analizador.Estado> lE = new LinkedList<>();
-		    List<Integer> lAcep = new LinkedList<>();
 		    while (true)
 		    {
 		    	BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		    	String cad = reader.readLine();
-		    	//lE = aux.siguienteToken(cad, lAut, lE, lAcep);
-		    	int cont = -1;
-		    	for (int ac : lAcep)
+		    	lE = aux.siguienteToken(cad, lE, li, arbol);
+		    	int cont;
+		    	for (Analizador.Estado e : lE)
 		    	{
-		    		cont++;
-		    		if (ac == 1)
+		    		cont = -1;
+		    		for (int nExp : e.expRegs)
 		    		{
-		    			if (cont >= auxmacro.size())
-		    				System.out.println(auxregex.get(cont));
+		    			cont++;
+		    			// EN PRUEBA
+		    			if (nExp >= auxmacro.size())
+		    				System.out.println(auxregex.get(nExp));
 		    			else
-		    				System.out.println(auxmacro.get(cont));
+		    				System.out.println(auxmacro.get(nExp));
 		    		}
-		    			
 		    	}
 		    	System.out.println();
 		    }
