@@ -827,7 +827,7 @@ public class Analizador
 		public int n;
 		public boolean esfinal = false;
 		public boolean esinicial = false;
-		public List<Integer> expRegs = new LinkedList<>();
+		public List<String> expRegs = new LinkedList<>();
 		
 		/**
 		 * Constructor principal
@@ -965,13 +965,13 @@ public class Analizador
 						{
 							nuevo = new Estado(conjunto);
 							nER = this.devolverNER(arbol,i); // EN PRUEBA
-							nuevo.expRegs.add(nER); // EN PRUEBA
+							nuevo.expRegs.add(Integer.toString(nER) + "-" + Integer.toString(i)); // EN PRUEBA
 							for (Estado aux : laux)
 							{
 								if (aux.lposiciones.equals(conjunto))
 								{
 									esta = true;
-									aux.expRegs.add(nER); // EN PRUEBA
+									aux.expRegs.add(Integer.toString(nER) + "-" + Integer.toString(i)); // EN PRUEBA
 									nuevo = aux;
 									break;
 								}
