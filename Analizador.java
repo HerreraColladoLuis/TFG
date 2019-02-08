@@ -892,8 +892,7 @@ public class Analizador
 	/**
 	 * Método que dada una entrada en forma de String y un estado del autómata,
 	 * comprueba si con dicho terminal se puede avanzar a otro(s) estado(s). En
-	 * ese caso, los va introduciendo en una lista de enteros que representan el
-	 * estado.
+	 * ese caso, los va introduciendo en una lista de estados.
 	 * @param terminal
 	 * @param estado
 	 * @param tabla

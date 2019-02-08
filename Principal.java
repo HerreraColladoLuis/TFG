@@ -82,7 +82,7 @@ public class Principal {
 	        aux.preOrden(arbol);
 	    	System.out.println();
 	    	System.out.println();
-	        li = aux.crearAutomata(arbol);
+	        li = aux.crearAutomata(arbol); // AUTOMATA CREADO
 	        List<Analizador.Estado> lEstAux = new LinkedList<>();
 	        List<Integer> nER = null;
 	        int nEst = -1;
@@ -128,9 +128,11 @@ public class Principal {
 	        System.out.println();
 	    	System.out.println();
 		    	
+	    	List<Integer> lnER = new LinkedList<>();
 		    List<Analizador.Estado> lE = new LinkedList<>();
 		    while (true)
 		    {
+		    	lnER.clear();
 		    	BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		    	String cad = reader.readLine();
 		    	lE = aux.siguienteToken(cad, lE, li, arbol);
@@ -141,11 +143,15 @@ public class Principal {
 		    		for (int nExp : e.expRegs)
 		    		{
 		    			cont++;
-		    			// EN PRUEBA
-		    			if (nExp >= auxmacro.size())
-		    				System.out.println(auxregex.get(nExp));
-		    			else
-		    				System.out.println(auxmacro.get(nExp));
+		    			if (!lnER.contains(nExp))
+		    			{
+		    				lnER.add(nExp);
+			    			// EN PRUEBA
+			    			if (nExp >= auxmacro.size())
+			    				System.out.println(auxregex.get(nExp));
+			    			else
+			    				System.out.println(auxmacro.get(nExp));
+		    			}
 		    		}
 		    	}
 		    	System.out.println();
