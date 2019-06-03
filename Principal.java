@@ -133,13 +133,13 @@ public class Principal {
 		    List<Analizador.Estado> lE = new LinkedList<>();
 		    while (true)
 		    {
-		    	lnER.clear();
 		    	BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		    	String cad = reader.readLine();
 		    	lE = aux.siguienteToken(cad, lE, li, arbol);
 		    	/** Hay que llevar un conteo de los terminales que hemos leido, y a partir de ahí saber
 		    	en qué expresión regular estamos **/
-		    	lnE = aux.activarER(cad, lE, li, arbol);
+		    	lnE = aux.activarER(cad, lE, li, lnER, arbol);
+		    	lnER.clear();
 		    	for (int nExp : lnE)
 		    	{
 		    		if (!lnER.contains(nExp))

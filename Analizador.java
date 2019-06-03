@@ -1024,18 +1024,29 @@ public class Analizador
 		}
 		return tabla;
 	}
-	
-	public List<Integer> activarER(String tok, List<Estado> lE, List<List<Estado>> tabla, NodoArbol arbol)
+	/**
+	 * Método que devuelve una lista de índices de expresiones regulares, dada una lista de estados en los que
+	 * se encuentra el autómata. Además, se pasa como parámetro una lista de las expresiones regulares que se 
+	 * activaron en el último estado. Con esta lista se comprueba si en el nuevo estado se activa alguna expresión
+	 * regular que anteriormente no se encontraba activa, si es así, no se activa.
+	 * @param terminal que se lee
+	 * @param lista de estados
+	 * @param automata
+	 * @Param lista de expresiones regulares
+	 * @param arbol
+	 * @return lista de ER que se activan
+	 */
+	public List<Integer> activarER(String tok, List<Estado> lE, List<List<Estado>> tabla, List<Integer> lER, NodoArbol arbol)
 	{
 		List<Integer> lOut = new LinkedList<>();
 		List<Integer> lInt = new LinkedList<>();
 		List<Estado> lAux;
 		String cad;
-		int c;
+		int c, a;
 		
 		int i = 0;
 		lAux = tabla.get(0);
-		for (Estado e : lAux) // Este primer bucle es para coger el índice de terminal del string leído
+		for (@SuppressWarnings("unused") Estado e : lAux) // Este primer bucle es para coger el índice de terminal del string leído
 		{
 			i++;
 			cad = this.devolverTerminal(arbol,i);
@@ -1048,7 +1059,16 @@ public class Analizador
 			{
 				c = est.lTerm.indexOf(obj); // Cogemos el índice en el que se encuentra ese terminal
 				if (c != -1)
-					lOut.add(est.expRegs.get(c)); // Cogemos la ER correspondiente
+				{
+					a = est.expRegs.get(c);
+					if (!lER.isEmpty())
+					{
+						if (lER.contains(a))
+							lOut.add(a);
+					}
+					else
+						lOut.add(a); // Cogemos la ER correspondiente
+				}	
 			}
 		}
 		return lOut;
