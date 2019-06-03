@@ -129,6 +129,7 @@ public class Principal {
 	    	System.out.println();
 		    	
 	    	List<Integer> lnER = new LinkedList<>();
+	    	List<Integer> lnE;
 		    List<Analizador.Estado> lE = new LinkedList<>();
 		    while (true)
 		    {
@@ -136,24 +137,39 @@ public class Principal {
 		    	BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		    	String cad = reader.readLine();
 		    	lE = aux.siguienteToken(cad, lE, li, arbol);
-		    	int cont;
-		    	for (Analizador.Estado e : lE)
+		    	/** Hay que llevar un conteo de los terminales que hemos leido, y a partir de ahí saber
+		    	en qué expresión regular estamos **/
+		    	lnE = aux.activarER(cad, lE, li, arbol);
+		    	for (int nExp : lnE)
 		    	{
-		    		cont = -1;
-		    		for (int nExp : e.expRegs)
-		    		{
-		    			cont++;
-		    			if (!lnER.contains(nExp))
-		    			{
-		    				lnER.add(nExp);
-			    			// EN PRUEBA
-			    			if (nExp >= auxmacro.size())
-			    				System.out.println(auxregex.get(nExp));
-			    			else
-			    				System.out.println(auxmacro.get(nExp));
-		    			}
-		    		}
+		    		if (!lnER.contains(nExp))
+	    			{
+	    				lnER.add(nExp);
+		    			// EN PRUEBA
+		    			if (nExp >= auxmacro.size())
+		    				System.out.println(auxregex.get(nExp));
+		    			else
+		    				System.out.println(auxmacro.get(nExp));
+	    			}
 		    	}
+//		    	int cont;
+//		    	for (Analizador.Estado e : lE)
+//		    	{
+//		    		cont = -1;
+//		    		for (int nExp : e.expRegs)
+//		    		{
+//		    			cont++;
+//		    			if (!lnER.contains(nExp))
+//		    			{
+//		    				lnER.add(nExp);
+//			    			// EN PRUEBA
+//			    			if (nExp >= auxmacro.size())
+//			    				System.out.println(auxregex.get(nExp));
+//			    			else
+//			    				System.out.println(auxmacro.get(nExp));
+//		    			}
+//		    		}
+//		    	}
 		    	System.out.println();
 		    }
 	        /*List<String> lER = new LinkedList<>();

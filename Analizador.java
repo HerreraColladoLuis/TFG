@@ -1024,6 +1024,35 @@ public class Analizador
 		}
 		return tabla;
 	}
+	
+	public List<Integer> activarER(String tok, List<Estado> lE, List<List<Estado>> tabla, NodoArbol arbol)
+	{
+		List<Integer> lOut = new LinkedList<>();
+		List<Integer> lInt = new LinkedList<>();
+		List<Estado> lAux;
+		String cad;
+		int c;
+		
+		int i = 0;
+		lAux = tabla.get(0);
+		for (Estado e : lAux) // Este primer bucle es para coger el índice de terminal del string leído
+		{
+			i++;
+			cad = this.devolverTerminal(arbol,i);
+			if (this.comprobarTerminal(cad,tok))
+				lInt.add(i);
+		}
+		for (Estado est : lE)
+		{
+			for (Integer obj : lInt)
+			{
+				c = est.lTerm.indexOf(obj); // Cogemos el índice en el que se encuentra ese terminal
+				if (c != -1)
+					lOut.add(est.expRegs.get(c)); // Cogemos la ER correspondiente
+			}
+		}
+		return lOut;
+	}
 	/**
 	 * Método para unir dos árboles mediante un nodo operación que 
 	 * se pasa por parámetro.
