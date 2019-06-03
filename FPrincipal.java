@@ -1,6 +1,13 @@
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -45,6 +52,11 @@ public class FPrincipal extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jToggleButton1 = new javax.swing.JToggleButton();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -52,6 +64,14 @@ public class FPrincipal extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
+        jSeparator4 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem9 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
 
@@ -60,6 +80,7 @@ public class FPrincipal extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(153, 255, 153));
 
+        jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setFont(new java.awt.Font("Monospaced", 2, 13)); // NOI18N
         jTextArea1.setForeground(new java.awt.Color(153, 153, 153));
@@ -68,6 +89,7 @@ public class FPrincipal extends javax.swing.JFrame {
         jTextArea1.setFocusable(false);
         jScrollPane1.setViewportView(jTextArea1);
 
+        jTextArea2.setEditable(false);
         jTextArea2.setBackground(new java.awt.Color(255, 255, 197));
         jTextArea2.setColumns(20);
         jTextArea2.setFont(new java.awt.Font("Monospaced", 1, 13)); // NOI18N
@@ -95,6 +117,7 @@ public class FPrincipal extends javax.swing.JFrame {
 
         jButton2.setBackground(new java.awt.Color(57, 195, 160));
         jButton2.setText("Editar Entrada");
+        jButton2.setEnabled(false);
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -112,6 +135,7 @@ public class FPrincipal extends javax.swing.JFrame {
 
         jButton3.setBackground(new java.awt.Color(57, 141, 142));
         jButton3.setText("Añadir Entrada");
+        jButton3.setEnabled(false);
 
         jToggleButton1.setBackground(new java.awt.Color(240, 203, 104));
         jToggleButton1.setText("Iniciar Reconocimiento");
@@ -121,6 +145,20 @@ public class FPrincipal extends javax.swing.JFrame {
                 jToggleButton1ActionPerformed(evt);
             }
         });
+
+        jButton4.setText("Nueva");
+
+        jButton5.setText("Editar");
+        jButton5.setEnabled(false);
+
+        jButton6.setText("Borrar");
+        jButton6.setEnabled(false);
+
+        jButton7.setText("Guardar");
+        jButton7.setEnabled(false);
+
+        jButton8.setText("Procesar");
+        jButton8.setEnabled(false);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -135,20 +173,31 @@ public class FPrincipal extends javax.swing.JFrame {
                         .addGap(27, 27, 27)
                         .addComponent(jLabel1)))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel2)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 695, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jButton2)
+                            .addGap(18, 18, 18)
+                            .addComponent(jButton1)
+                            .addGap(18, 18, 18)
+                            .addComponent(jButton3)
+                            .addGap(18, 18, 18)
+                            .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel3)
+                        .addComponent(jScrollPane3))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton1)
+                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton3)
+                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jToggleButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE))
-                    .addComponent(jScrollPane3)
-                    .addComponent(jScrollPane1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jButton7)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton8)))
+                .addGap(0, 20, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -171,7 +220,14 @@ public class FPrincipal extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton4)
+                            .addComponent(jButton5)
+                            .addComponent(jButton6)
+                            .addComponent(jButton7)
+                            .addComponent(jButton8))))
                 .addContainerGap())
         );
 
@@ -188,16 +244,55 @@ public class FPrincipal extends javax.swing.JFrame {
         jMenu1.add(jMenuItem1);
 
         jMenuItem2.setText("Editar Especificación..");
+        jMenuItem2.setEnabled(false);
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem2);
         jMenu1.add(jSeparator1);
 
         jMenuItem4.setText("Borrar Especificación");
         jMenuItem4.setEnabled(false);
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem4);
 
         jMenuItem3.setText("Guardar Especificación");
         jMenuItem3.setEnabled(false);
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem3);
+        jMenu1.add(jSeparator2);
+
+        jMenuItem5.setText("Procesar Especificación..");
+        jMenuItem5.setEnabled(false);
+        jMenu1.add(jMenuItem5);
+        jMenu1.add(jSeparator3);
+
+        jMenuItem6.setText("Editar Entrada..");
+        jMenuItem6.setEnabled(false);
+        jMenu1.add(jMenuItem6);
+
+        jMenuItem7.setText("Borrar Entrada");
+        jMenuItem7.setEnabled(false);
+        jMenu1.add(jMenuItem7);
+
+        jMenuItem8.setText("Añadir Entrada..");
+        jMenuItem8.setEnabled(false);
+        jMenu1.add(jMenuItem8);
+        jMenu1.add(jSeparator4);
+
+        jMenuItem9.setText("Iniciar Reconocimiento");
+        jMenuItem9.setEnabled(false);
+        jMenu1.add(jMenuItem9);
 
         jMenuBar1.add(jMenu1);
 
@@ -213,9 +308,7 @@ public class FPrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -225,8 +318,47 @@ public class FPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private String abrirArchivo() {
+        String aux;   
+        String texto="";
+        try
+        {
+            JFileChooser file=new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(
+            "Especificación léxica","flex","flex");
+            file.setFileFilter(filter);
+            file.showOpenDialog(this);
+            File abre=file.getSelectedFile();
+
+            if(abre!=null)
+            {     
+               FileReader archivos=new FileReader(abre);
+                try (BufferedReader lee = new BufferedReader(archivos)) {
+                    while((aux=lee.readLine())!=null)
+                    {
+                        texto+= aux+ "\n";
+                    }
+                }
+            }    
+        }
+            catch(IOException ex)
+            {
+              JOptionPane.showMessageDialog(null,ex+"" +
+                    "\nNo se ha encontrado el archivo",
+                          "ADVERTENCIA",JOptionPane.WARNING_MESSAGE);
+            }
+        return texto;
+    }
+    
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
+        String especificacion = this.abrirArchivo();
+        this.jLabel3.setEnabled(true);
+        this.jTextArea3.setEnabled(true);
+        this.jTextArea3.setText(especificacion);
+        this.jMenuItem2.setEnabled(true);
+        this.jMenuItem4.setEnabled(true);
+        this.jButton2.setEnabled(true);
+        this.jButton3.setEnabled(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -234,6 +366,7 @@ public class FPrincipal extends javax.swing.JFrame {
         this.jTextArea1.setText("");
         this.jTextArea1.setFont(new Font("Monospaced",0,13));
         this.jTextArea1.setForeground(Color.black);
+        this.jTextArea1.setEditable(true);
         this.jButton1.setEnabled(true);
         this.jButton2.setEnabled(false);
         this.jButton3.setEnabled(false);
@@ -243,6 +376,7 @@ public class FPrincipal extends javax.swing.JFrame {
         this.jTextArea1.setFont(new Font("Monospaced",2,13));
         this.jTextArea1.setForeground(new Color(153,153,153));
         this.jTextArea1.setText("Pulse \"Editar Entrada\"");
+        this.jTextArea1.setEditable(false);
         this.jButton1.setEnabled(false);
         this.jTextArea1.setFocusable(false);
         this.jButton2.setEnabled(true);
@@ -261,6 +395,29 @@ public class FPrincipal extends javax.swing.JFrame {
             this.jToggleButton1.setBackground(new Color(240,203,104));
         }
     }//GEN-LAST:event_jToggleButton1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        this.jTextArea3.setEditable(true);
+        this.jMenuItem3.setEnabled(true);
+        this.jMenuItem2.setEnabled(false);
+        this.jMenuItem4.setEnabled(false);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        this.jTextArea3.setText("");
+        this.jTextArea3.setEditable(false);
+        this.jTextArea3.setEnabled(false);
+        this.jMenuItem2.setEnabled(false);
+        this.jMenuItem4.setEnabled(false);
+        this.jLabel3.setEnabled(false);
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        this.jTextArea3.setEditable(false);
+        this.jMenuItem3.setEnabled(false);
+        this.jMenuItem2.setEnabled(true);
+        this.jMenuItem4.setEnabled(true);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -301,6 +458,11 @@ public class FPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -312,11 +474,19 @@ public class FPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea jTextArea3;
