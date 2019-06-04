@@ -136,6 +136,11 @@ public class FPrincipal extends javax.swing.JFrame {
         jButton3.setBackground(new java.awt.Color(57, 141, 142));
         jButton3.setText("Añadir Entrada");
         jButton3.setEnabled(false);
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jToggleButton1.setBackground(new java.awt.Color(240, 203, 104));
         jToggleButton1.setText("Iniciar Reconocimiento");
@@ -146,17 +151,41 @@ public class FPrincipal extends javax.swing.JFrame {
             }
         });
 
+        jButton4.setBackground(new java.awt.Color(240, 186, 164));
         jButton4.setText("Nueva");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
+        jButton5.setBackground(new java.awt.Color(240, 197, 191));
         jButton5.setText("Editar");
         jButton5.setEnabled(false);
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
+        jButton6.setBackground(new java.awt.Color(240, 162, 124));
         jButton6.setText("Borrar");
         jButton6.setEnabled(false);
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         jButton7.setText("Guardar");
         jButton7.setEnabled(false);
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
 
+        jButton8.setBackground(new java.awt.Color(240, 215, 162));
         jButton8.setText("Procesar");
         jButton8.setEnabled(false);
 
@@ -181,7 +210,7 @@ public class FPrincipal extends javax.swing.JFrame {
                             .addComponent(jButton2)
                             .addGap(18, 18, 18)
                             .addComponent(jButton1)
-                            .addGap(18, 18, 18)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(jButton3)
                             .addGap(18, 18, 18)
                             .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -220,7 +249,7 @@ public class FPrincipal extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton4)
@@ -279,10 +308,20 @@ public class FPrincipal extends javax.swing.JFrame {
 
         jMenuItem6.setText("Editar Entrada..");
         jMenuItem6.setEnabled(false);
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem6);
 
         jMenuItem7.setText("Borrar Entrada");
         jMenuItem7.setEnabled(false);
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem7);
 
         jMenuItem8.setText("Añadir Entrada..");
@@ -357,8 +396,10 @@ public class FPrincipal extends javax.swing.JFrame {
         this.jTextArea3.setText(especificacion);
         this.jMenuItem2.setEnabled(true);
         this.jMenuItem4.setEnabled(true);
-        this.jButton2.setEnabled(true);
-        this.jButton3.setEnabled(true);
+        this.jMenuItem5.setEnabled(true);
+        this.jButton5.setEnabled(true);
+        this.jButton6.setEnabled(true);
+        this.jButton8.setEnabled(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -370,6 +411,9 @@ public class FPrincipal extends javax.swing.JFrame {
         this.jButton1.setEnabled(true);
         this.jButton2.setEnabled(false);
         this.jButton3.setEnabled(false);
+        this.jMenuItem6.setEnabled(true);
+        this.jMenuItem7.setEnabled(true);
+        this.jMenuItem8.setEnabled(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -377,10 +421,13 @@ public class FPrincipal extends javax.swing.JFrame {
         this.jTextArea1.setForeground(new Color(153,153,153));
         this.jTextArea1.setText("Pulse \"Editar Entrada\"");
         this.jTextArea1.setEditable(false);
-        this.jButton1.setEnabled(false);
         this.jTextArea1.setFocusable(false);
+        this.jButton1.setEnabled(false);
         this.jButton2.setEnabled(true);
         this.jButton3.setEnabled(true);
+        this.jMenuItem6.setEnabled(true);
+        this.jMenuItem7.setEnabled(false);
+        this.jMenuItem8.setEnabled(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
@@ -401,6 +448,11 @@ public class FPrincipal extends javax.swing.JFrame {
         this.jMenuItem3.setEnabled(true);
         this.jMenuItem2.setEnabled(false);
         this.jMenuItem4.setEnabled(false);
+        this.jMenuItem5.setEnabled(false);
+        this.jButton7.setEnabled(true);
+        this.jButton5.setEnabled(false);
+        this.jButton6.setEnabled(false);
+        this.jButton8.setEnabled(false);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
@@ -409,7 +461,11 @@ public class FPrincipal extends javax.swing.JFrame {
         this.jTextArea3.setEnabled(false);
         this.jMenuItem2.setEnabled(false);
         this.jMenuItem4.setEnabled(false);
+        this.jMenuItem5.setEnabled(false);
         this.jLabel3.setEnabled(false);
+        this.jButton5.setEnabled(false);
+        this.jButton6.setEnabled(false);
+        this.jButton8.setEnabled(false);
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
@@ -417,7 +473,40 @@ public class FPrincipal extends javax.swing.JFrame {
         this.jMenuItem3.setEnabled(false);
         this.jMenuItem2.setEnabled(true);
         this.jMenuItem4.setEnabled(true);
+        this.jMenuItem5.setEnabled(true);
+        this.jButton7.setEnabled(false);
+        this.jButton5.setEnabled(true);
+        this.jButton6.setEnabled(true);
+        this.jButton8.setEnabled(true);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        this.jMenuItem1ActionPerformed(evt);
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        this.jMenuItem2ActionPerformed(evt);
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        this.jMenuItem4ActionPerformed(evt);
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        this.jMenuItem3ActionPerformed(evt);
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        this.jButton2ActionPerformed(evt);
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        this.jButton1ActionPerformed(evt);
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     /**
      * @param args the command line arguments
