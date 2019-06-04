@@ -5,6 +5,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -20,7 +23,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author herre
  */
 public class FPrincipal extends javax.swing.JFrame {
-
+    
+    private List<String> lER;
     /**
      * Creates new form FPrincipal
      */
@@ -85,14 +89,13 @@ public class FPrincipal extends javax.swing.JFrame {
         jTextArea1.setFont(new java.awt.Font("Monospaced", 2, 13)); // NOI18N
         jTextArea1.setForeground(new java.awt.Color(153, 153, 153));
         jTextArea1.setRows(5);
-        jTextArea1.setText("Pulse \"Editar Entrada\"");
         jTextArea1.setFocusable(false);
         jScrollPane1.setViewportView(jTextArea1);
 
         jTextArea2.setEditable(false);
         jTextArea2.setBackground(new java.awt.Color(255, 255, 197));
         jTextArea2.setColumns(20);
-        jTextArea2.setFont(new java.awt.Font("Monospaced", 1, 13)); // NOI18N
+        jTextArea2.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
         jTextArea2.setForeground(new java.awt.Color(0, 51, 153));
         jTextArea2.setRows(5);
         jTextArea2.setFocusable(false);
@@ -100,9 +103,11 @@ public class FPrincipal extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText("EXPRESIONES REGULARES");
+        jLabel1.setEnabled(false);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel2.setText("ENTRADA");
+        jLabel2.setEnabled(false);
 
         jTextArea3.setEditable(false);
         jTextArea3.setBackground(new java.awt.Color(204, 204, 204));
@@ -188,6 +193,11 @@ public class FPrincipal extends javax.swing.JFrame {
         jButton8.setBackground(new java.awt.Color(240, 215, 162));
         jButton8.setText("Procesar");
         jButton8.setEnabled(false);
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -210,7 +220,7 @@ public class FPrincipal extends javax.swing.JFrame {
                             .addComponent(jButton2)
                             .addGap(18, 18, 18)
                             .addComponent(jButton1)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addGap(18, 18, 18)
                             .addComponent(jButton3)
                             .addGap(18, 18, 18)
                             .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -249,7 +259,7 @@ public class FPrincipal extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton4)
@@ -303,6 +313,11 @@ public class FPrincipal extends javax.swing.JFrame {
 
         jMenuItem5.setText("Procesar Especificación..");
         jMenuItem5.setEnabled(false);
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem5);
         jMenu1.add(jSeparator3);
 
@@ -357,7 +372,7 @@ public class FPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private String abrirArchivo() {
+    private String abrirArchivo() throws Exception {
         String aux;   
         String texto="";
         try
@@ -368,6 +383,7 @@ public class FPrincipal extends javax.swing.JFrame {
             file.setFileFilter(filter);
             file.showOpenDialog(this);
             File abre=file.getSelectedFile();
+            lER = Principal.procesarEsp(abre.getPath());
 
             if(abre!=null)
             {     
@@ -390,7 +406,12 @@ public class FPrincipal extends javax.swing.JFrame {
     }
     
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        String especificacion = this.abrirArchivo();
+        String especificacion = null;
+        try {
+            especificacion = this.abrirArchivo();
+        } catch (Exception ex) {
+            Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.jLabel3.setEnabled(true);
         this.jTextArea3.setEnabled(true);
         this.jTextArea3.setText(especificacion);
@@ -411,9 +432,9 @@ public class FPrincipal extends javax.swing.JFrame {
         this.jButton1.setEnabled(true);
         this.jButton2.setEnabled(false);
         this.jButton3.setEnabled(false);
-        this.jMenuItem6.setEnabled(true);
+        this.jMenuItem6.setEnabled(false);
         this.jMenuItem7.setEnabled(true);
-        this.jMenuItem8.setEnabled(true);
+        this.jMenuItem8.setEnabled(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -507,6 +528,34 @@ public class FPrincipal extends javax.swing.JFrame {
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
         this.jButton1ActionPerformed(evt);
     }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        String cad = this.lER.get(0);
+        for (int i = 1; i < this.lER.size(); i++)
+        {
+            cad += "\n" + this.lER.get(i);
+        }
+        this.jTextArea2.setText(cad);
+        this.jLabel1.setEnabled(true);
+        this.jLabel2.setEnabled(true);
+        this.jButton5.setEnabled(false);
+        this.jButton6.setEnabled(false);
+        this.jButton7.setEnabled(false);
+        this.jButton8.setEnabled(false);
+        this.jMenuItem2.setEnabled(false);
+        this.jMenuItem3.setEnabled(false);
+        this.jMenuItem4.setEnabled(false);
+        this.jMenuItem5.setEnabled(false);
+        this.jTextArea1.setFont(new Font("Monospaced",2,13));
+        this.jTextArea1.setForeground(new Color(153,153,153));
+        this.jTextArea1.setText("Pulse \"Editar Entrada\"");
+        this.jButton2.setEnabled(true);
+        this.jMenuItem6.setEnabled(true);
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        this.jButton8ActionPerformed(evt);
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     /**
      * @param args the command line arguments
