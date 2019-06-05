@@ -90,6 +90,11 @@ public class FPrincipal extends javax.swing.JFrame {
         jTextArea1.setForeground(new java.awt.Color(153, 153, 153));
         jTextArea1.setRows(5);
         jTextArea1.setFocusable(false);
+        jTextArea1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextArea1KeyTyped(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTextArea1);
 
         jTextArea2.setEditable(false);
@@ -346,6 +351,11 @@ public class FPrincipal extends javax.swing.JFrame {
 
         jMenuItem9.setText("Iniciar Reconocimiento");
         jMenuItem9.setEnabled(false);
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem9);
 
         jMenuBar1.add(jMenu1);
@@ -383,7 +393,7 @@ public class FPrincipal extends javax.swing.JFrame {
             file.setFileFilter(filter);
             file.showOpenDialog(this);
             File abre=file.getSelectedFile();
-            lER = Principal.procesarEsp(abre.getPath());
+            lER = Procesador.procesarEsp(abre.getPath());
 
             if(abre!=null)
             {     
@@ -435,6 +445,8 @@ public class FPrincipal extends javax.swing.JFrame {
         this.jMenuItem6.setEnabled(false);
         this.jMenuItem7.setEnabled(true);
         this.jMenuItem8.setEnabled(false);
+        this.jToggleButton1.setEnabled(true);
+        this.jMenuItem9.setEnabled(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -449,6 +461,8 @@ public class FPrincipal extends javax.swing.JFrame {
         this.jMenuItem6.setEnabled(true);
         this.jMenuItem7.setEnabled(false);
         this.jMenuItem8.setEnabled(true);
+        this.jToggleButton1.setEnabled(false);
+        this.jMenuItem9.setEnabled(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
@@ -456,6 +470,11 @@ public class FPrincipal extends javax.swing.JFrame {
         {
             this.jToggleButton1.setText("Detener Reconocimiento");
             this.jToggleButton1.setBackground(Color.gray);
+            try {
+                Procesador.crearAutomata();
+            } catch (Exception ex) {
+                Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else
         {
@@ -556,6 +575,23 @@ public class FPrincipal extends javax.swing.JFrame {
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
         this.jButton8ActionPerformed(evt);
     }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        this.jToggleButton1ActionPerformed(evt);
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
+
+    private void jTextArea1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyTyped
+        String tok = Character.toString(evt.getKeyChar());
+        List<Integer> expr = Procesador.reconocer(tok);
+        this.jTextArea2.setText("");
+        if (expr.contains(0))
+            this.jTextArea2.append(this.lER.get(0));
+        for (int i = 1; i < this.lER.size(); i++)
+        {
+            if (expr.contains(i))
+                this.jTextArea2.append("\n" + this.lER.get(i));
+        } 
+    }//GEN-LAST:event_jTextArea1KeyTyped
 
     /**
      * @param args the command line arguments
