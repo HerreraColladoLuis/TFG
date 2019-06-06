@@ -1066,7 +1066,7 @@ public class Analizador
 						if (lER.contains(a))
 							lOut.add(a);
 					}
-					else
+					else // Aquí hay que tocar 
 						lOut.add(a); // Cogemos la ER correspondiente
 				}	
 			}
