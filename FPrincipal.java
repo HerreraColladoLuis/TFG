@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +34,9 @@ import javax.swing.text.StyledDocument;
 public class FPrincipal extends javax.swing.JFrame {
     
     private List<String> lER;
+    private List<Analizador.Estado> lEaux;
+    private List<Analizador.Estado> lE = new LinkedList<>();
+    private List<Integer> lnER = new LinkedList<>();
     /**
      * Creates new form FPrincipal
      */
@@ -592,7 +596,16 @@ public class FPrincipal extends javax.swing.JFrame {
      */
     private void jTextArea1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyTyped
         String tok = Character.toString(evt.getKeyChar());
-        List<Integer> expr = Procesador.reconocer(tok);
+        this.lEaux = this.lE;
+        List<Integer> expr = Procesador.reconocer(this.lE,this.lnER,tok);
+        this.lnER.clear();
+        for (int n : expr)
+        {
+            if (!this.lnER.contains(n))
+                this.lnER.add(n);
+        }
+        this.lE = Procesador.actualizarLE(this.lEaux, tok);
+        
         this.jTextPane1.setText("");
         StyledDocument doc = this.jTextPane1.getStyledDocument();
         Style style = this.jTextPane1.addStyle("Style", null);

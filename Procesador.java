@@ -143,20 +143,30 @@ public class Procesador {
         System.out.println();
     }
     
-    // ERROR
-    public static List<Integer> reconocer(String tok)
+    public static List<Analizador.Estado> actualizarLE(List<Analizador.Estado> lE, String tok)
     {
         Analizador aux = new Analizador();
         aux.listaER = auxregex;
         aux.listaM = auxmacro;
-        List<Integer> lnER = new LinkedList<>();
-        List<Integer> lnE;
-        List<Analizador.Estado> lE = new LinkedList<>();
+        List<Analizador.Estado> lEAux;
         
-        lE = aux.siguienteToken(tok, lE, Procesador.automata, Procesador.arbolAux);
+        lEAux = aux.siguienteToken(tok, lE, Procesador.automata, Procesador.arbolAux);
+        
+        return lEAux;
+    }
+    
+    public static List<Integer> reconocer(List<Analizador.Estado> lE, List<Integer> lnER, String tok)
+    {
+        Analizador aux = new Analizador();
+        aux.listaER = auxregex;
+        aux.listaM = auxmacro;
+        List<Integer> lnE;
+        List<Analizador.Estado> lEAux;
+        
+        lEAux = aux.siguienteToken(tok, lE, Procesador.automata, Procesador.arbolAux);
         /** Hay que llevar un conteo de los terminales que hemos leido, y a partir de ahí saber
         en qué expresión regular estamos **/
-        lnE = aux.activarER(tok, lE, Procesador.automata, lnER, Procesador.arbolAux);
+        lnE = aux.activarER(tok, lEAux, Procesador.automata, lnER, Procesador.arbolAux);
         return lnE;
 //        lnER.clear();
 //        for (int nExp : lnE)
