@@ -155,7 +155,7 @@ public class Procesador {
         return lEAux;
     }
     
-    public static List<Integer> reconocer(List<Analizador.Estado> lE, List<Integer> lnER, String tok)
+    public static List<Integer> reconocer(List<Analizador.Estado> lE, List<Integer> lnER, String tok) throws Exception
     {
         Analizador aux = new Analizador();
         aux.listaER = auxregex;

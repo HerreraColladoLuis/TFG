@@ -1,7 +1,7 @@
 import java.util.LinkedList;
 import java.util.List;
 /**
- * Clase central de la aplicación, donde introduciré toda la lógica
+ * Clase central de la aplicaciï¿½n, donde introducirï¿½ toda la lï¿½gica
  * @author herre
  *
  */
@@ -10,10 +10,10 @@ public class Analizador
 	List<String> listaM;
 	List<String> listaER;
 	/**
-	   * Método que recibe una lista con strings correspondientes a macros 
-	   * y parsea cada uno traduciendolos a un estado común
+	   * Mï¿½todo que recibe una lista con strings correspondientes a macros 
+	   * y parsea cada uno traduciendolos a un estado comï¿½n
 	   * @param lista con las macros
-	   * @return lista con las macros traducidas a un estado común
+	   * @return lista con las macros traducidas a un estado comï¿½n
 	   */
 	  public List<String> translateMacro(List<String> lista)
 	  {
@@ -29,10 +29,10 @@ public class Analizador
 		  return out;
 	  }
 	  /**
-	   * Método que recibe una lista con strings correspondientes a regex 
-	   * y parsea cada una traduciendolos a un estado común
+	   * Mï¿½todo que recibe una lista con strings correspondientes a regex 
+	   * y parsea cada una traduciendolos a un estado comï¿½n
 	   * @param lista con las regex
-	   * @return lista con las regex traducidas a un estado común
+	   * @return lista con las regex traducidas a un estado comï¿½n
 	   */
 	  public List<String> translateRegex(List<String> lista)
 	  {
@@ -115,10 +115,10 @@ public class Analizador
 		return out;
 	}
 	/**
-	 * Método para traducir una expresión regular a un formato
+	 * Mï¿½todo para traducir una expresiï¿½n regular a un formato
 	 * que pueda reconocer el algoritmo final
-	 * @param exp string de la expresión
-	 * @return string de la expresión traducido
+	 * @param exp string de la expresiï¿½n
+	 * @return string de la expresiï¿½n traducido
 	 * @throws Exception 
 	 */
 	public String traducir(String exp) throws Exception
@@ -137,17 +137,17 @@ public class Analizador
 			if (rech[i] == '[') 
 			{
 				cadena += "\"";
-				if (rech[i+1] == '^') // Comprobamos si está negado
+				if (rech[i+1] == '^') // Comprobamos si estï¿½ negado
 				{
 					cadena+= rech[i+1]; // aux += ^
-					i = i+1; // Apuntamos a la negación
+					i = i+1; // Apuntamos a la negaciï¿½n
 					if (rech[i+1] == ']')
 						n = true;
 				}
 				i = i+1; // Apuntamos al primer caracter del set
 				while (true)
 				{
-					// Comprobamos si es una letra, mayúscula o minúscula, o un número
+					// Comprobamos si es una letra, mayï¿½scula o minï¿½scula, o un nï¿½mero
 					if (((int) rech[i] > 64 && (int) rech[i] < 91) || ((int) rech[i] > 96 && (int) rech[i] < 123) || ((int) rech[i] > 47 && (int) rech[i] < 58))
 					{
 						// Caso correspondiente a [a-z] o [0-9] (por ejemplo)
@@ -157,7 +157,7 @@ public class Analizador
 								cadena += (char) j;
 							i = i+3; // Apuntamos al siguiente caracter de la secuencia
 						}
-						else // Si no es una secuencia, guardamos el número o la letra
+						else // Si no es una secuencia, guardamos el nï¿½mero o la letra
 						{
 							cadena += rech[i];
 							i = i+1; // Apuntamos al siguiente caracter de la secuencia
@@ -174,14 +174,14 @@ public class Analizador
 					// Comprobamos si es el final del set
 					else if (rech[i] == ']') // Acaba el set
 						break; // Salimos del while
-					// Cualquier otro símbolo
+					// Cualquier otro sï¿½mbolo
 					else
 					{
-						cadena += rech[i]; // Guardamos el símbolo
+						cadena += rech[i]; // Guardamos el sï¿½mbolo
 						i = i+1;
 					}	
 				}
-				cadena += "^##\""; // Añadir algo para saber que es un set ^##
+				cadena += "^##\""; // Aï¿½adir algo para saber que es un set ^##
 				if (n)
 				{
 					n = false;
@@ -199,34 +199,34 @@ public class Analizador
 					aux1 += rech[i]; // Guardamos en aux1 la macro 
 					i = i+1;
 				}
-				// Comprobamos que la lista no esté vacia o sea nula
+				// Comprobamos que la lista no estï¿½ vacia o sea nula
 				if (listaM != null && !listaM.isEmpty()) 
 				{
-					for (String comp : listaM) // Recorremos la lista buscando la posición de la macro dada
+					for (String comp : listaM) // Recorremos la lista buscando la posiciï¿½n de la macro dada
 					{
 						if (comp.equalsIgnoreCase(aux1)) // Cuando la encontramos, salimos
 							break;
-						j = j+1; // En esta variable guardamos la posición
+						j = j+1; // En esta variable guardamos la posiciï¿½n
 					}
 				}
 				else 
-					throw new Exception("Lista de Macros vacía o nula"); // Devolvemos una excepción 
-				// Comprobamos que la lista no esté vacia o sea nula
+					throw new Exception("Lista de Macros vacï¿½a o nula"); // Devolvemos una excepciï¿½n 
+				// Comprobamos que la lista no estï¿½ vacia o sea nula
 				if (listaER != null && !listaER.isEmpty()) 
 				{
 					cadAux = traducir(listaER.get(j)); // Hacemos recursividad para parsear una macro
 				}
 				else
-					throw new Exception("Lista de ER vacía o nula"); // Devolvemos una excepción
-				// Añadimos el arbol de la macro como hijo del arbol actúal
+					throw new Exception("Lista de ER vacï¿½a o nula"); // Devolvemos una excepciï¿½n
+				// Aï¿½adimos el arbol de la macro como hijo del arbol actï¿½al
 				if (cadAux == null)
-					throw new Exception("Cadena auxiliar nula"); // Devolvemos una excepción
+					throw new Exception("Cadena auxiliar nula"); // Devolvemos una excepciï¿½n
 				else
 				{
 					cadena += "(" + cadAux + ")";
 				}
 			}
-			// Entramos en el caso en el que se abre un paréntesis
+			// Entramos en el caso en el que se abre un parï¿½ntesis
 			else if (rech[i] == '(')
 			{
 				cadena += "(";
@@ -285,10 +285,10 @@ public class Analizador
 		return cadena;
 	}
 	/**
-	 * Método que devuelve si una Expresión Regular está parseada,
-	 * es decir, si no tiene paréntesis inicial y final.
-	 * @param exp Expresión Regular
-	 * @return True si está parseada, false en caso contrario
+	 * Mï¿½todo que devuelve si una Expresiï¿½n Regular estï¿½ parseada,
+	 * es decir, si no tiene parï¿½ntesis inicial y final.
+	 * @param exp Expresiï¿½n Regular
+	 * @return True si estï¿½ parseada, false en caso contrario
 	 */
 	private boolean parseado(String exp)
 	{
@@ -324,13 +324,13 @@ public class Analizador
 		return false;
 	}
 	/**
-	 * Método que recibe una expresión regular en forma de string
+	 * Mï¿½todo que recibe una expresiï¿½n regular en forma de string
 	 * y devuelve una lista con sus componentes 
 	 * parseada. Es decir, los componentes que se encuentre sin 
-	 * paréntesis, los añade a la lista, y si se encuentra una 
-	 * subexpresión dentro de paréntesis, quita éstos y añade la 
-	 * subexpresión como un elemento más de la lista.
-	 * @param exp Expresión regular en forma de string
+	 * parï¿½ntesis, los aï¿½ade a la lista, y si se encuentra una 
+	 * subexpresiï¿½n dentro de parï¿½ntesis, quita ï¿½stos y aï¿½ade la 
+	 * subexpresiï¿½n como un elemento mï¿½s de la lista.
+	 * @param exp Expresiï¿½n regular en forma de string
 	 * @return Lista de componentes 
 	 * @throws Exception 
 	 */
@@ -406,8 +406,8 @@ public class Analizador
 		return lComp;
 	}
 	/**
-	 * Método para recorrer un árbol binario en pre orden
-	 * @param nodo Nodo del árbol del que empezaremos a recorrer
+	 * Mï¿½todo para recorrer un ï¿½rbol binario en pre orden
+	 * @param nodo Nodo del ï¿½rbol del que empezaremos a recorrer
 	 */
 	public void preOrden(NodoArbol nodo)
 	{
@@ -419,7 +419,7 @@ public class Analizador
 		}
 	}
 	/**
-	 * Método para recorrer un árbol binario en in orden
+	 * Mï¿½todo para recorrer un ï¿½rbol binario en in orden
 	 * @param nodo Nodo del arbol del que empezaremos a recorrer
 	 */
 	public void inOrden(NodoArbol nodo)
@@ -432,9 +432,9 @@ public class Analizador
 		}
 	}
 	/**
-	 * Método para aumentar un árbol de una expresión regular
-	 * @param nodo Raíz del árbol a aumentar
-	 * @return Árbol aumentado
+	 * Mï¿½todo para aumentar un ï¿½rbol de una expresiï¿½n regular
+	 * @param nodo Raï¿½z del ï¿½rbol a aumentar
+	 * @return ï¿½rbol aumentado
 	 */
 	public NodoArbol aumentar(NodoArbol nodo)
 	{
@@ -444,11 +444,11 @@ public class Analizador
 		return nodoAuxiliar;
 	}
 	/**
-	 * Método para numerar las hojas de un arbol sintáctico
-	 * en el orden de aparición en el mismo
+	 * Mï¿½todo para numerar las hojas de un arbol sintï¿½ctico
+	 * en el orden de apariciï¿½n en el mismo
 	 * @param nodo Nodo inicial del arbol
 	 * @param pos contador 
-	 * @return última posición asignada
+	 * @return ï¿½ltima posiciï¿½n asignada
 	 */
 	public int numerar(NodoArbol nodo, int pos)
 	{
@@ -469,7 +469,7 @@ public class Analizador
 		return p;
 	}
 	/**
-	 * Método anulable que devuelve verdadero o falso
+	 * Mï¿½todo anulable que devuelve verdadero o falso
 	 * @param nodo Nodo a analizar
 	 * @return verdadero o falso
 	 */
@@ -489,7 +489,7 @@ public class Analizador
 			return true;
 	}
 	/**
-	 * Método primeraPos que devuelve una lista de posiciones
+	 * Mï¿½todo primeraPos que devuelve una lista de posiciones
 	 * @param nodo Nodo a analizar
 	 * @return Lista de posiciones
 	 */
@@ -524,7 +524,7 @@ public class Analizador
 		return out;
 	}
 	/**
-	 * Método ultimaPos que devuelve una lista de posiciones
+	 * Mï¿½todo ultimaPos que devuelve una lista de posiciones
 	 * @param nodo Nodo a analizar
 	 * @return Lista de posiciones
 	 */
@@ -553,7 +553,7 @@ public class Analizador
 			out.addAll(ultimaPos(nodo.hijoDcho));
 			out.addAll(ultimaPos(nodo.hijoIzdo));
 		}
-		else if (nodo.info.equals("?")) // CAMBIO AQUÍ RESPECTO DOCUMENTACION
+		else if (nodo.info.equals("?")) // CAMBIO AQUï¿½ RESPECTO DOCUMENTACION
 		{
 			out.addAll(ultimaPos(nodo.hijoIzdo));
 			if (aux.hijoIzdo.equals(nodo))
@@ -572,9 +572,9 @@ public class Analizador
 		return out;
 	}
 	/**
-	 * Método siguientePos que se calcula sobre los nodos hoja
-	 * @param nodo Nodo desde el que recorreremos el árbol
-	 * @param pos Posición de la hoja a analizar
+	 * Mï¿½todo siguientePos que se calcula sobre los nodos hoja
+	 * @param nodo Nodo desde el que recorreremos el ï¿½rbol
+	 * @param pos Posiciï¿½n de la hoja a analizar
 	 * @return Lista de posiciones
 	 */
 	public List<Integer> siguientePos(NodoArbol nodo, int pos)
@@ -593,7 +593,7 @@ public class Analizador
 					}
 				}
 			}
-			else if (nodo.info.equals("*") || nodo.info.equals("+")) // CAMBIO AQUÍ RESPECTO DOCUMENTACION
+			else if (nodo.info.equals("*") || nodo.info.equals("+")) // CAMBIO AQUï¿½ RESPECTO DOCUMENTACION
 			{
 				for (int p : ultimaPos(nodo))
 				{
@@ -609,7 +609,7 @@ public class Analizador
 		return out;
 	}
 	/**
-	 * Clase auxiliar para un árbol binario
+	 * Clase auxiliar para un ï¿½rbol binario
 	 * @author herre
 	 *
 	 */
@@ -626,8 +626,8 @@ public class Analizador
 		public int expReg = -1;
 		
 		/**
-		 * Constructor para un nodo del árbol
-		 * @param info Información que llevará el nodo
+		 * Constructor para un nodo del ï¿½rbol
+		 * @param info Informaciï¿½n que llevarï¿½ el nodo
 		 */
 		public NodoArbol(String info) 
 		{
@@ -644,7 +644,7 @@ public class Analizador
 			this.padre = null;
 		}
 		/**
-		 * Método que devuelve si un nodo es una hoja
+		 * Mï¿½todo que devuelve si un nodo es una hoja
 		 * @param nodo Nodo que evaluaremos
 		 * @return verdadero si es una hoja
 		 */
@@ -653,7 +653,7 @@ public class Analizador
 			return (this.hijoIzdo == null && this.hijoDcho == null);
 		}
 		/**
-		 * Método para insertar un nodo como hijo derecho de otro nodo padre
+		 * Mï¿½todo para insertar un nodo como hijo derecho de otro nodo padre
 		 * @param nodo Nodo que insertaremos como hijo derecho 
 		 * @return Nodo hijo derecho
 		 */
@@ -668,7 +668,7 @@ public class Analizador
 			return nodoAuxiliar.hijoDcho;
 		}
 		/**
-		 * Método para insertar un nodo como hijo izquierdo de otro nodo padre
+		 * Mï¿½todo para insertar un nodo como hijo izquierdo de otro nodo padre
 		 * @param nodo Nodo que insertaremos como hijo izquierdo
 		 * @return Nodo hijo izquierdo
 		 */
@@ -684,11 +684,11 @@ public class Analizador
 		}
 	}
 	/**
-	 * Método que devuelve, en forma de string, la información
-	 * de un nodo hoja determinado por su posición.
+	 * Mï¿½todo que devuelve, en forma de string, la informaciï¿½n
+	 * de un nodo hoja determinado por su posiciï¿½n.
 	 * @param nodo Arbol a recorrer
-	 * @param posicion Posición del nodo hoja a evaluar
-	 * @return Información del nodo hoja en forma de string
+	 * @param posicion Posiciï¿½n del nodo hoja a evaluar
+	 * @return Informaciï¿½n del nodo hoja en forma de string
 	 */
 	String devolverTerminal(NodoArbol nodo, int posicion)
 	{
@@ -708,11 +708,11 @@ public class Analizador
 		return res;
 	}
 	/**
-	 * Método que devuelve la posición de la expresión regular que
-	 * tiene un nodo en su información.
-	 * @param nodo Árbol a recorrer
-	 * @param posicion Posición del nodo hoja a recorrer
-	 * @return Posición en la lista de ER
+	 * Mï¿½todo que devuelve la posiciï¿½n de la expresiï¿½n regular que
+	 * tiene un nodo en su informaciï¿½n.
+	 * @param nodo ï¿½rbol a recorrer
+	 * @param posicion Posiciï¿½n del nodo hoja a recorrer
+	 * @return Posiciï¿½n en la lista de ER
 	 */
 	int devolverNER(NodoArbol nodo, int posicion)
 	{
@@ -731,9 +731,33 @@ public class Analizador
 		}
 		return i;
 	}
+        /**
+	 * MÃ©todo que devuelve una lista de terminales correspondientes a una expresiÃ³n regular
+	 * dada por su Ã­ndice.
+	 * @param nodo
+	 * @param lis
+	 * @param expReg
+	 * @return
+	 */
+	List<String> devolverPos(NodoArbol nodo, List<String> lis, int expReg)
+	{
+            if (nodo != null)
+            {
+                if (nodo.expReg == expReg)
+                {
+                    lis.add(nodo.info);
+                }
+                else
+                {
+                    lis = devolverPos(nodo.hijoIzdo,lis,expReg);
+                    lis = devolverPos(nodo.hijoDcho,lis,expReg);
+                }
+            }
+            return lis;
+	}
 	/**
-	 * Método que devuelve si una cadena es un conjunto. Es decir,
-	 * "abcdef" sería un conjunto determinado por a-f.
+	 * Mï¿½todo que devuelve si una cadena es un conjunto. Es decir,
+	 * "abcdef" serï¿½a un conjunto determinado por a-f.
 	 * @param cadena Cadena a evaluar
 	 * @return Verdadero si es un conjunto
 	 */
@@ -766,8 +790,8 @@ public class Analizador
 		return true;
 	}
 	/**
-	 * Método que comprueba si dos cadenas son equivalentes para
-	 * su aceptación en el autómata.
+	 * Mï¿½todo que comprueba si dos cadenas son equivalentes para
+	 * su aceptaciï¿½n en el autï¿½mata.
 	 * @param c1 Cadena principal
 	 * @param c2 Cadena que comprobaremos con la principal
 	 * @return Verdadero si son equivalentes
@@ -802,7 +826,7 @@ public class Analizador
 		}
 		else
 		{
-			if ((c1.equals("\""+c2+"\"")) || (c1.equals("\".\"")))
+			if ((c1.equals("\""+c2+"\"")))// || (c1.equals("\".\"")))
 				encontrado = true;
 		}
 		if (!neg)
@@ -816,7 +840,7 @@ public class Analizador
 		}
 	}
 	/**
-	 * Clase auxiliar para definir un estado del autómata
+	 * Clase auxiliar para definir un estado del autï¿½mata
 	 * @author herre
 	 *
 	 */
@@ -842,7 +866,7 @@ public class Analizador
 			this.marcado = false;
 		}
 		/**
-		 * Método para imprimir por pantalla la información de un estado
+		 * Mï¿½todo para imprimir por pantalla la informaciï¿½n de un estado
 		 */
 		public void imprimir()
 		{
@@ -850,7 +874,7 @@ public class Analizador
 		}
 	}
 	/**
-	 * Clase auxiliar para definir una transición en un autómata
+	 * Clase auxiliar para definir una transiciï¿½n en un autï¿½mata
 	 * @author herre
 	 *
 	 */
@@ -862,7 +886,7 @@ public class Analizador
 		/**
 		 * Constructor principal
 		 * @param ei Estado inicial
-		 * @param t Identificador del símbolo de la transición
+		 * @param t Identificador del sï¿½mbolo de la transiciï¿½n
 		 * @param ef Estado final
 		 */
 		public Transicion(Estado ei, String t, Estado ef)
@@ -872,7 +896,7 @@ public class Analizador
 			this.estadoFinal = ef;
 		}
 		/**
-		 * Metodo para imprimir por pantalla los valores de una transición
+		 * Metodo para imprimir por pantalla los valores de una transiciï¿½n
 		 */
 		public void imprimir()
 		{
@@ -890,7 +914,7 @@ public class Analizador
 		}
 	}
 	/**
-	 * Método que dada una entrada en forma de String y un estado del autómata,
+	 * Mï¿½todo que dada una entrada en forma de String y un estado del autï¿½mata,
 	 * comprueba si con dicho terminal se puede avanzar a otro(s) estado(s). En
 	 * ese caso, los va introduciendo en una lista de estados.
 	 * @param terminal
@@ -938,97 +962,97 @@ public class Analizador
 		return lEst;
 	}
 	/**
-	 * Método para crear un autómata a partir de un árbol binario de una
-	 * expresión regular. Se devolverá una tabla representando las transiciones
-	 * desde cada estado con cada símbolo de entrada posible.
-	 * @param arbol Árbol binario de la expresión regular
+	 * Mï¿½todo para crear un autï¿½mata a partir de un ï¿½rbol binario de una
+	 * expresiï¿½n regular. Se devolverï¿½ una tabla representando las transiciones
+	 * desde cada estado con cada sï¿½mbolo de entrada posible.
+	 * @param arbol ï¿½rbol binario de la expresiï¿½n regular
 	 * @return Tabla de transiciones
 	 */
 	public List<List<Estado>> crearAutomata(NodoArbol arbol)
 	{
-		List<List<Estado>> tabla = new LinkedList<>();
-		List<Estado> lest = new LinkedList<>();
-		List<Integer> conjunto = new LinkedList<>();
-		List<Estado> laux = new LinkedList<>();
-		boolean esta = false;
-		int noMarcado = 1;
-		int naux = 0;
-		int nER;
-		// Añadimos el estado inicial para el automata
-		List<Integer> la = primeraPos(arbol);
-		Estado einicial = new Estado(primeraPos(arbol));
-		einicial.n = naux;
-		einicial.esinicial = true;
-		if (la.contains(arbol.hijoDcho.posicion))
-			einicial.esfinal = true;
-		naux++;
-		Estado nuevo;
-		lest.add(einicial);
-		laux.add(einicial);
-		// Iniciamos el algoritmo de creación del autómata
-		while (noMarcado > 0)
-		{
-			for (Estado actual : lest)
-			{
-				if (!actual.marcado)
-				{
-					tabla.add(new LinkedList<>());
-					for (int x = 0; x < arbol.hijoDcho.posicion-1; x++)
-					{
-						tabla.get(tabla.size()-1).add(new Estado(null));
-					}
-					actual.marcado = true;
-					noMarcado--;
-					for (int i = 1;i < arbol.hijoDcho.posicion;i++)
-					{
-						if (actual.lposiciones.contains(i))
-						{
-							conjunto.addAll(siguientePos(arbol,i));
-						}
-						if (!conjunto.isEmpty())
-						{
-							nuevo = new Estado(conjunto);
-							nER = this.devolverNER(arbol,i); // EN PRUEBA
-							nuevo.expRegs.add(nER); // EN PRUEBA
-							nuevo.lTerm.add(i);
-							for (Estado aux : laux)
-							{
-								if (aux.lposiciones.equals(conjunto))
-								{
-									esta = true;
-									aux.expRegs.add(nER); // EN PRUEBA
-									aux.lTerm.add(i);
-									nuevo = aux;
-									break;
-								}
-							}
-							if (!esta)
-							{
-								nuevo.n = naux;
-								naux++;
-								if (conjunto.contains(arbol.hijoDcho.posicion))
-									nuevo.esfinal = true;
-								laux.add(nuevo);
-								noMarcado++;
-							}
-							else
-								esta = false;
-							tabla.get(actual.n).set(i-1, nuevo);
-							conjunto.clear();
-						}
-					}
-				}
-			}
-			lest.clear();
-			lest.addAll(laux);
-		}
-		return tabla;
+            List<List<Estado>> tabla = new LinkedList<>();
+            List<Estado> lest = new LinkedList<>();
+            List<Integer> conjunto = new LinkedList<>();
+            List<Estado> laux = new LinkedList<>();
+            boolean esta = false;
+            int noMarcado = 1;
+            int naux = 0;
+            int nER;
+            // Aï¿½adimos el estado inicial para el automata
+            List<Integer> la = primeraPos(arbol);
+            Estado einicial = new Estado(primeraPos(arbol));
+            einicial.n = naux;
+            einicial.esinicial = true;
+            if (la.contains(arbol.hijoDcho.posicion))
+                    einicial.esfinal = true;
+            naux++;
+            Estado nuevo;
+            lest.add(einicial);
+            laux.add(einicial);
+            // Iniciamos el algoritmo de creaciï¿½n del autï¿½mata
+            while (noMarcado > 0)
+            {
+                    for (Estado actual : lest)
+                    {
+                            if (!actual.marcado)
+                            {
+                                    tabla.add(new LinkedList<>());
+                                    for (int x = 0; x < arbol.hijoDcho.posicion-1; x++)
+                                    {
+                                            tabla.get(tabla.size()-1).add(new Estado(null));
+                                    }
+                                    actual.marcado = true;
+                                    noMarcado--;
+                                    for (int i = 1;i < arbol.hijoDcho.posicion;i++)
+                                    {
+                                            if (actual.lposiciones.contains(i))
+                                            {
+                                                    conjunto.addAll(siguientePos(arbol,i));
+                                            }
+                                            if (!conjunto.isEmpty())
+                                            {
+                                                    nuevo = new Estado(conjunto);
+                                                    nER = this.devolverNER(arbol,i); // EN PRUEBA
+                                                    nuevo.expRegs.add(nER); // EN PRUEBA
+                                                    nuevo.lTerm.add(i);
+                                                    for (Estado aux : laux)
+                                                    {
+                                                            if (aux.lposiciones.equals(conjunto))
+                                                            {
+                                                                    esta = true;
+                                                                    aux.expRegs.add(nER); // EN PRUEBA
+                                                                    aux.lTerm.add(i);
+                                                                    nuevo = aux;
+                                                                    break;
+                                                            }
+                                                    }
+                                                    if (!esta)
+                                                    {
+                                                            nuevo.n = naux;
+                                                            naux++;
+                                                            if (conjunto.contains(arbol.hijoDcho.posicion))
+                                                                    nuevo.esfinal = true;
+                                                            laux.add(nuevo);
+                                                            noMarcado++;
+                                                    }
+                                                    else
+                                                            esta = false;
+                                                    tabla.get(actual.n).set(i-1, nuevo);
+                                                    conjunto.clear();
+                                            }
+                                    }
+                            }
+                    }
+                    lest.clear();
+                    lest.addAll(laux);
+            }
+            return tabla;
 	}
 	/**
-	 * Método que devuelve una lista de índices de expresiones regulares, dada una lista de estados en los que
-	 * se encuentra el autómata. Además, se pasa como parámetro una lista de las expresiones regulares que se 
-	 * activaron en el último estado. Con esta lista se comprueba si en el nuevo estado se activa alguna expresión
-	 * regular que anteriormente no se encontraba activa, si es así, no se activa.
+	 * Mï¿½todo que devuelve una lista de ï¿½ndices de expresiones regulares, dada una lista de estados en los que
+	 * se encuentra el autï¿½mata. Ademï¿½s, se pasa como parï¿½metro una lista de las expresiones regulares que se 
+	 * activaron en el ï¿½ltimo estado. Con esta lista se comprueba si en el nuevo estado se activa alguna expresiï¿½n
+	 * regular que anteriormente no se encontraba activa, si es asï¿½, no se activa.
 	 * @param terminal que se lee
 	 * @param lista de estados
 	 * @param automata
@@ -1036,46 +1060,52 @@ public class Analizador
 	 * @param arbol
 	 * @return lista de ER que se activan
 	 */
-	public List<Integer> activarER(String tok, List<Estado> lE, List<List<Estado>> tabla, List<Integer> lER, NodoArbol arbol)
+	public List<Integer> activarER(String tok, List<Estado> lE, List<List<Estado>> tabla, List<Integer> lER, NodoArbol arbol) throws Exception
 	{
-		List<Integer> lOut = new LinkedList<>();
-		List<Integer> lInt = new LinkedList<>();
-		List<Estado> lAux;
-		String cad;
-		int c, a;
-		
-		int i = 0;
-		lAux = tabla.get(0);
-		for (@SuppressWarnings("unused") Estado e : lAux) // Este primer bucle es para coger el índice de terminal del string leído
-		{
-			i++;
-			cad = this.devolverTerminal(arbol,i);
-			if (this.comprobarTerminal(cad,tok))
-				lInt.add(i);
-		}
-		for (Estado est : lE)
-		{
-			for (Integer obj : lInt)
-			{
-				c = est.lTerm.indexOf(obj); // Cogemos el índice en el que se encuentra ese terminal
-				if (c != -1)
-				{
-					a = est.expRegs.get(c);
-					if (!lER.isEmpty())
-					{
-						if (lER.contains(a))
-							lOut.add(a);
-					}
-					else // Aquí hay que tocar 
-						lOut.add(a); // Cogemos la ER correspondiente
-				}	
-			}
-		}
-		return lOut;
+            List<Integer> lOut = new LinkedList<>();
+            List<Integer> lInt = new LinkedList<>();
+            List<String> lPos = new LinkedList<>();
+            List<Estado> lAux;
+            String cad, auxER;
+            int c, a;
+
+            int i = 0;
+            lAux = tabla.get(0);
+            for (@SuppressWarnings("unused") Estado e : lAux) // Este primer bucle es para coger el ï¿½ndice de terminal del string leï¿½do
+            {
+                i++;
+                cad = this.devolverTerminal(arbol,i);
+                if (this.comprobarTerminal(cad,tok))
+                    lInt.add(i);
+            }
+            for (Estado est : lE)
+            {
+                for (Integer obj : lInt)
+                {
+                    c = est.lTerm.indexOf(obj); // Cogemos el ï¿½ndice en el que se encuentra ese terminal
+                    if (c != -1)
+                    {
+                        a = est.expRegs.get(c);
+                        if (!lER.isEmpty())
+                        {
+                            if (lER.contains(a))
+                                    lOut.add(a);
+                        }
+                        else
+                        {
+                            lPos = this.devolverPos(arbol,lPos,a);
+                            if (this.comprobarTerminal(lPos.get(0),tok))
+                                    lOut.add(a); // Cogemos la ER correspondiente
+                            lPos.clear();
+                        }		
+                    }	
+                }
+            }
+            return lOut;
 	}
 	/**
-	 * Método para unir dos árboles mediante un nodo operación que 
-	 * se pasa por parámetro.
+	 * Mï¿½todo para unir dos ï¿½rboles mediante un nodo operaciï¿½n que 
+	 * se pasa por parï¿½metro.
 	 * @param arbol1 Arbol 1 a unir
 	 * @param arbol2 Arbol 2 a unir
 	 * @param op String para representar el nodo raiz
@@ -1089,12 +1119,12 @@ public class Analizador
 		return raiz;
 	}
 	/**
-	 * Método que recibe una lista con los componentes de una 
-	 * expresión regular y devuelve un árbol sintáctico binario 
+	 * Mï¿½todo que recibe una lista con los componentes de una 
+	 * expresiï¿½n regular y devuelve un ï¿½rbol sintï¿½ctico binario 
 	 * de la misma
-	 * @param lExp Lista de componentes de una expresión regular
+	 * @param lExp Lista de componentes de una expresiï¿½n regular
 	 * @param posicion 
-	 * @return Árbol sintáctico binario de una expresión regular
+	 * @return ï¿½rbol sintï¿½ctico binario de una expresiï¿½n regular
 	 * @throws Exception 
 	 */
 	public NodoArbol crearArbol(List<String> lExp, int posicion) throws Exception
@@ -1123,16 +1153,16 @@ public class Analizador
 			}	
 			if (raiz == null) // Se trata del primer nodo del arbol que tenemos que crear
 			{
-				if (nodoActual.hoja) // Comprobamos si es una hoja y añadimos la expresión regular que representa
+				if (nodoActual.hoja) // Comprobamos si es una hoja y aï¿½adimos la expresiï¿½n regular que representa
 				{
 					nodoActual.expReg = posicion;
 				}
 				raiz = nodoActual;
 				nodoAnterior = nodoActual;
 			}
-			else // Ya existe algún nodo creado anteriormente
+			else // Ya existe algï¿½n nodo creado anteriormente
 			{
-				if (nodoActual.hoja) // Comprobamos si es una hoja y añadimos la expresión regular que representa
+				if (nodoActual.hoja) // Comprobamos si es una hoja y aï¿½adimos la expresiï¿½n regular que representa
 				{
 					nodoActual.expReg = posicion;
 				}
