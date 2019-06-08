@@ -1,6 +1,10 @@
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Clase Principal para manejar el analizador.
+ * @author herre
+ */
 public class Procesador {
     
     private static List<String> auxregex;
@@ -47,7 +51,13 @@ public class Procesador {
         aux.listaER = auxregex1;
         aux.listaM = auxmacro1;
         outList.addAll(auxmacro1);
-        //outList.addAll(auxregex);
+        if (auxregex1.size() > auxmacro1.size())
+        {
+            for (int cont = auxmacro1.size();cont < auxregex1.size();cont++)
+            {
+                outList.add(auxregex1.get(cont));
+            }
+        }
         Procesador.auxregex = auxregex1;
         Procesador.auxmacro = auxmacro1;
         return outList;
@@ -144,7 +154,13 @@ public class Procesador {
         System.out.println();
         System.out.println();
     }
-    
+    /**
+     * Método para actualizar la lista de estados dada una entrada y la lista
+     * de estados.
+     * @param lE lista de estados
+     * @param tok entrada leida
+     * @return lista de estados actualizada
+     */
     public static List<Analizador.Estado> actualizarLE(List<Analizador.Estado> lE, String tok)
     {
         Analizador aux = new Analizador();
@@ -156,7 +172,15 @@ public class Procesador {
         
         return lEAux;
     }
-    
+    /**
+     * Método que dada una entrada, una lista de estados y una lista de ER 
+     * reconocidas, devuelve una lista de ER que se reconocen.
+     * @param lE lista de estados
+     * @param lnER lista de ER
+     * @param tok entrada leida
+     * @return lista de ER nueva
+     * @throws Exception 
+     */
     public static List<Integer> reconocer(List<Analizador.Estado> lE, List<Integer> lnER, String tok) throws Exception
     {
         Analizador aux = new Analizador();
@@ -170,19 +194,5 @@ public class Procesador {
         en qué expresión regular estamos **/
         lnE = aux.activarER(tok, lEAux, Procesador.automata, lnER, Procesador.arbolAux);
         return lnE;
-//        lnER.clear();
-//        for (int nExp : lnE)
-//        {
-//            if (!lnER.contains(nExp))
-//            {
-//                lnER.add(nExp);
-//                // EN PRUEBA
-//                if (nExp >= auxmacro.size())
-//                    System.out.println(auxregex.get(nExp));
-//                else
-//                    System.out.println(auxmacro.get(nExp));
-//            }
-//        }
-//        System.out.println();
     }
 }
