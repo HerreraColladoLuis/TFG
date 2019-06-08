@@ -1,1665 +1,1663 @@
 import java.util.LinkedList;
 import java.util.List;
 /**
- * Clase central de la aplicación, donde introduciré toda la lógica
+ * Clase central de la aplicaciï¿½n, donde introducirï¿½ toda la lï¿½gica
  * @author herre
  *
  */
 public class Analizador 
 {
-	List<String> listaM;
-	List<String> listaER;
-	/**
-	   * Método que recibe una lista con strings correspondientes a macros 
-	   * y parsea cada uno traduciendolos a un estado común
-	   * @param lista con las macros
-	   * @return lista con las macros traducidas a un estado común
-	   */
-	  public List<String> translateMacro(List<String> lista)
-	  {
-		  List<String> out = new LinkedList<>();
-		  String aux;
-		  for (String cad : lista)
-		  {
-			  aux = "";
-			  aux = procesarMacro(cad);
-			  if (aux != "")
-				  out.add(aux);
-		  }
-		  return out;
-	  }
-	  /**
-	   * Método que recibe una lista con strings correspondientes a regex 
-	   * y parsea cada una traduciendolos a un estado común
-	   * @param lista con las regex
-	   * @return lista con las regex traducidas a un estado común
-	   */
-	  public List<String> translateRegex(List<String> lista)
-	  {
-		  List<String> out = new LinkedList<>();
-		  String aux;
-		  for (String cad : lista)
-		  {
-			  aux = "";
-			  aux = procesarRegex(cad);
-			  if (aux != "")
-				  out.add(aux);
-		  }
-		  return out;
-	  }
-	/**
-	 * Algoritmo para parsear un string que contiene una 
-	 * expresion regular
-	 * @param re expresion regular
-	 * @return expresion regular parseada
-	 */
-	private String procesarRegex(String re)
-	{
-		int le = re.length();
-		int i,j,c;
-		char[] rech = re.toCharArray();
-		char[] auxch;
-		String out = "";
-		if (rech[le-1] == '{')
-		{
-			for (i = le-2; i > 0; i--)
-			{
-				if (rech[i] != ' ')
-					break;
-			}
-			auxch = new char[i+1];
-			for (j = 0; j < i+1; j++)
-				auxch[j] = rech[j];
-			out = String.valueOf(auxch);
-		}
-		else
-		{
-			i = le-1;
-			while (rech[i] == ' ')
-				i--;
-			auxch = new char[i];
-			c = 0;
-			for (j = 1; j < i+1; j++)
-			{
-				auxch[c] = rech[j];
-				c++;
-			}
-			out = String.valueOf(auxch);
-		}
-		return out;
-	}
-	/**
-	 * Algoritmo para parsear un string que contiene una macro
-	 * @param re macro
-	 * @return macro parseada
-	 */
-	private String procesarMacro(String re)
-	{
-		int i = 0;
-		int c = 0;
-		char[] rech = re.toCharArray();
-		while (rech[i] != ' ')
-		{
-			c++;
-			i++;
-		}
-		char[] auxch = new char[c];
-		String out = "";
-		for (i = 0; i < c; i++)
-		{
-			if (rech[i] == ' ')
-				break;
-			auxch[i] = rech[i];
-		}
-		out = String.valueOf(auxch);
-		return out;
-	}
-	/**
-	 * Método para traducir una expresión regular a un formato
-	 * que pueda reconocer el algoritmo final
-	 * @param exp string de la expresión
-	 * @return string de la expresión traducido
-	 * @throws Exception 
-	 */
-	public String traducir(String exp) throws Exception
-	{
-		String cadAux;
-		String aux1;
-		String cadena = "";
-		boolean n = false;
-		char[] rech = exp.toCharArray();
-		int i = 0;
-		int j;
-		// Vamos a recorrer el string caracter a caracter
-		while (i < exp.length()) 
-		{	
-			// Entramos en el caso en el que se abre un set
-			if (rech[i] == '[') 
-			{
-				cadena += "\"";
-				if (rech[i+1] == '^') // Comprobamos si está negado
-				{
-					cadena+= rech[i+1]; // aux += ^
-					i = i+1; // Apuntamos a la negación
-					if (rech[i+1] == ']')
-						n = true;
-				}
-				i = i+1; // Apuntamos al primer caracter del set
-				while (true)
-				{
-					// Comprobamos si es una letra, mayúscula o minúscula, o un número
-					if (((int) rech[i] > 64 && (int) rech[i] < 91) || ((int) rech[i] > 96 && (int) rech[i] < 123) || ((int) rech[i] > 47 && (int) rech[i] < 58))
-					{
-						// Caso correspondiente a [a-z] o [0-9] (por ejemplo)
-						if (rech[i+1] == '-')
-						{
-							for (j = (int) rech[i]; j <= (int) rech[i+2]; j++)
-								cadena += (char) j;
-							i = i+3; // Apuntamos al siguiente caracter de la secuencia
-						}
-						else // Si no es una secuencia, guardamos el número o la letra
-						{
-							cadena += rech[i];
-							i = i+1; // Apuntamos al siguiente caracter de la secuencia
-						}
-					}
-					// Comprobamos si es un caracter de escape \
-					else if ((int) rech[i] == 10 || (int) rech[i] == 9 || (int) rech[i] == 13 || (int) rech[i] == 13 ||
-							 (int) rech[i] == 12 || (int) rech[i] == 8 || (int) rech[i] == 92 || (int) rech[i] == 39 ||
-							 (int) rech[i] == 34)
-					{
-						cadena += rech[i]; // Guardamos el caracter de escape
-						i = i+1;
-					}
-					// Comprobamos si es el final del set
-					else if (rech[i] == ']') // Acaba el set
-						break; // Salimos del while
-					// Cualquier otro símbolo
-					else
-					{
-						cadena += rech[i]; // Guardamos el símbolo
-						i = i+1;
-					}	
-				}
-				cadena += "^##\""; // Añadir algo para saber que es un set ^##
-				if (n)
-				{
-					n = false;
-					cadena += "*";
-				}
-			}
-			// Entramos en el caso en el que se abre una macro
-			else if (rech[i] == '{')
-			{
-				aux1 = "";
-				j = 0;
-				i = i+1;
-				while (rech[i] != '}')
-				{
-					aux1 += rech[i]; // Guardamos en aux1 la macro 
-					i = i+1;
-				}
-				// Comprobamos que la lista no esté vacia o sea nula
-				if (listaM != null && !listaM.isEmpty()) 
-				{
-					for (String comp : listaM) // Recorremos la lista buscando la posición de la macro dada
-					{
-						if (comp.equalsIgnoreCase(aux1)) // Cuando la encontramos, salimos
-							break;
-						j = j+1; // En esta variable guardamos la posición
-					}
-				}
-				else 
-					throw new Exception("Lista de Macros vacía o nula"); // Devolvemos una excepción 
-				// Comprobamos que la lista no esté vacia o sea nula
-				if (listaER != null && !listaER.isEmpty()) 
-				{
-					cadAux = traducir(listaER.get(j)); // Hacemos recursividad para parsear una macro
-				}
-				else
-					throw new Exception("Lista de ER vacía o nula"); // Devolvemos una excepción
-				// Añadimos el arbol de la macro como hijo del arbol actúal
-				if (cadAux == null)
-					throw new Exception("Cadena auxiliar nula"); // Devolvemos una excepción
-				else
-				{
-					cadena += "(" + cadAux + ")";
-				}
-			}
-			// Entramos en el caso en el que se abre un paréntesis
-			else if (rech[i] == '(')
-			{
-				cadena += "(";
-			}
-			else if (rech[i] == ')')
-			{
-				cadena += ")";
-			}
-			// Se encuentra un OR
-			else if (rech[i] == '|')
-			{
-				cadena += "|";
-			}
-			// Se encuentra un "
-			else if (rech[i] == '\"')
-			{
-				i = i+1;
-				while (true)
-				{
-					if (rech[i] == '\"')
-						break;
-					cadena += "\"" + rech[i] + "\"";
-					i = i+1;
-				}
-			}
-			else if (rech[i] == ' ')
-			{
-				// Nada
-			}
-			else if (rech[i] == '+' || rech[i] == '*' || rech[i] == '?')
-			{
-				cadena += (String.valueOf(rech[i]));
-			}
-			else if (rech[i] == '.')
-			{
-				cadena += "\"" + rech[i] + "\"" + "*";
-			}
-			// Cualquier otro caracter
-			else
-			{
-				//cadena += "\"";
-				while (true)
-				{
-					if (i == rech.length || rech[i] == '+' || rech[i] == '*' || rech[i] == '?' || rech[i] == ' ' || rech[i] == ')' || rech[i] == '|' || rech[i] == '(')
-					{
-						i = i-1;
-						break;
-					}
-					if ((int) rech[i] == 10 || (int) rech[i] == 9 || (int) rech[i] == 13 || (int) rech[i] == 13 ||
-							 (int) rech[i] == 12 || (int) rech[i] == 8 || (int) rech[i] == 92 || (int) rech[i] == 39 ||
-							 (int) rech[i] == 34)
-					{
-						cadena += "\"" + rech[i] + rech[i+1] + "\""; // Guardamos el caracter de escape
-						i = i + 1;
-					}
-					else
-						cadena += "\"" + rech[i] + "\"";
-					i = i+1;
-				}
-				//cadena += "\"";
-			}
-			i = i+1;
-		}
-		return cadena;
-	}
-	/**
-	 * Método que devuelve si una Expresión Regular está parseada,
-	 * es decir, si no tiene paréntesis inicial y final.
-	 * @param exp Expresión Regular
-	 * @return True si está parseada, false en caso contrario
-	 */
-	private boolean parseado(String exp)
-	{
-		char[] rech = exp.toCharArray();
-		if (rech[0] != '(' || rech[exp.length()-1] != ')')
-			return true;
-		int i = 1;
-		int pA = 0;
-		int pC = 0;
-		boolean com = false;
-		while (i < exp.length()-1)
-		{
-			if (rech[i] == '\"' && !com)
-			{
-				com = true;
-			}
-			if (rech[i] == '\"' && com)
-			{
-				com = false;
-			}
-			if (rech[i] == '(' && !com)
-			{
-				pA++;
-			}
-			if (rech[i] == ')' && !com)
-			{
-				pC++;
-				if (pC > pA)
-					return true;
-			}
-			i++;
-		}
-		return false;
-	}
-	/**
-	 * Método que recibe una expresión regular en forma de string
-	 * y devuelve una lista con sus componentes 
-	 * parseada. Es decir, los componentes que se encuentre sin 
-	 * paréntesis, los añade a la lista, y si se encuentra una 
-	 * subexpresión dentro de paréntesis, quita éstos y añade la 
-	 * subexpresión como un elemento más de la lista.
-	 * @param exp Expresión regular en forma de string
-	 * @return Lista de componentes 
-	 * @throws Exception 
-	 */
-	public List<String> parsear(String exp) throws Exception 
-	{
-		List<String> lComp = new LinkedList<>();
-		char[] rech = exp.toCharArray();
-		String nuevo;
-		int i = 0;
-		int anidado;
-		boolean com = false;
-		while (i < exp.length())
-		{		
-			if (rech[i] == '\"')
-			{
-				nuevo = "\"";
-				i = i+1;
-				while (true)
-				{
-					nuevo += rech[i];
-					if (rech[i] == '\"')
-						break;
-					i = i+1;
-				}
-				lComp.add(nuevo);
-			}
-			else if (rech[i] == '+' || rech[i] == '*' || rech[i] == '?')
-			{
-				nuevo = "";
-				nuevo += rech[i];
-				lComp.add(nuevo);
-			}
-			else if (rech[i] == '(')
-			{
-				anidado = 0;
-				nuevo = "";
-				i = i+1;
-				while (true)
-				{
-					if (rech[i] == '\"' && !com)
-					{
-						com = true;
-					}
-					else if (rech[i] == '\"' && com)
-					{
-						com = false;
-					}
-					else if (rech[i] == '(' && !com)
-					{
-						anidado = anidado+1;
-					}
-					else if (rech[i] == ')' && !com && anidado == 0)
-					{
-						break;
-					}
-					else if (rech[i] == ')' && !com && anidado > 0)
-					{
-						anidado = anidado-1;
-					}
-					nuevo += rech[i];
-					i = i+1;
-				}
-				lComp.add(nuevo);
-			}
-			else if (rech[i] == '|')
-			{
-				nuevo = "";
-				nuevo += rech[i];
-				lComp.add(nuevo);
-			}
-			i = i+1;
-		}
-		return lComp;
-	}
-	/**
-	 * Método para recorrer un árbol binario en pre orden
-	 * @param nodo Nodo del árbol del que empezaremos a recorrer
-	 */
-	public void preOrden(NodoArbol nodo)
-	{
-		if (nodo != null)
-		{
-			System.out.print(nodo.info);
-			preOrden(nodo.hijoIzdo);
-			preOrden(nodo.hijoDcho);
-		}
-	}
-	/**
-	 * Método para recorrer un árbol binario en in orden
-	 * @param nodo Nodo del arbol del que empezaremos a recorrer
-	 */
-	public void inOrden(NodoArbol nodo)
-	{
-		if (nodo != null)
-		{
-			inOrden(nodo.hijoIzdo);
-			System.out.print(nodo.info);
-			inOrden(nodo.hijoDcho);
-		}
-	}
-	/**
-	 * Método para aumentar un árbol de una expresión regular
-	 * @param nodo Raíz del árbol a aumentar
-	 * @return Árbol aumentado
-	 */
-	public NodoArbol aumentar(NodoArbol nodo)
-	{
-		NodoArbol nodoAuxiliar = new NodoArbol(".");
-		nodoAuxiliar.insertarIzda(nodo);
-		nodoAuxiliar.insertarDcha(new NodoArbol("#"));
-		return nodoAuxiliar;
-	}
-	/**
-	 * Método para numerar las hojas de un arbol sintáctico
-	 * en el orden de aparición en el mismo
-	 * @param nodo Nodo inicial del arbol
-	 * @param pos contador 
-	 * @return última posición asignada
-	 */
-	public int numerar(NodoArbol nodo, int pos)
-	{
-		int p = pos;
-		if (nodo != null)
-		{
-			if (nodo.esHoja())
-			{
-				nodo.posicion = pos+1;
-				return p+1;
-			}
-			else
-			{
-				p = numerar(nodo.hijoIzdo,p);
-				p = numerar(nodo.hijoDcho,p);
-			}
-		}
-		return p;
-	}
-	/**
-	 * Método anulable que devuelve verdadero o falso
-	 * @param nodo Nodo a analizar
-	 * @return verdadero o falso
-	 */
-	public boolean anulable(NodoArbol nodo)
-	{
-		if (nodo.esHoja())
-			return false;
-		else if (nodo.info.equals("."))
-			return (anulable(nodo.hijoIzdo) && anulable(nodo.hijoDcho));
-		else if (nodo.info.equals("|"))
-			return (anulable(nodo.hijoIzdo) || anulable(nodo.hijoDcho));
-		else if (nodo.info.equals("*"))
-			return true;
-		else if (nodo.info.equals("+"))
-			return anulable(nodo.hijoIzdo);
-		else // nodo.info.equals("?")
-			return true;
-	}
-	/**
-	 * Método primeraPos que devuelve una lista de posiciones
-	 * @param nodo Nodo a analizar
-	 * @return Lista de posiciones
-	 */
-	public List<Integer> primeraPos(NodoArbol nodo)
-	{
-		List<Integer> out = new LinkedList<>();
-		if (nodo.esHoja())
-		{
-			out.add(nodo.posicion);
-		}	
-		else if (nodo.info.equals("."))
-		{
-			if (anulable(nodo.hijoIzdo))
-			{
-				out.addAll(primeraPos(nodo.hijoIzdo));
-				out.addAll(primeraPos(nodo.hijoDcho));
-			}
-			else
-			{
-				out.addAll(primeraPos(nodo.hijoIzdo));
-			}
-		}
-		else if (nodo.info.equals("|"))
-		{
-			out.addAll(primeraPos(nodo.hijoIzdo));
-			out.addAll(primeraPos(nodo.hijoDcho));
-		}
-		else
-		{
-			out.addAll(primeraPos(nodo.hijoIzdo));
-		}
-		return out;
-	}
-	/**
-	 * Método ultimaPos que devuelve una lista de posiciones
-	 * @param nodo Nodo a analizar
-	 * @return Lista de posiciones
-	 */
-	public List<Integer> ultimaPos(NodoArbol nodo)
-	{
-		NodoArbol aux = nodo.padre;
-		List<Integer> out = new LinkedList<>();
-		if (nodo.esHoja())
-		{
-			out.add(nodo.posicion);
-		}	
-		else if (nodo.info.equals("."))
-		{
-			if (anulable(nodo.hijoDcho))
-			{	
-				out.addAll(ultimaPos(nodo.hijoDcho));
-				out.addAll(ultimaPos(nodo.hijoIzdo));
-			}
-			else
-			{
-				out.addAll(ultimaPos(nodo.hijoDcho));
-			}
-		}
-		else if (nodo.info.equals("|"))
-		{	
-			out.addAll(ultimaPos(nodo.hijoDcho));
-			out.addAll(ultimaPos(nodo.hijoIzdo));
-		}
-		else if (nodo.info.equals("?")) // CAMBIO AQUÍ RESPECTO DOCUMENTACION
-		{
-			out.addAll(ultimaPos(nodo.hijoIzdo));
-			if (aux.hijoIzdo.equals(nodo))
-			{
-				while (!aux.info.equals("."))
-				{
-					aux = aux.padre;
-				}
-				out.addAll(ultimaPos(aux.hijoDcho));
-			}
-		}
-		else
-		{
-			out.addAll(ultimaPos(nodo.hijoIzdo));
-		}
-		return out;
-	}
-	/**
-	 * Método siguientePos que se calcula sobre los nodos hoja
-	 * @param nodo Nodo desde el que recorreremos el árbol
-	 * @param pos Posición de la hoja a analizar
-	 * @return Lista de posiciones
-	 */
-	public List<Integer> siguientePos(NodoArbol nodo, int pos)
-	{
-		List<Integer> out = new LinkedList<>();
-		if (nodo != null)
-		{
-			if (nodo.info.equals("."))
-			{
-				for (int p : ultimaPos(nodo.hijoIzdo))
-				{
-					if (pos == p)
-					{
-						out.addAll(primeraPos(nodo.hijoDcho));
-						break;
-					}
-				}
-			}
-			else if (nodo.info.equals("*") || nodo.info.equals("+")) // CAMBIO AQUÍ RESPECTO DOCUMENTACION
-			{
-				for (int p : ultimaPos(nodo))
-				{
-					if (pos == p)
-					{
-						out.addAll(primeraPos(nodo));
-					}
-				}
-			}
-			out.addAll(siguientePos(nodo.hijoIzdo,pos));
-			out.addAll(siguientePos(nodo.hijoDcho,pos));
-		}
-		return out;
-	}
-	/**
-	 * Clase auxiliar para un árbol binario
-	 * @author herre
-	 *
-	 */
-	public class NodoArbol
-	{
-		public String info;
-		public NodoArbol hijoDcho;
-		public NodoArbol hijoIzdo;
-		public NodoArbol padre;
-		public int posicion;
-		public boolean cuantificador;
-		public boolean operacion;
-		public boolean hoja;
-		public int expReg = -1;
-		
-		/**
-		 * Constructor para un nodo del árbol
-		 * @param info Información que llevará el nodo
-		 */
-		public NodoArbol(String info) 
-		{
-			super();
-			this.info = info;
-			if (info.equals("+") || info.equals("*") || info.equals("?"))
-				this.cuantificador = true;
-			else if (info.equals("|") || info.equals("."))
-				this.operacion = true;
-			else
-				this.hoja = true;
-			this.hijoDcho = null;
-			this.hijoIzdo = null;
-			this.padre = null;
-		}
-		/**
-		 * Método que devuelve si un nodo es una hoja
-		 * @param nodo Nodo que evaluaremos
-		 * @return verdadero si es una hoja
-		 */
-		public boolean esHoja()
-		{
-			return (this.hijoIzdo == null && this.hijoDcho == null);
-		}
-		/**
-		 * Método para insertar un nodo como hijo derecho de otro nodo padre
-		 * @param nodo Nodo que insertaremos como hijo derecho 
-		 * @return Nodo hijo derecho
-		 */
-		public NodoArbol insertarDcha(NodoArbol nodo) 
-		{
-			NodoArbol nodoAuxiliar;
-			nodoAuxiliar = this;
-			while (nodoAuxiliar.hijoDcho != null)
-				nodoAuxiliar = nodoAuxiliar.hijoDcho;
-			nodoAuxiliar.hijoDcho = nodo;
-			nodoAuxiliar.hijoDcho.padre = this;
-			return nodoAuxiliar.hijoDcho;
-		}
-		/**
-		 * Método para insertar un nodo como hijo izquierdo de otro nodo padre
-		 * @param nodo Nodo que insertaremos como hijo izquierdo
-		 * @return Nodo hijo izquierdo
-		 */
-		public NodoArbol insertarIzda(NodoArbol nodo) 
-		{
-			NodoArbol nodoAuxiliar;
-			nodoAuxiliar = this;
-			while (nodoAuxiliar.hijoIzdo != null)
-				nodoAuxiliar = nodoAuxiliar.hijoIzdo;
-			nodoAuxiliar.hijoIzdo = nodo;
-			nodoAuxiliar.hijoIzdo.padre = this;
-			return nodoAuxiliar.hijoIzdo;
-		}
-	}
-	/**
-	 * Método que devuelve, en forma de string, la información
-	 * de un nodo hoja determinado por su posición.
-	 * @param nodo Arbol a recorrer
-	 * @param posicion Posición del nodo hoja a evaluar
-	 * @return Información del nodo hoja en forma de string
-	 */
-	String devolverTerminal(NodoArbol nodo, int posicion)
-	{
-		String res = "";
-		if (nodo != null)
-		{
-			if (nodo.posicion == posicion)
-			{
-				res = nodo.info;
-			}
-			else
-			{
-				res += devolverTerminal(nodo.hijoIzdo,posicion);
-				res += devolverTerminal(nodo.hijoDcho,posicion);
-			}
-		}
-		return res;
-	}
-	/**
-	 * Método que devuelve la posición de la expresión regular que
-	 * tiene un nodo en su información.
-	 * @param nodo Árbol a recorrer
-	 * @param posicion Posición del nodo hoja a recorrer
-	 * @return Posición en la lista de ER
-	 */
-	int devolverNER(NodoArbol nodo, int posicion)
-	{
-		int i = 0;
-		if (nodo != null)
-		{
-			if (nodo.posicion == posicion)
-			{
-				i = nodo.expReg;
-			}
-			else
-			{
-				i += devolverNER(nodo.hijoIzdo,posicion);
-				i += devolverNER(nodo.hijoDcho,posicion);
-			}
-		}
-		return i;
-	}
-	/**
-	 * Método que devuelve una lista de terminales correspondientes a una expresión regular
-	 * dada por su índice.
-	 * @param nodo
-	 * @param lis
-	 * @param expReg
-	 * @return
-	 */
-	List<String> devolverPos(NodoArbol nodo, List<String> lis, int expReg)
-	{
-		if (nodo != null)
-		{
-			if (nodo.expReg == expReg)
-			{
-				lis.add(nodo.info);
-			}
-			else
-			{
-				lis = devolverPos(nodo.hijoIzdo,lis,expReg);
-				lis = devolverPos(nodo.hijoDcho,lis,expReg);
-			}
-		}
-		return lis;
-	}
-	/**
-	 * Método que devuelve si una cadena es un conjunto. Es decir,
-	 * "abcdef" sería un conjunto determinado por a-f.
-	 * @param cadena Cadena a evaluar
-	 * @return Verdadero si es un conjunto
-	 */
-	boolean esConjunto(String cadena)
-	{
-		char ant = ' ';
-		int i = -1;
-		if (cadena.length() == 3)
-			return false;
-		for (char c : cadena.toCharArray())
-		{
-			i++;
-			if (i == 0 || i == cadena.length()-1)
-				continue;
-			else if (i == 1 && c == '^')
-				continue;
-			else if (i == 1)
-				ant = c;
-			else if (i == 2 && ant == ' ')
-				ant = c;
-			else
-			{
-				int a1 = (int) ant;
-				int a2 = (int) c;
-				if (a1+1 != a2)
-					return false;
-				ant = c;
-			}
-		}
-		return true;
-	}
-	/**
-	 * Método que comprueba si dos cadenas son equivalentes para
-	 * su aceptación en el autómata.
-	 * @param c1 Cadena principal
-	 * @param c2 Cadena que comprobaremos con la principal
-	 * @return Verdadero si son equivalentes
-	 */
-	boolean comprobarTerminal(String c1, String c2)
-	{
-		boolean encontrado = false;
-		boolean set = false;
-		boolean neg = false;
-		int i = -1;
-		if (c1.charAt(1) == '^')
-			neg = true;
-		if ((c1.charAt(c1.length()-2) == '#') && (c1.charAt(c1.length()-3) == '#') && (c1.charAt(c1.length()-4) == '^'))
-			set = true;
-		if (this.esConjunto(c1) || set)
-		{
-			for (char t : c1.toCharArray())
-			{
-				i++;
-				if (i == 0 || i == c1.length()-1)
-					continue;
-				if (set && (i == c1.length()-2) || (i == c1.length()-3) || (i == c1.length()-4))
-					continue;
-				if (neg && i == 1)
-					continue;
-				if (String.valueOf(t).equals(c2))
-				{
-					encontrado = true;
-					break;
-				}
-			}
-		}
-		else
-		{
-			if ((int) c2.toCharArray()[0] == 10 || (int) c2.toCharArray()[0] == 9 || (int) c2.toCharArray()[0] == 13 || (int) c2.toCharArray()[0] == 13 ||
+    List<String> listaM;
+    List<String> listaER;
+    /**
+       * Mï¿½todo que recibe una lista con strings correspondientes a macros 
+       * y parsea cada uno traduciendolos a un estado comï¿½n
+       * @param lista con las macros
+       * @return lista con las macros traducidas a un estado comï¿½n
+       */
+      public List<String> translateMacro(List<String> lista)
+      {
+        List<String> out = new LinkedList<>();
+        String aux;
+        for (String cad : lista)
+        {
+            aux = procesarMacro(cad);
+            if (!"".equals(aux))
+                out.add(aux);
+        }
+        return out;
+      }
+      /**
+       * Mï¿½todo que recibe una lista con strings correspondientes a regex 
+       * y parsea cada una traduciendolos a un estado comï¿½n
+       * @param lista con las regex
+       * @return lista con las regex traducidas a un estado comï¿½n
+       */
+      public List<String> translateRegex(List<String> lista)
+      {
+        List<String> out = new LinkedList<>();
+        String aux;
+        for (String cad : lista)
+        {
+            aux = procesarRegex(cad);
+            if (!"".equals(aux))
+                out.add(aux);
+        }
+        return out;
+      }
+    /**
+     * Algoritmo para parsear un string que contiene una 
+     * expresion regular
+     * @param re expresion regular
+     * @return expresion regular parseada
+     */
+    private String procesarRegex(String re)
+    {
+        int le = re.length();
+        int i,j,c;
+        char[] rech = re.toCharArray();
+        char[] auxch;
+        String out;
+        if (rech[le-1] == '{')
+        {
+            for (i = le-2; i > 0; i--)
+            {
+                if (rech[i] != ' ')
+                    break;
+            }
+            auxch = new char[i+1];
+            for (j = 0; j < i+1; j++)
+                auxch[j] = rech[j];
+            out = String.valueOf(auxch);
+        }
+        else
+        {
+            i = le-1;
+            while (rech[i] == ' ')
+                i--;
+            auxch = new char[i];
+            c = 0;
+            for (j = 1; j < i+1; j++)
+            {
+                auxch[c] = rech[j];
+                c++;
+            }
+            out = String.valueOf(auxch);
+        }
+        return out;
+    }
+    /**
+     * Algoritmo para parsear un string que contiene una macro
+     * @param re macro
+     * @return macro parseada
+     */
+    private String procesarMacro(String re)
+    {
+        int i = 0;
+        int c = 0;
+        char[] rech = re.toCharArray();
+        while (rech[i] != ' ')
+        {
+            c++;
+            i++;
+        }
+        char[] auxch = new char[c];
+        String out;
+        for (i = 0; i < c; i++)
+        {
+            if (rech[i] == ' ')
+                break;
+            auxch[i] = rech[i];
+        }
+        out = String.valueOf(auxch);
+        return out;
+    }
+    /**
+     * Mï¿½todo para traducir una expresiï¿½n regular a un formato
+     * que pueda reconocer el algoritmo final
+     * @param exp string de la expresiï¿½n
+     * @return string de la expresiï¿½n traducido
+     * @throws Exception 
+     */
+    public String traducir(String exp) throws Exception
+    {
+        String cadAux;
+        String aux1;
+        String cadena = "";
+        boolean n = false;
+        char[] rech = exp.toCharArray();
+        int i = 0;
+        int j;
+        // Vamos a recorrer el string caracter a caracter
+        while (i < exp.length()) 
+        {	
+            // Entramos en el caso en el que se abre un set
+            if (rech[i] == '[') 
+            {
+                cadena += "\"";
+                if (rech[i+1] == '^') // Comprobamos si estï¿½ negado
+                {
+                    cadena+= rech[i+1]; // aux += ^
+                    i = i+1; // Apuntamos a la negaciï¿½n
+                    if (rech[i+1] == ']')
+                        n = true;
+                }
+                i = i+1; // Apuntamos al primer caracter del set
+                while (true)
+                {
+                    // Comprobamos si es una letra, mayï¿½scula o minï¿½scula, o un nï¿½mero
+                    if (((int) rech[i] > 64 && (int) rech[i] < 91) || ((int) rech[i] > 96 && (int) rech[i] < 123) || ((int) rech[i] > 47 && (int) rech[i] < 58))
+                    {
+                        // Caso correspondiente a [a-z] o [0-9] (por ejemplo)
+                        if (rech[i+1] == '-')
+                        {
+                            for (j = (int) rech[i]; j <= (int) rech[i+2]; j++)
+                                cadena += (char) j;
+                            i = i+3; // Apuntamos al siguiente caracter de la secuencia
+                        }
+                        else // Si no es una secuencia, guardamos el nï¿½mero o la letra
+                        {
+                            cadena += rech[i];
+                            i = i+1; // Apuntamos al siguiente caracter de la secuencia
+                        }
+                    }
+                    // Comprobamos si es un caracter de escape \
+                    else if ((int) rech[i] == 10 || (int) rech[i] == 9 || (int) rech[i] == 13 || (int) rech[i] == 13 ||
+                            (int) rech[i] == 12 || (int) rech[i] == 8 || (int) rech[i] == 92 || (int) rech[i] == 39 ||
+                            (int) rech[i] == 34)
+                    {
+                        cadena += rech[i]; // Guardamos el caracter de escape
+                        i = i+1;
+                    }
+                    // Comprobamos si es el final del set
+                    else if (rech[i] == ']') // Acaba el set
+                        break; // Salimos del while
+                    // Cualquier otro sï¿½mbolo
+                    else
+                    {
+                        cadena += rech[i]; // Guardamos el sï¿½mbolo
+                        i = i+1;
+                    }	
+                }
+                cadena += "^##\""; // Aï¿½adir algo para saber que es un set ^##
+                if (n)
+                {
+                    n = false;
+                    cadena += "*";
+                }
+            }
+            // Entramos en el caso en el que se abre una macro
+            else if (rech[i] == '{')
+            {
+                aux1 = "";
+                j = 0;
+                i = i+1;
+                while (rech[i] != '}')
+                {
+                    aux1 += rech[i]; // Guardamos en aux1 la macro 
+                    i = i+1;
+                }
+                // Comprobamos que la lista no estï¿½ vacia o sea nula
+                if (listaM != null && !listaM.isEmpty()) 
+                {
+                    for (String comp : listaM) // Recorremos la lista buscando la posiciï¿½n de la macro dada
+                    {
+                        if (comp.equalsIgnoreCase(aux1)) // Cuando la encontramos, salimos
+                            break;
+                        j = j+1; // En esta variable guardamos la posiciï¿½n
+                    }
+                }
+                else 
+                    throw new Exception("Lista de Macros vacï¿½a o nula"); // Devolvemos una excepciï¿½n 
+                // Comprobamos que la lista no estï¿½ vacia o sea nula
+                if (listaER != null && !listaER.isEmpty()) 
+                {
+                    cadAux = traducir(listaER.get(j)); // Hacemos recursividad para parsear una macro
+                }
+                else
+                    throw new Exception("Lista de ER vacï¿½a o nula"); // Devolvemos una excepciï¿½n
+                // Aï¿½adimos el arbol de la macro como hijo del arbol actï¿½al
+                if (cadAux == null)
+                    throw new Exception("Cadena auxiliar nula"); // Devolvemos una excepciï¿½n
+                else
+                {
+                    cadena += "(" + cadAux + ")";
+                }
+            }
+            // Entramos en el caso en el que se abre un parï¿½ntesis
+            else if (rech[i] == '(')
+            {
+                cadena += "(";
+            }
+            else if (rech[i] == ')')
+            {
+                cadena += ")";
+            }
+            // Se encuentra un OR
+            else if (rech[i] == '|')
+            {
+                cadena += "|";
+            }
+            // Se encuentra un "
+            else if (rech[i] == '\"')
+            {
+                i = i+1;
+                while (true)
+                {
+                        if (rech[i] == '\"')
+                                break;
+                        cadena += "\"" + rech[i] + "\"";
+                        i = i+1;
+                }
+            }
+            else if (rech[i] == ' ')
+            {
+                // Nada
+            }
+            else if (rech[i] == '+' || rech[i] == '*' || rech[i] == '?')
+            {
+                cadena += (String.valueOf(rech[i]));
+            }
+            else if (rech[i] == '.')
+            {
+                cadena += "\"" + rech[i] + "\"" + "*";
+            }
+            // Cualquier otro caracter
+            else
+            {
+                //cadena += "\"";
+                while (true)
+                {
+                    if (i == rech.length || rech[i] == '+' || rech[i] == '*' || rech[i] == '?' || rech[i] == ' ' || rech[i] == ')' || rech[i] == '|' || rech[i] == '(')
+                    {
+                        i = i-1;
+                        break;
+                    }
+                    if ((int) rech[i] == 10 || (int) rech[i] == 9 || (int) rech[i] == 13 || (int) rech[i] == 13 ||
+                        (int) rech[i] == 12 || (int) rech[i] == 8 || (int) rech[i] == 92 || (int) rech[i] == 39 ||
+                        (int) rech[i] == 34)
+                    {
+                        cadena += "\"" + rech[i] + rech[i+1] + "\""; // Guardamos el caracter de escape
+                        i = i + 1;
+                    }
+                    else
+                        cadena += "\"" + rech[i] + "\"";
+                    i = i+1;
+                }
+                //cadena += "\"";
+            }
+            i = i+1;
+        }
+        return cadena;
+    }
+    /**
+     * Mï¿½todo que devuelve si una Expresiï¿½n Regular estï¿½ parseada,
+     * es decir, si no tiene parï¿½ntesis inicial y final.
+     * @param exp Expresiï¿½n Regular
+     * @return True si estï¿½ parseada, false en caso contrario
+     */
+    private boolean parseado(String exp)
+    {
+        char[] rech = exp.toCharArray();
+        if (rech[0] != '(' || rech[exp.length()-1] != ')')
+                return true;
+        int i = 1;
+        int pA = 0;
+        int pC = 0;
+        boolean com = false;
+        while (i < exp.length()-1)
+        {
+            if (rech[i] == '\"' && !com)
+            {
+                com = true;
+            }
+            if (rech[i] == '\"' && com)
+            {
+                com = false;
+            }
+            if (rech[i] == '(' && !com)
+            {
+                pA++;
+            }
+            if (rech[i] == ')' && !com)
+            {
+                pC++;
+                if (pC > pA)
+                    return true;
+            }
+            i++;
+        }
+        return false;
+    }
+    /**
+     * Mï¿½todo que recibe una expresiï¿½n regular en forma de string
+     * y devuelve una lista con sus componentes 
+     * parseada. Es decir, los componentes que se encuentre sin 
+     * parï¿½ntesis, los aï¿½ade a la lista, y si se encuentra una 
+     * subexpresiï¿½n dentro de parï¿½ntesis, quita ï¿½stos y aï¿½ade la 
+     * subexpresiï¿½n como un elemento mï¿½s de la lista.
+     * @param exp Expresiï¿½n regular en forma de string
+     * @return Lista de componentes 
+     * @throws Exception 
+     */
+    public List<String> parsear(String exp) throws Exception 
+    {
+        List<String> lComp = new LinkedList<>();
+        char[] rech = exp.toCharArray();
+        String nuevo;
+        int i = 0;
+        int anidado;
+        boolean com = false;
+        while (i < exp.length())
+        {		
+            if (rech[i] == '\"')
+            {
+                nuevo = "\"";
+                i = i+1;
+                while (true)
+                {
+                    nuevo += rech[i];
+                    if (rech[i] == '\"')
+                        break;
+                    i = i+1;
+                }
+                lComp.add(nuevo);
+            }
+            else if (rech[i] == '+' || rech[i] == '*' || rech[i] == '?')
+            {
+                nuevo = "";
+                nuevo += rech[i];
+                lComp.add(nuevo);
+            }
+            else if (rech[i] == '(')
+            {
+                anidado = 0;
+                nuevo = "";
+                i = i+1;
+                while (true)
+                {
+                    if (rech[i] == '\"' && !com)
+                    {
+                        com = true;
+                    }
+                    else if (rech[i] == '\"' && com)
+                    {
+                        com = false;
+                    }
+                    else if (rech[i] == '(' && !com)
+                    {
+                        anidado = anidado+1;
+                    }
+                    else if (rech[i] == ')' && !com && anidado == 0)
+                    {
+                        break;
+                    }
+                    else if (rech[i] == ')' && !com && anidado > 0)
+                    {
+                        anidado = anidado-1;
+                    }
+                    nuevo += rech[i];
+                    i = i+1;
+                }
+                lComp.add(nuevo);
+            }
+            else if (rech[i] == '|')
+            {
+                nuevo = "";
+                nuevo += rech[i];
+                lComp.add(nuevo);
+            }
+            i = i+1;
+        }
+        return lComp;
+    }
+    /**
+     * Mï¿½todo para recorrer un ï¿½rbol binario en pre orden
+     * @param nodo Nodo del ï¿½rbol del que empezaremos a recorrer
+     */
+    public void preOrden(NodoArbol nodo)
+    {
+        if (nodo != null)
+        {
+            System.out.print(nodo.info);
+            preOrden(nodo.hijoIzdo);
+            preOrden(nodo.hijoDcho);
+        }
+    }
+    /**
+     * Mï¿½todo para recorrer un ï¿½rbol binario en in orden
+     * @param nodo Nodo del arbol del que empezaremos a recorrer
+     */
+    public void inOrden(NodoArbol nodo)
+    {
+        if (nodo != null)
+        {
+            inOrden(nodo.hijoIzdo);
+            System.out.print(nodo.info);
+            inOrden(nodo.hijoDcho);
+        }
+    }
+    /**
+     * Mï¿½todo para aumentar un ï¿½rbol de una expresiï¿½n regular
+     * @param nodo Raï¿½z del ï¿½rbol a aumentar
+     * @return ï¿½rbol aumentado
+     */
+    public NodoArbol aumentar(NodoArbol nodo)
+    {
+        NodoArbol nodoAuxiliar = new NodoArbol(".");
+        nodoAuxiliar.insertarIzda(nodo);
+        nodoAuxiliar.insertarDcha(new NodoArbol("#"));
+        return nodoAuxiliar;
+    }
+    /**
+     * Mï¿½todo para numerar las hojas de un arbol sintï¿½ctico
+     * en el orden de apariciï¿½n en el mismo
+     * @param nodo Nodo inicial del arbol
+     * @param pos contador 
+     * @return ï¿½ltima posiciï¿½n asignada
+     */
+    public int numerar(NodoArbol nodo, int pos)
+    {
+        int p = pos;
+        if (nodo != null)
+        {
+            if (nodo.esHoja())
+            {
+                nodo.posicion = pos+1;
+                return p+1;
+            }
+            else
+            {
+                p = numerar(nodo.hijoIzdo,p);
+                p = numerar(nodo.hijoDcho,p);
+            }
+        }
+        return p;
+    }
+    /**
+     * Mï¿½todo anulable que devuelve verdadero o falso
+     * @param nodo Nodo a analizar
+     * @return verdadero o falso
+     */
+    public boolean anulable(NodoArbol nodo)
+    {
+        if (nodo.esHoja())
+            return false;
+        else if (nodo.info.equals("."))
+            return (anulable(nodo.hijoIzdo) && anulable(nodo.hijoDcho));
+        else if (nodo.info.equals("|"))
+            return (anulable(nodo.hijoIzdo) || anulable(nodo.hijoDcho));
+        else if (nodo.info.equals("*"))
+            return true;
+        else if (nodo.info.equals("+"))
+            return anulable(nodo.hijoIzdo);
+        else // nodo.info.equals("?")
+            return true;
+    }
+    /**
+     * Mï¿½todo primeraPos que devuelve una lista de posiciones
+     * @param nodo Nodo a analizar
+     * @return Lista de posiciones
+     */
+    public List<Integer> primeraPos(NodoArbol nodo)
+    {
+        List<Integer> out = new LinkedList<>();
+        if (nodo.esHoja())
+        {
+            out.add(nodo.posicion);
+        }	
+        else if (nodo.info.equals("."))
+        {
+            if (anulable(nodo.hijoIzdo))
+            {
+                out.addAll(primeraPos(nodo.hijoIzdo));
+                out.addAll(primeraPos(nodo.hijoDcho));
+            }
+            else
+            {
+                out.addAll(primeraPos(nodo.hijoIzdo));
+            }
+        }
+        else if (nodo.info.equals("|"))
+        {
+            out.addAll(primeraPos(nodo.hijoIzdo));
+            out.addAll(primeraPos(nodo.hijoDcho));
+        }
+        else
+        {
+            out.addAll(primeraPos(nodo.hijoIzdo));
+        }
+        return out;
+    }
+    /**
+     * Mï¿½todo ultimaPos que devuelve una lista de posiciones
+     * @param nodo Nodo a analizar
+     * @return Lista de posiciones
+     */
+    public List<Integer> ultimaPos(NodoArbol nodo)
+    {
+        NodoArbol aux = nodo.padre;
+        List<Integer> out = new LinkedList<>();
+        if (nodo.esHoja())
+        {
+            out.add(nodo.posicion);
+        }	
+        else if (nodo.info.equals("."))
+        {
+            if (anulable(nodo.hijoDcho))
+            {	
+                out.addAll(ultimaPos(nodo.hijoDcho));
+                out.addAll(ultimaPos(nodo.hijoIzdo));
+            }
+            else
+            {
+                out.addAll(ultimaPos(nodo.hijoDcho));
+            }
+        }
+        else if (nodo.info.equals("|"))
+        {	
+            out.addAll(ultimaPos(nodo.hijoDcho));
+            out.addAll(ultimaPos(nodo.hijoIzdo));
+        }
+        else if (nodo.info.equals("?")) // CAMBIO AQUï¿½ RESPECTO DOCUMENTACION
+        {
+            out.addAll(ultimaPos(nodo.hijoIzdo));
+            if (aux.hijoIzdo.equals(nodo))
+            {
+                while (!aux.info.equals("."))
+                {
+                    aux = aux.padre;
+                }
+                out.addAll(ultimaPos(aux.hijoDcho));
+            }
+        }
+        else
+        {
+            out.addAll(ultimaPos(nodo.hijoIzdo));
+        }
+        return out;
+    }
+    /**
+     * Mï¿½todo siguientePos que se calcula sobre los nodos hoja
+     * @param nodo Nodo desde el que recorreremos el ï¿½rbol
+     * @param pos Posiciï¿½n de la hoja a analizar
+     * @return Lista de posiciones
+     */
+    public List<Integer> siguientePos(NodoArbol nodo, int pos)
+    {
+        List<Integer> out = new LinkedList<>();
+        if (nodo != null)
+        {
+            if (nodo.info.equals("."))
+            {
+                for (int p : ultimaPos(nodo.hijoIzdo))
+                {
+                    if (pos == p)
+                    {
+                        out.addAll(primeraPos(nodo.hijoDcho));
+                        break;
+                    }
+                }
+            }
+            else if (nodo.info.equals("*") || nodo.info.equals("+")) // CAMBIO AQUï¿½ RESPECTO DOCUMENTACION
+            {
+                for (int p : ultimaPos(nodo))
+                {
+                    if (pos == p)
+                    {
+                        out.addAll(primeraPos(nodo));
+                    }
+                }
+            }
+            out.addAll(siguientePos(nodo.hijoIzdo,pos));
+            out.addAll(siguientePos(nodo.hijoDcho,pos));
+        }
+        return out;
+    }
+    /**
+     * Clase auxiliar para un ï¿½rbol binario
+     * @author herre
+     *
+     */
+    public class NodoArbol
+    {
+        public String info;
+        public NodoArbol hijoDcho;
+        public NodoArbol hijoIzdo;
+        public NodoArbol padre;
+        public int posicion;
+        public boolean cuantificador;
+        public boolean operacion;
+        public boolean hoja;
+        public int expReg = -1;
+
+        /**
+         * Constructor para un nodo del ï¿½rbol
+         * @param info Informaciï¿½n que llevarï¿½ el nodo
+         */
+        @SuppressWarnings("ConvertToStringSwitch")
+        public NodoArbol(String info) 
+        {
+            super();
+            this.info = info;
+            if (info.equals("+") || info.equals("*") || info.equals("?"))
+                    this.cuantificador = true;
+            else if (info.equals("|") || info.equals("."))
+                    this.operacion = true;
+            else
+                    this.hoja = true;
+            this.hijoDcho = null;
+            this.hijoIzdo = null;
+            this.padre = null;
+        }
+        /**
+         * Mï¿½todo que devuelve si un nodo es una hoja
+         * @return verdadero si es una hoja
+         */
+        public boolean esHoja()
+        {
+            return (this.hijoIzdo == null && this.hijoDcho == null);
+        }
+        /**
+         * Mï¿½todo para insertar un nodo como hijo derecho de otro nodo padre
+         * @param nodo Nodo que insertaremos como hijo derecho 
+         * @return Nodo hijo derecho
+         */
+        public NodoArbol insertarDcha(NodoArbol nodo) 
+        {
+            NodoArbol nodoAuxiliar;
+            nodoAuxiliar = this;
+            while (nodoAuxiliar.hijoDcho != null)
+                nodoAuxiliar = nodoAuxiliar.hijoDcho;
+            nodoAuxiliar.hijoDcho = nodo;
+            nodoAuxiliar.hijoDcho.padre = this;
+            return nodoAuxiliar.hijoDcho;
+        }
+        /**
+         * Mï¿½todo para insertar un nodo como hijo izquierdo de otro nodo padre
+         * @param nodo Nodo que insertaremos como hijo izquierdo
+         * @return Nodo hijo izquierdo
+         */
+        public NodoArbol insertarIzda(NodoArbol nodo) 
+        {
+            NodoArbol nodoAuxiliar;
+            nodoAuxiliar = this;
+            while (nodoAuxiliar.hijoIzdo != null)
+                nodoAuxiliar = nodoAuxiliar.hijoIzdo;
+            nodoAuxiliar.hijoIzdo = nodo;
+            nodoAuxiliar.hijoIzdo.padre = this;
+            return nodoAuxiliar.hijoIzdo;
+        }
+    }
+    /**
+     * Mï¿½todo que devuelve, en forma de string, la informaciï¿½n
+     * de un nodo hoja determinado por su posiciï¿½n.
+     * @param nodo Arbol a recorrer
+     * @param posicion Posiciï¿½n del nodo hoja a evaluar
+     * @return Informaciï¿½n del nodo hoja en forma de string
+     */
+    String devolverTerminal(NodoArbol nodo, int posicion)
+    {
+        String res = "";
+        if (nodo != null)
+        {
+            if (nodo.posicion == posicion)
+            {
+                res = nodo.info;
+            }
+            else
+            {
+                res += devolverTerminal(nodo.hijoIzdo,posicion);
+                res += devolverTerminal(nodo.hijoDcho,posicion);
+            }
+        }
+        return res;
+    }
+    /**
+     * Mï¿½todo que devuelve la posiciï¿½n de la expresiï¿½n regular que
+     * tiene un nodo en su informaciï¿½n.
+     * @param nodo ï¿½rbol a recorrer
+     * @param posicion Posiciï¿½n del nodo hoja a recorrer
+     * @return Posiciï¿½n en la lista de ER
+     */
+    int devolverNER(NodoArbol nodo, int posicion)
+    {
+        int i = 0;
+        if (nodo != null)
+        {
+            if (nodo.posicion == posicion)
+            {
+                i = nodo.expReg;
+            }
+            else
+            {
+                i += devolverNER(nodo.hijoIzdo,posicion);
+                i += devolverNER(nodo.hijoDcho,posicion);
+            }
+        }
+        return i;
+    }
+    /**
+     * MÃ©todo que devuelve una lista de terminales correspondientes a una expresiÃ³n regular
+     * dada por su Ã­ndice.
+     * @param nodo
+     * @param lis
+     * @param expReg
+     * @return
+     */
+    List<String> devolverPos(NodoArbol nodo, List<String> lis, int expReg)
+    {
+        if (nodo != null)
+        {
+            if (nodo.expReg == expReg)
+            {
+                lis.add(nodo.info);
+            }
+            else
+            {
+                lis = devolverPos(nodo.hijoIzdo,lis,expReg);
+                lis = devolverPos(nodo.hijoDcho,lis,expReg);
+            }
+        }
+        return lis;
+    }
+    /**
+     * Mï¿½todo que devuelve si una cadena es un conjunto. Es decir,
+     * "abcdef" serï¿½a un conjunto determinado por a-f.
+     * @param cadena Cadena a evaluar
+     * @return Verdadero si es un conjunto
+     */
+    @SuppressWarnings("UnnecessaryContinue")
+    boolean esConjunto(String cadena)
+    {
+        char ant = ' ';
+        int i = -1;
+        if (cadena.length() == 3)
+                return false;
+        for (char c : cadena.toCharArray())
+        {
+            i++;
+            if (i == 0 || i == cadena.length()-1)
+                continue;
+            else if (i == 1 && c == '^')
+                continue;
+            else if (i == 1)
+                ant = c;
+            else if (i == 2 && ant == ' ')
+                ant = c;
+            else
+            {
+                int a1 = (int) ant;
+                int a2 = (int) c;
+                if (a1+1 != a2)
+                        return false;
+                ant = c;
+            }
+        }
+        return true;
+    }
+    /**
+     * Mï¿½todo que comprueba si dos cadenas son equivalentes para
+     * su aceptaciï¿½n en el autï¿½mata.
+     * @param c1 Cadena principal
+     * @param c2 Cadena que comprobaremos con la principal
+     * @return Verdadero si son equivalentes
+     */
+    boolean comprobarTerminal(String c1, String c2)
+    {
+        boolean encontrado = false;
+        boolean set = false;
+        boolean neg = false;
+        int i = -1;
+        if (c1.charAt(1) == '^')
+                neg = true;
+        if ((c1.charAt(c1.length()-2) == '#') && (c1.charAt(c1.length()-3) == '#') && (c1.charAt(c1.length()-4) == '^'))
+                set = true;
+        if (this.esConjunto(c1) || set)
+        {
+            for (char t : c1.toCharArray())
+            {
+                i++;
+                if (i == 0 || i == c1.length()-1)
+                    continue;
+                if (set && (i == c1.length()-2) || (i == c1.length()-3) || (i == c1.length()-4))
+                    continue;
+                if (neg && i == 1)
+                    continue;
+                if (String.valueOf(t).equals(c2))
+                {
+                    encontrado = true;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            if ((int) c2.toCharArray()[0] == 10 || (int) c2.toCharArray()[0] == 9 || (int) c2.toCharArray()[0] == 13 || (int) c2.toCharArray()[0] == 13 ||
                 (int) c2.toCharArray()[0] == 12 || (int) c2.toCharArray()[0] == 8 || (int) c2.toCharArray()[0] == 92 || (int) c2.toCharArray()[0] == 39 ||
                 (int) c2.toCharArray()[0] == 34)
             {
                 if ((int) c2.toCharArray()[0] == 10)
                     c2 = "\\n";
             }
-			if ((c1.equals("\""+c2+"\""))) //|| (c1.equals("\".\"")))
-				encontrado = true;
-		}
-		if (!neg)
-			return encontrado;
-		else
-		{
-			if (encontrado)
-				return false;
-			else
-				return true;
-		}
-	}
-	/**
-	 * Clase auxiliar para definir un estado del autómata
-	 * @author herre
-	 *
-	 */
-	public class Estado
-	{
-		public List<Integer> lposiciones;
-		public boolean marcado;
-		public int n;
-		public boolean esfinal = false;
-		public boolean esinicial = false;
-		public List<Integer> expRegs = new LinkedList<>();
-		public List<Integer> lTerm = new LinkedList<>();
-		
-		/**
-		 * Constructor principal
-		 * @param l Lista de posiciones
-		 */
-		public Estado(List<Integer> l)
-		{
-			this.lposiciones = new LinkedList<>();
-			if (l != null)
-				this.lposiciones.addAll(l);
-			this.marcado = false;
-		}
-		/**
-		 * Método para imprimir por pantalla la información de un estado
-		 */
-		public void imprimir()
-		{
-			System.out.println("Estado "+this.n);
-		}
-	}
-	/**
-	 * Clase auxiliar para definir una transición en un autómata
-	 * @author herre
-	 *
-	 */
-	public class Transicion
-	{
-		public Estado estadoInicial;
-		public String terminal;
-		public Estado estadoFinal;
-		/**
-		 * Constructor principal
-		 * @param ei Estado inicial
-		 * @param t Identificador del símbolo de la transición
-		 * @param ef Estado final
-		 */
-		public Transicion(Estado ei, String t, Estado ef)
-		{
-			this.estadoInicial = ei;
-			this.terminal = t;
-			this.estadoFinal = ef;
-		}
-		/**
-		 * Metodo para imprimir por pantalla los valores de una transición
-		 */
-		public void imprimir()
-		{
-			if (this.estadoInicial.esinicial)
-				System.out.print("INICIAL ");
-			if (this.estadoInicial.esfinal)
-				System.out.print("FINAL ");
-			System.out.println("Estado base: "+this.estadoInicial.n);
-			System.out.println("Transicion: "+this.terminal);
-			if (this.estadoFinal.esinicial)
-				System.out.print("INICIAL ");
-			if (this.estadoFinal.esfinal)
-				System.out.print("FINAL ");
-			System.out.println("Estado Final: "+ this.estadoFinal.n);
-		}
-	}
-	/**
-	 * Método que dada una entrada en forma de String y un estado del autómata,
-	 * comprueba si con dicho terminal se puede avanzar a otro(s) estado(s). En
-	 * ese caso, los va introduciendo en una lista de estados.
-	 * @param terminal
-	 * @param estado
-	 * @param tabla
-	 * @param arbol
-	 * @return Lista de estados
-	 */
-	public List<Estado> siguienteToken(String tok, List<Estado> lIni, List<List<Estado>> tabla, NodoArbol arbol)
-	{
-		List<Estado> lEst = new LinkedList<>();
-		List<Estado> lAux;
-		String cad;
-		int i = 0;
-		if (lIni.isEmpty())
-		{
-			lAux = tabla.get(0);
-			for (Estado e : lAux)
-			{
-				i++;
-				if (e.n == 0)
-					continue;
-				cad = this.devolverTerminal(arbol,i);
-				if (this.comprobarTerminal(cad,tok))
-					lEst.add(e);
-			}
-		}
-		else
-		{
-			for (Estado est : lIni)
-			{
-				i = 0;
-				lAux = tabla.get(est.n);
-				for (Estado e : lAux)
-				{
-					i++;
-					if (e.n == 0)
-						continue;
-					cad = this.devolverTerminal(arbol,i);
-					if (this.comprobarTerminal(cad,tok))
-						lEst.add(e);
-				}
-			}
-		}
-		return lEst;
-	}
-	/**
-	 * Método para crear un autómata a partir de un árbol binario de una
-	 * expresión regular. Se devolverá una tabla representando las transiciones
-	 * desde cada estado con cada símbolo de entrada posible.
-	 * @param arbol Árbol binario de la expresión regular
-	 * @return Tabla de transiciones
-	 */
-	public List<List<Estado>> crearAutomata(NodoArbol arbol)
-	{
-		List<List<Estado>> tabla = new LinkedList<>();
-		List<Estado> lest = new LinkedList<>();
-		List<Integer> conjunto = new LinkedList<>();
-		List<Estado> laux = new LinkedList<>();
-		boolean esta = false;
-		int noMarcado = 1;
-		int naux = 0;
-		int nER;
-		// Añadimos el estado inicial para el automata
-		List<Integer> la = primeraPos(arbol);
-		Estado einicial = new Estado(primeraPos(arbol));
-		einicial.n = naux;
-		einicial.esinicial = true;
-		if (la.contains(arbol.hijoDcho.posicion))
-			einicial.esfinal = true;
-		naux++;
-		Estado nuevo;
-		lest.add(einicial);
-		laux.add(einicial);
-		// Iniciamos el algoritmo de creación del autómata
-		while (noMarcado > 0)
-		{
-			for (Estado actual : lest)
-			{
-				if (!actual.marcado)
-				{
-					tabla.add(new LinkedList<>());
-					for (int x = 0; x < arbol.hijoDcho.posicion-1; x++)
-					{
-						tabla.get(tabla.size()-1).add(new Estado(null));
-					}
-					actual.marcado = true;
-					noMarcado--;
-					for (int i = 1;i < arbol.hijoDcho.posicion;i++)
-					{
-						if (actual.lposiciones.contains(i))
-						{
-							conjunto.addAll(siguientePos(arbol,i));
-						}
-						if (!conjunto.isEmpty())
-						{
-							nuevo = new Estado(conjunto);
-							nER = this.devolverNER(arbol,i); // EN PRUEBA
-							nuevo.expRegs.add(nER); // EN PRUEBA
-							nuevo.lTerm.add(i);
-							for (Estado aux : laux)
-							{
-								if (aux.lposiciones.equals(conjunto))
-								{
-									esta = true;
-									aux.expRegs.add(nER); // EN PRUEBA
-									aux.lTerm.add(i);
-									nuevo = aux;
-									break;
-								}
-							}
-							if (!esta)
-							{
-								nuevo.n = naux;
-								naux++;
-								if (conjunto.contains(arbol.hijoDcho.posicion))
-									nuevo.esfinal = true;
-								laux.add(nuevo);
-								noMarcado++;
-							}
-							else
-								esta = false;
-							tabla.get(actual.n).set(i-1, nuevo);
-							conjunto.clear();
-						}
-					}
-				}
-			}
-			lest.clear();
-			lest.addAll(laux);
-		}
-		return tabla;
-	}
-	/**
-	 * Método que devuelve una lista de índices de expresiones regulares, dada una lista de estados en los que
-	 * se encuentra el autómata. Además, se pasa como parámetro una lista de las expresiones regulares que se 
-	 * activaron en el último estado. Con esta lista se comprueba si en el nuevo estado se activa alguna expresión
-	 * regular que anteriormente no se encontraba activa, si es así, no se activa.
-	 * @param terminal que se lee
-	 * @param lista de estados
-	 * @param automata
-	 * @Param lista de expresiones regulares
-	 * @param arbol
-	 * @return lista de ER que se activan
-	 * @throws Exception 
-	 */
-	public List<Integer> activarER(String tok, List<Estado> lE, List<List<Estado>> tabla, List<Integer> lER, NodoArbol arbol) throws Exception
-	{
-		List<Integer> lOut = new LinkedList<>();
-		List<Integer> lInt = new LinkedList<>();
-		List<String> lPos = new LinkedList<>();
-		List<Estado> lAux;
-		String cad, auxER;
-		int c, a;
-		
-		int i = 0;
-		lAux = tabla.get(0);
-		for (@SuppressWarnings("unused") Estado e : lAux) // Este primer bucle es para coger el índice de terminal del string leído
-		{
-			i++;
-			cad = this.devolverTerminal(arbol,i);
-			if (this.comprobarTerminal(cad,tok))
-				lInt.add(i);
-		}
-		for (Estado est : lE)
-		{
-			for (Integer obj : lInt)
-			{
-				c = est.lTerm.indexOf(obj); // Cogemos el índice en el que se encuentra ese terminal
-				if (c != -1)
-				{
-					a = est.expRegs.get(c);
-					if (!lER.isEmpty())
-					{
-						if (lER.contains(a))
-							lOut.add(a);
-					}
-					else
-					{
-						lPos = this.devolverPos(arbol,lPos,a);
-						if (this.comprobarTerminal(lPos.get(0),tok))
-							lOut.add(a); // Cogemos la ER correspondiente
-						lPos.clear();
-					}	
-				}	
-			}
-		}
-		return lOut;
-	}
-	/**
-	 * Método para unir dos árboles mediante un nodo operación que 
-	 * se pasa por parámetro.
-	 * @param arbol1 Arbol 1 a unir
-	 * @param arbol2 Arbol 2 a unir
-	 * @param op String para representar el nodo raiz
-	 * @return raiz
-	 */
-	public NodoArbol unirArbol(NodoArbol r1, NodoArbol r2, String op)
-	{
-		NodoArbol raiz = new NodoArbol(op);
-		raiz.insertarIzda(r1);
-		raiz.insertarDcha(r2);
-		return raiz;
-	}
-	/**
-	 * Método que recibe una lista con los componentes de una 
-	 * expresión regular y devuelve un árbol sintáctico binario 
-	 * de la misma
-	 * @param lExp Lista de componentes de una expresión regular
-	 * @param posicion 
-	 * @return Árbol sintáctico binario de una expresión regular
-	 * @throws Exception 
-	 */
-	public NodoArbol crearArbol(List<String> lExp, int posicion) throws Exception
-	{
-		NodoArbol raiz = null;
-		NodoArbol nodoAnterior = null;
-		NodoArbol nodoActual = null;
-		NodoArbol nodoAuxiliar = null;
-		NodoArbol nodoAuxiliar1 = null;
-		List<String> lpar;
-		for (String n : lExp)
-		{
-			while (!parseado(n))
-			{
-				lpar = parsear(n);
-				n = lpar.get(0);
-			}
-			lpar = parsear(n);
-			if (lpar.size() == 1) // Caso base
-			{
-				nodoActual = new NodoArbol(lpar.get(0));
-			}
-			else // Caso recursivo
-			{
-				nodoActual = crearArbol(lpar,posicion);
-			}	
-			if (raiz == null) // Se trata del primer nodo del arbol que tenemos que crear
-			{
-				if (nodoActual.hoja) // Comprobamos si es una hoja y añadimos la expresión regular que representa
-				{
-					nodoActual.expReg = posicion;
-				}
-				raiz = nodoActual;
-				nodoAnterior = nodoActual;
-			}
-			else // Ya existe algún nodo creado anteriormente
-			{
-				if (nodoActual.hoja) // Comprobamos si es una hoja y añadimos la expresión regular que representa
-				{
-					nodoActual.expReg = posicion;
-				}
-				if (nodoActual.hoja || (nodoActual.cuantificador && nodoActual.hijoIzdo != null))
-				{
-					if (nodoAnterior.info.equals("|"))
-					{
-						if (nodoAnterior.hijoIzdo == null)
-						{
-							nodoAnterior.insertarIzda(nodoActual);
-							nodoAnterior = nodoActual;
-						}
-						else if (nodoAnterior.hijoDcho == null)
-						{
-							nodoAnterior.insertarDcha(nodoActual);
-							nodoAnterior = nodoActual;
-						}
-						else
-						{
-							if (nodoAnterior.padre != null)
-							{
-								if (nodoAnterior.padre.cuantificador)
-								{
-									if (nodoAnterior.padre.padre != null && nodoAnterior.padre.padre.operacion)
-									{
-										nodoAuxiliar = new NodoArbol(".");
-										nodoAnterior.padre.padre.hijoDcho = null;
-										nodoAnterior.padre.padre.insertarDcha(nodoAuxiliar);
-										nodoAuxiliar.insertarIzda(nodoAnterior.padre);
-										nodoAuxiliar.insertarDcha(nodoActual);
-										nodoAnterior = nodoActual;
-									}
-									else
-									{
-										nodoAuxiliar = new NodoArbol(".");
-										nodoAuxiliar.insertarIzda(nodoAnterior.padre);
-										nodoAuxiliar.insertarDcha(nodoActual);
-										nodoAnterior = nodoActual;
-										raiz = nodoAuxiliar;
-									}
-								}
-								else
-								{
-									nodoAuxiliar = new NodoArbol(".");
-									nodoAnterior.padre.hijoDcho = null;
-									nodoAnterior.padre.insertarDcha(nodoAuxiliar);
-									nodoAuxiliar.insertarIzda(nodoAnterior);
-									nodoAuxiliar.insertarDcha(nodoActual);
-									nodoAnterior = nodoActual;
-								}
-							}
-							else
-							{
-								nodoAuxiliar = new NodoArbol(".");
-								nodoAuxiliar.insertarIzda(nodoAnterior);
-								nodoAuxiliar.insertarDcha(nodoActual);
-								nodoAnterior = nodoActual;
-								raiz = nodoAuxiliar;
-							}	
-						}	
-					}
-					else if (nodoAnterior.hoja || nodoAnterior.cuantificador)
-					{
-						if (nodoAnterior.padre != null)
-						{
-							if (nodoAnterior.padre.cuantificador)
-							{
-								if (nodoAnterior.padre.padre != null && nodoAnterior.padre.padre.operacion)
-								{
-									nodoAuxiliar = new NodoArbol(".");
-									nodoAnterior.padre.padre.hijoDcho = null;
-									nodoAnterior.padre.padre.insertarDcha(nodoAuxiliar);
-									nodoAuxiliar.insertarIzda(nodoAnterior.padre);
-									nodoAuxiliar.insertarDcha(nodoActual);
-									nodoAnterior = nodoActual;
-								}
-								else
-								{
-									nodoAuxiliar = new NodoArbol(".");
-									nodoAuxiliar.insertarIzda(nodoAnterior.padre);
-									nodoAuxiliar.insertarDcha(nodoActual);
-									nodoAnterior = nodoActual; 
-									raiz = nodoAuxiliar;
-								}
-							}
-							else
-							{
-								nodoAuxiliar = new NodoArbol(".");
-								nodoAnterior.padre.hijoDcho = null;
-								nodoAnterior.padre.insertarDcha(nodoAuxiliar);
-								nodoAuxiliar.insertarIzda(nodoAnterior);
-								nodoAuxiliar.insertarDcha(nodoActual);
-								nodoAnterior = nodoActual;
-							}
-						}
-						else
-						{
-							nodoAuxiliar = new NodoArbol(".");	
-							nodoAuxiliar.insertarIzda(nodoAnterior);
-							nodoAuxiliar.insertarDcha(nodoActual);
-							nodoAnterior = nodoActual; // nodoAuxiliar
-							raiz = nodoAuxiliar;
-						}
-					}
-					else if (nodoAnterior.info.equals("."))
-					{
-						if (nodoAnterior.padre != null)
-						{
-							if (nodoAnterior.padre.cuantificador)
-							{
-								if (nodoAnterior.padre.padre != null && nodoAnterior.padre.padre.operacion)
-								{
-									nodoAuxiliar = new NodoArbol(".");
-									nodoAnterior.padre.padre.hijoDcho = null;
-									nodoAnterior.padre.padre.insertarDcha(nodoAuxiliar);
-									nodoAuxiliar.insertarIzda(nodoAnterior.padre);
-									nodoAuxiliar.insertarDcha(nodoActual);
-									nodoAnterior = nodoActual;
-								}
-								else
-								{
-									nodoAuxiliar = new NodoArbol(".");
-									nodoAuxiliar.insertarIzda(nodoAnterior.padre);
-									nodoAuxiliar.insertarDcha(nodoActual);
-									nodoAnterior = nodoActual;
-									raiz = nodoAuxiliar;
-								}
-							}
-							else
-							{
-								nodoAuxiliar = new NodoArbol(".");
-								nodoAnterior.padre.hijoDcho = null;
-								nodoAnterior.padre.insertarDcha(nodoAuxiliar);
-								nodoAuxiliar.insertarIzda(nodoAnterior);
-								nodoAuxiliar.insertarDcha(nodoActual);
-								nodoAnterior = nodoActual;
-							}
-						}
-						else
-						{
-							nodoAuxiliar = new NodoArbol(".");
-							nodoAuxiliar.insertarIzda(nodoAnterior);
-							nodoAuxiliar.insertarDcha(nodoActual);
-							nodoAnterior = nodoActual;
-							raiz = nodoAuxiliar;
-						}
-					}
-				}
-				else if (nodoActual.info.equals("|"))
-				{
-					if (nodoAnterior.hoja || nodoAnterior.cuantificador)
-					{
-						if (nodoAnterior.padre != null)
-						{
-							if (nodoActual.hijoIzdo != null)
-							{
-								if (nodoAnterior.padre.operacion)
-								{
-									nodoAuxiliar = new NodoArbol(".");
-									nodoAnterior.padre.hijoDcho = null;
-									nodoAnterior.padre.insertarDcha(nodoAuxiliar);
-									nodoAuxiliar.insertarIzda(nodoAnterior);
-									nodoAuxiliar.insertarDcha(nodoActual);
-									nodoAnterior = nodoActual;
-								}
-								else
-								{
-									if (nodoAnterior.padre.cuantificador)
-									{
-										if (nodoAnterior.padre.padre != null && nodoAnterior.padre.padre.operacion)
-										{
-											nodoAuxiliar = new NodoArbol(".");
-											nodoAnterior.padre.padre.hijoDcho = null;
-											nodoAnterior.padre.padre.insertarDcha(nodoAuxiliar);
-											nodoAuxiliar.insertarIzda(nodoAnterior.padre);
-											nodoAuxiliar.insertarDcha(nodoActual);
-											nodoAnterior = nodoActual;
-										}
-										else
-										{
-											nodoAuxiliar = new NodoArbol(".");
-											nodoAuxiliar.insertarIzda(nodoAnterior.padre);
-											nodoAuxiliar.insertarDcha(nodoActual);
-											nodoAnterior = nodoActual;
-											raiz = nodoAuxiliar;
-										}
-									}
-								}
-							}
-							else
-							{
-								if (nodoAnterior.padre.cuantificador)
-								{
-									if (nodoAnterior.padre.padre != null)
-									{
-										if (nodoAnterior.padre.padre.info.equals("|"))
-										{
-											nodoAnterior.padre.padre.hijoDcho = null;
-											nodoAnterior.padre.padre.insertarDcha(nodoActual);
-											nodoActual.insertarIzda(nodoAnterior.padre);
-											nodoAnterior = nodoActual;
-										}
-										else
-										{
-											nodoAuxiliar1 = nodoAnterior.padre;
-											while (nodoAuxiliar1.padre != null)
-												nodoAuxiliar1 = nodoAuxiliar1.padre;
-											if (nodoAuxiliar1.info.equals("."))
-											{
-												nodoActual.insertarIzda(nodoAuxiliar1);
-												nodoAnterior = nodoActual;
-												raiz = nodoActual;
-											}
-											else
-											{
-												nodoAuxiliar = nodoAuxiliar1;
-												nodoAuxiliar1 = nodoAuxiliar1.hijoDcho;
-												nodoAuxiliar.hijoDcho = null;
-												nodoActual.insertarIzda(nodoAuxiliar1);
-												nodoAuxiliar.insertarDcha(nodoActual);
-												nodoAnterior = nodoActual;
-											}
-										}
-									}
-									else
-									{
-										nodoActual.insertarIzda(nodoAnterior.padre);
-										nodoAnterior = nodoActual;
-										raiz = nodoActual;
-									}
-								}
-								else if (nodoAnterior.padre.info.equals("|"))
-								{
-									nodoAnterior.padre.hijoDcho = null;
-									nodoAnterior.padre.insertarDcha(nodoActual);
-									nodoActual.insertarIzda(nodoAnterior);
-									nodoAnterior = nodoActual;
-								}
-								else if (nodoAnterior.padre.info.equals("."))
-								{
-									nodoAuxiliar1 = nodoAnterior.padre;
-									while (nodoAuxiliar1.padre != null)
-										nodoAuxiliar1 = nodoAuxiliar1.padre;
-									if (nodoAuxiliar1.info.equals("."))
-									{
-										nodoActual.insertarIzda(nodoAuxiliar1);
-										nodoAnterior = nodoActual;
-										raiz = nodoActual;
-									}
-									else
-									{
-										nodoAuxiliar = nodoAuxiliar1;
-										nodoAuxiliar1 = nodoAuxiliar1.hijoDcho;
-										nodoAuxiliar.hijoDcho = null;
-										nodoActual.insertarIzda(nodoAuxiliar1);
-										nodoAuxiliar.insertarDcha(nodoActual);
-										nodoAnterior = nodoActual;
-									}
-								}
-							}
-						}
-						else
-						{
-							if (nodoActual.hijoIzdo != null)
-							{
-								nodoAuxiliar = new NodoArbol(".");
-								nodoAuxiliar.insertarIzda(nodoAnterior);
-								nodoAuxiliar.insertarDcha(nodoActual);
-								nodoAnterior = nodoActual;
-								raiz = nodoAuxiliar;
-							}
-							else
-							{
-								nodoActual.insertarIzda(nodoAnterior);
-								nodoAnterior = nodoActual;
-								raiz = nodoActual;
-							}
-						}
-					}
-					else if (nodoAnterior.operacion)
-					{
-						if (nodoActual.hijoIzdo != null)
-						{
-							if (nodoAnterior.hijoDcho != null)
-							{
-								if (nodoAnterior.padre != null)
-								{
-									if (nodoAnterior.padre.operacion)
-									{
-										nodoAuxiliar = new NodoArbol(".");
-										nodoAnterior.padre.hijoDcho = null;
-										nodoAnterior.padre.insertarDcha(nodoAuxiliar);
-										nodoAuxiliar.insertarIzda(nodoAnterior);
-										nodoAuxiliar.insertarDcha(nodoActual);
-										nodoAnterior = nodoActual;
-									}
-								}
-								else
-								{
-									nodoAuxiliar = new NodoArbol(".");
-									nodoAuxiliar.insertarIzda(nodoAnterior);
-									nodoAuxiliar.insertarDcha(nodoActual);
-									nodoAnterior = nodoActual;
-									raiz = nodoAuxiliar;
-								}
-							}
-							else
-							{
-								nodoAnterior.insertarDcha(nodoActual);
-								nodoAnterior = nodoActual;
-							}
-						}
-						else
-						{
-							if (nodoAnterior.padre == null)
-							{
-								nodoActual.insertarIzda(nodoAnterior);
-								nodoAnterior = nodoActual;
-								raiz = nodoActual;
-							}
-							else
-							{
-								if (nodoAnterior.padre.cuantificador)
-								{
-									nodoAuxiliar1 = nodoAnterior.padre;
-									while (nodoAuxiliar1.padre != null)
-										nodoAuxiliar1 = nodoAuxiliar1.padre;
-									if (nodoAuxiliar1.info.equals("."))
-									{
-										nodoActual.insertarIzda(nodoAuxiliar1);
-										nodoAnterior = nodoActual;
-										raiz = nodoActual;
-									}
-									else
-									{
-										nodoAuxiliar = nodoAuxiliar1;
-										nodoAuxiliar1 = nodoAuxiliar1.hijoDcho;
-										nodoAuxiliar.hijoDcho = null;
-										nodoActual.insertarIzda(nodoAuxiliar1);
-										nodoAuxiliar.insertarDcha(nodoActual);
-										nodoAnterior = nodoActual;
-									}
-								}
-								else if (nodoAnterior.padre.info.equals("|"))
-								{
-									nodoAnterior.padre.hijoDcho = null;
-									nodoAnterior.padre.insertarDcha(nodoActual);
-									nodoActual.insertarIzda(nodoAnterior);
-									nodoAnterior = nodoActual;
-								}
-								else if (nodoAnterior.padre.info.equals("."))
-								{
-									nodoAuxiliar1 = nodoAnterior.padre;
-									while (nodoAuxiliar1.padre != null)
-										nodoAuxiliar1 = nodoAuxiliar1.padre;
-									if (nodoAuxiliar1.info.equals("."))
-									{
-										nodoActual.insertarIzda(nodoAuxiliar1);
-										nodoAnterior = nodoActual;
-										raiz = nodoActual;
-									}
-									else
-									{
-										nodoAuxiliar = nodoAuxiliar1;
-										nodoAuxiliar1 = nodoAuxiliar1.hijoDcho;
-										nodoAuxiliar.hijoDcho = null;
-										nodoActual.insertarIzda(nodoAuxiliar1);
-										nodoAuxiliar.insertarDcha(nodoActual);
-										nodoAnterior = nodoActual;
-									}
-								}
-							}
-						}
-					}
-				}
-				else if (nodoActual.info.equals("."))
-				{
-					if (nodoAnterior.hoja)
-					{
-						if (nodoAnterior.padre != null)
-						{
-							if (nodoAnterior.padre.cuantificador)
-							{
-								if (nodoAnterior.padre.padre != null && nodoAnterior.padre.padre.operacion)
-								{
-									nodoAuxiliar = new NodoArbol(".");
-									nodoAnterior.padre.padre.hijoDcho = null;
-									nodoAnterior.padre.padre.insertarDcha(nodoAuxiliar);
-									nodoAuxiliar.insertarIzda(nodoAnterior.padre);
-									nodoAuxiliar.insertarDcha(nodoActual);
-									nodoAnterior = nodoActual;
-								}
-								else
-								{
-									nodoAuxiliar = new NodoArbol(".");
-									nodoAuxiliar.insertarIzda(nodoAnterior.padre);
-									nodoAuxiliar.insertarDcha(nodoActual);
-									nodoAnterior = nodoActual;
-									raiz = nodoAuxiliar;
-								}
-							}
-							else
-							{
-								nodoAuxiliar = new NodoArbol(".");
-								nodoAnterior.padre.hijoDcho = null;
-								nodoAnterior.padre.insertarDcha(nodoAuxiliar);
-								nodoAuxiliar.insertarIzda(nodoAnterior);
-								nodoAuxiliar.insertarDcha(nodoActual);
-								nodoAnterior = nodoActual;
-							}
-						}
-						else
-						{
-							nodoAuxiliar = new NodoArbol(".");
-							nodoAuxiliar.insertarIzda(nodoAnterior);
-							nodoAuxiliar.insertarDcha(nodoActual);
-							nodoAnterior = nodoActual;
-							raiz = nodoAuxiliar;
-						}
-					}
-					else if (nodoAnterior.info.equals("|"))
-					{
-						nodoAnterior.insertarDcha(nodoActual);
-						nodoAnterior = nodoActual;
-					}
-					else if (nodoAnterior.info.equals("."))
-					{
-						if (nodoAnterior.padre != null)
-						{
-							nodoAuxiliar = new NodoArbol(".");
-							nodoAnterior.padre.hijoDcho = null;
-							nodoAnterior.padre.insertarDcha(nodoAuxiliar);
-							nodoAuxiliar.insertarIzda(nodoAnterior);
-							nodoAuxiliar.insertarDcha(nodoActual);
-							nodoAnterior = nodoActual;
-						}
-						else
-						{
-							nodoAuxiliar = new NodoArbol(".");
-							nodoAuxiliar.insertarIzda(nodoAnterior);
-							nodoAuxiliar.insertarDcha(nodoActual);
-							nodoAnterior = nodoActual;
-							raiz = nodoAuxiliar;
-						}
-					}
-				}
-				else
-				{
-					if (nodoAnterior.hoja)
-					{
-						if (nodoAnterior.padre != null)
-						{
-							nodoAnterior.padre.hijoDcho = null;
-							nodoAnterior.padre.insertarDcha(nodoActual);
-							nodoActual.insertarIzda(nodoAnterior);
-						}
-						else
-						{
-							nodoActual.insertarIzda(nodoAnterior);
-							raiz = nodoActual;
-						}
-					}
-					else if (nodoAnterior.operacion)
-					{
-						if (nodoAnterior.padre != null)
-						{
-							nodoAnterior.padre.hijoDcho = null;
-							nodoAnterior.padre.insertarDcha(nodoActual);
-							nodoActual.insertarIzda(nodoAnterior);
-							nodoAnterior = nodoActual;
-						}
-						else
-						{
-							nodoActual.insertarIzda(nodoAnterior);
-							nodoAnterior = nodoActual;
-							raiz = nodoActual;
-						}
-					}
-				}
-			}
-		}
-		return raiz;
-	}
+            if ((c1.equals("\""+c2+"\"")))// || (c1.equals("\".\"")))
+                    encontrado = true;
+        }
+        if (!neg)
+            return encontrado;
+        else
+        {
+            return !encontrado;
+        }
+    }
+    /**
+     * Clase auxiliar para definir un estado del autï¿½mata
+     * @author herre
+     *
+     */
+    public class Estado
+    {
+        public List<Integer> lposiciones;
+        public boolean marcado;
+        public int n;
+        public boolean esfinal = false;
+        public boolean esinicial = false;
+        public List<Integer> expRegs = new LinkedList<>();
+        public List<Integer> lTerm = new LinkedList<>();
+
+        /**
+         * Constructor principal
+         * @param l Lista de posiciones
+         */
+        public Estado(List<Integer> l)
+        {
+            this.lposiciones = new LinkedList<>();
+            if (l != null)
+                    this.lposiciones.addAll(l);
+            this.marcado = false;
+        }
+        /**
+         * Mï¿½todo para imprimir por pantalla la informaciï¿½n de un estado
+         */
+        public void imprimir()
+        {
+            System.out.println("Estado "+this.n);
+        }
+    }
+    /**
+     * Clase auxiliar para definir una transiciï¿½n en un autï¿½mata
+     * @author herre
+     *
+     */
+    public class Transicion
+    {
+        public Estado estadoInicial;
+        public String terminal;
+        public Estado estadoFinal;
+        /**
+         * Constructor principal
+         * @param ei Estado inicial
+         * @param t Identificador del sï¿½mbolo de la transiciï¿½n
+         * @param ef Estado final
+         */
+        public Transicion(Estado ei, String t, Estado ef)
+        {
+            this.estadoInicial = ei;
+            this.terminal = t;
+            this.estadoFinal = ef;
+        }
+        /**
+         * Metodo para imprimir por pantalla los valores de una transiciï¿½n
+         */
+        public void imprimir()
+        {
+            if (this.estadoInicial.esinicial)
+                    System.out.print("INICIAL ");
+            if (this.estadoInicial.esfinal)
+                    System.out.print("FINAL ");
+            System.out.println("Estado base: "+this.estadoInicial.n);
+            System.out.println("Transicion: "+this.terminal);
+            if (this.estadoFinal.esinicial)
+                    System.out.print("INICIAL ");
+            if (this.estadoFinal.esfinal)
+                    System.out.print("FINAL ");
+            System.out.println("Estado Final: "+ this.estadoFinal.n);
+        }
+    }
+    /**
+     * Mï¿½todo que dada una entrada en forma de String y un estado del autï¿½mata,
+     * comprueba si con dicho terminal se puede avanzar a otro(s) estado(s). En
+     * ese caso, los va introduciendo en una lista de estados.
+     * @param tok cadena que se lee
+     * @param lIni lista de estados iniciales
+     * @param tabla automata
+     * @param arbol arbol
+     * @return Lista de estados
+     */
+    public List<Estado> siguienteToken(String tok, List<Estado> lIni, List<List<Estado>> tabla, NodoArbol arbol)
+    {
+        List<Estado> lEst = new LinkedList<>();
+        List<Estado> lAux;
+        String cad;
+        int i = 0;
+        if (lIni.isEmpty())
+        {
+            lAux = tabla.get(0);
+            for (Estado e : lAux)
+            {
+                i++;
+                if (e.n == 0)
+                    continue;
+                cad = this.devolverTerminal(arbol,i);
+                if (this.comprobarTerminal(cad,tok))
+                    lEst.add(e);
+            }
+        }
+        else
+        {
+            for (Estado est : lIni)
+            {
+                i = 0;
+                lAux = tabla.get(est.n);
+                for (Estado e : lAux)
+                {
+                    i++;
+                    if (e.n == 0)
+                        continue;
+                    cad = this.devolverTerminal(arbol,i);
+                    if (this.comprobarTerminal(cad,tok))
+                        lEst.add(e);
+                }
+            }
+        }
+        return lEst;
+    }
+    /**
+     * Mï¿½todo para crear un autï¿½mata a partir de un ï¿½rbol binario de una
+     * expresiï¿½n regular. Se devolverï¿½ una tabla representando las transiciones
+     * desde cada estado con cada sï¿½mbolo de entrada posible.
+     * @param arbol ï¿½rbol binario de la expresiï¿½n regular
+     * @return Tabla de transiciones
+     */
+    public List<List<Estado>> crearAutomata(NodoArbol arbol)
+    {
+        List<List<Estado>> tabla = new LinkedList<>();
+        List<Estado> lest = new LinkedList<>();
+        List<Integer> conjunto = new LinkedList<>();
+        List<Estado> laux = new LinkedList<>();
+        boolean esta = false;
+        int noMarcado = 1;
+        int naux = 0;
+        int nER;
+        // Aï¿½adimos el estado inicial para el automata
+        List<Integer> la = primeraPos(arbol);
+        Estado einicial = new Estado(primeraPos(arbol));
+        einicial.n = naux;
+        einicial.esinicial = true;
+        if (la.contains(arbol.hijoDcho.posicion))
+            einicial.esfinal = true;
+        naux++;
+        Estado nuevo;
+        lest.add(einicial);
+        laux.add(einicial);
+        // Iniciamos el algoritmo de creaciï¿½n del autï¿½mata
+        while (noMarcado > 0)
+        {
+            for (Estado actual : lest)
+            {
+                if (!actual.marcado)
+                {
+                    tabla.add(new LinkedList<>());
+                    for (int x = 0; x < arbol.hijoDcho.posicion-1; x++)
+                    {
+                        tabla.get(tabla.size()-1).add(new Estado(null));
+                    }
+                    actual.marcado = true;
+                    noMarcado--;
+                    for (int i = 1;i < arbol.hijoDcho.posicion;i++)
+                    {
+                        if (actual.lposiciones.contains(i))
+                        {
+                            conjunto.addAll(siguientePos(arbol,i));
+                        }
+                        if (!conjunto.isEmpty())
+                        {
+                            nuevo = new Estado(conjunto);
+                            nER = this.devolverNER(arbol,i); // EN PRUEBA
+                            nuevo.expRegs.add(nER); // EN PRUEBA
+                            nuevo.lTerm.add(i);
+                            for (Estado aux : laux)
+                            {
+                                if (aux.lposiciones.equals(conjunto))
+                                {
+                                    esta = true;
+                                    aux.expRegs.add(nER); // EN PRUEBA
+                                    aux.lTerm.add(i);
+                                    nuevo = aux;
+                                    break;
+                                }
+                            }
+                            if (!esta)
+                            {
+                                nuevo.n = naux;
+                                naux++;
+                                if (conjunto.contains(arbol.hijoDcho.posicion))
+                                    nuevo.esfinal = true;
+                                laux.add(nuevo);
+                                noMarcado++;
+                            }
+                            else
+                                esta = false;
+                            tabla.get(actual.n).set(i-1, nuevo);
+                            conjunto.clear();
+                        }
+                    }
+                }
+            }
+            lest.clear();
+            lest.addAll(laux);
+        }
+        return tabla;
+    }
+    /**
+     * Mï¿½todo que devuelve una lista de ï¿½ndices de expresiones regulares, dada una lista de estados en los que
+     * se encuentra el autï¿½mata. Ademï¿½s, se pasa como parï¿½metro una lista de las expresiones regulares que se 
+     * activaron en el ï¿½ltimo estado. Con esta lista se comprueba si en el nuevo estado se activa alguna expresiï¿½n
+     * regular que anteriormente no se encontraba activa, si es asï¿½, no se activa.
+     * @param tok cadena que se lee
+     * @param lE lista de estados
+     * @param tabla automata
+     * @param lER lista de ER
+     * @throws java.lang.Exception
+     * @Param lista de expresiones regulares
+     * @param arbol arbol
+     * @return lista de ER que se activan
+     */
+    public List<Integer> activarER(String tok, List<Estado> lE, List<List<Estado>> tabla, List<Integer> lER, NodoArbol arbol) throws Exception
+    {
+        List<Integer> lOut = new LinkedList<>();
+        List<Integer> lInt = new LinkedList<>();
+        List<String> lPos = new LinkedList<>();
+        List<Estado> lAux;
+        String cad;
+        int c, a;
+
+        int i = 0;
+        lAux = tabla.get(0);
+        for (@SuppressWarnings("unused") Estado e : lAux) // Este primer bucle es para coger el ï¿½ndice de terminal del string leï¿½do
+        {
+            i++;
+            cad = this.devolverTerminal(arbol,i);
+            if (this.comprobarTerminal(cad,tok))
+                lInt.add(i);
+        }
+        for (Estado est : lE)
+        {
+            for (Integer obj : lInt)
+            {
+                c = est.lTerm.indexOf(obj); // Cogemos el ï¿½ndice en el que se encuentra ese terminal
+                if (c != -1)
+                {
+                    a = est.expRegs.get(c);
+                    if (!lER.isEmpty())
+                    {
+                        if (lER.contains(a))
+                            lOut.add(a);
+                    }
+                    else
+                    {
+                        lPos = this.devolverPos(arbol,lPos,a);
+                        if (this.comprobarTerminal(lPos.get(0),tok))
+                            lOut.add(a); // Cogemos la ER correspondiente
+                        lPos.clear();
+                    }		
+                }	
+            }
+        }
+        return lOut;
+    }
+    /**
+     * Mï¿½todo para unir dos ï¿½rboles mediante un nodo operaciï¿½n que 
+     * se pasa por parï¿½metro.
+     * @param r1
+     * @param r2
+     * @param op String para representar el nodo raiz
+     * @return raiz
+     */
+    public NodoArbol unirArbol(NodoArbol r1, NodoArbol r2, String op)
+    {
+        NodoArbol raiz = new NodoArbol(op);
+        raiz.insertarIzda(r1);
+        raiz.insertarDcha(r2);
+        return raiz;
+    }
+    /**
+     * Mï¿½todo que recibe una lista con los componentes de una 
+     * expresiï¿½n regular y devuelve un ï¿½rbol sintï¿½ctico binario 
+     * de la misma
+     * @param lExp Lista de componentes de una expresiï¿½n regular
+     * @param posicion 
+     * @return ï¿½rbol sintï¿½ctico binario de una expresiï¿½n regular
+     * @throws Exception 
+     */
+    @SuppressWarnings("null")
+    public NodoArbol crearArbol(List<String> lExp, int posicion) throws Exception
+    {
+        NodoArbol raiz = null;
+        NodoArbol nodoAnterior = null;
+        NodoArbol nodoActual = null;
+        NodoArbol nodoAuxiliar = null;
+        NodoArbol nodoAuxiliar1 = null;
+        List<String> lpar;
+        for (String n : lExp)
+        {
+            while (!parseado(n))
+            {
+                lpar = parsear(n);
+                n = lpar.get(0);
+            }
+            lpar = parsear(n);
+            if (lpar.size() == 1) // Caso base
+            {
+                nodoActual = new NodoArbol(lpar.get(0));
+            }
+            else // Caso recursivo
+            {
+                nodoActual = crearArbol(lpar,posicion);
+            }	
+            if (raiz == null) // Se trata del primer nodo del arbol que tenemos que crear
+            {
+                if (nodoActual.hoja) // Comprobamos si es una hoja y aï¿½adimos la expresiï¿½n regular que representa
+                {
+                    nodoActual.expReg = posicion;
+                }
+                raiz = nodoActual;
+                nodoAnterior = nodoActual;
+            }
+            else // Ya existe algï¿½n nodo creado anteriormente
+            {
+                if (nodoActual.hoja) // Comprobamos si es una hoja y aï¿½adimos la expresiï¿½n regular que representa
+                {
+                    nodoActual.expReg = posicion;
+                }
+                if (nodoActual.hoja || (nodoActual.cuantificador && nodoActual.hijoIzdo != null))
+                {
+                    if (nodoAnterior.info.equals("|"))
+                    {
+                        if (nodoAnterior.hijoIzdo == null)
+                        {
+                            nodoAnterior.insertarIzda(nodoActual);
+                            nodoAnterior = nodoActual;
+                        }
+                        else if (nodoAnterior.hijoDcho == null)
+                        {
+                            nodoAnterior.insertarDcha(nodoActual);
+                            nodoAnterior = nodoActual;
+                        }
+                        else
+                        {
+                            if (nodoAnterior.padre != null)
+                            {
+                                if (nodoAnterior.padre.cuantificador)
+                                {
+                                    if (nodoAnterior.padre.padre != null && nodoAnterior.padre.padre.operacion)
+                                    {
+                                        nodoAuxiliar = new NodoArbol(".");
+                                        nodoAnterior.padre.padre.hijoDcho = null;
+                                        nodoAnterior.padre.padre.insertarDcha(nodoAuxiliar);
+                                        nodoAuxiliar.insertarIzda(nodoAnterior.padre);
+                                        nodoAuxiliar.insertarDcha(nodoActual);
+                                        nodoAnterior = nodoActual;
+                                    }
+                                    else
+                                    {
+                                        nodoAuxiliar = new NodoArbol(".");
+                                        nodoAuxiliar.insertarIzda(nodoAnterior.padre);
+                                        nodoAuxiliar.insertarDcha(nodoActual);
+                                        nodoAnterior = nodoActual;
+                                        raiz = nodoAuxiliar;
+                                    }
+                                }
+                                else
+                                {
+                                    nodoAuxiliar = new NodoArbol(".");
+                                    nodoAnterior.padre.hijoDcho = null;
+                                    nodoAnterior.padre.insertarDcha(nodoAuxiliar);
+                                    nodoAuxiliar.insertarIzda(nodoAnterior);
+                                    nodoAuxiliar.insertarDcha(nodoActual);
+                                    nodoAnterior = nodoActual;
+                                }
+                            }
+                            else
+                            {
+                                nodoAuxiliar = new NodoArbol(".");
+                                nodoAuxiliar.insertarIzda(nodoAnterior);
+                                nodoAuxiliar.insertarDcha(nodoActual);
+                                nodoAnterior = nodoActual;
+                                raiz = nodoAuxiliar;
+                            }	
+                        }	
+                    }
+                    else if (nodoAnterior.hoja || nodoAnterior.cuantificador)
+                    {
+                        if (nodoAnterior.padre != null)
+                        {
+                            if (nodoAnterior.padre.cuantificador)
+                            {
+                                if (nodoAnterior.padre.padre != null && nodoAnterior.padre.padre.operacion)
+                                {
+                                    nodoAuxiliar = new NodoArbol(".");
+                                    nodoAnterior.padre.padre.hijoDcho = null;
+                                    nodoAnterior.padre.padre.insertarDcha(nodoAuxiliar);
+                                    nodoAuxiliar.insertarIzda(nodoAnterior.padre);
+                                    nodoAuxiliar.insertarDcha(nodoActual);
+                                    nodoAnterior = nodoActual;
+                                }
+                                else
+                                {
+                                    nodoAuxiliar = new NodoArbol(".");
+                                    nodoAuxiliar.insertarIzda(nodoAnterior.padre);
+                                    nodoAuxiliar.insertarDcha(nodoActual);
+                                    nodoAnterior = nodoActual; 
+                                    raiz = nodoAuxiliar;
+                                }
+                            }
+                            else
+                            {
+                                nodoAuxiliar = new NodoArbol(".");
+                                nodoAnterior.padre.hijoDcho = null;
+                                nodoAnterior.padre.insertarDcha(nodoAuxiliar);
+                                nodoAuxiliar.insertarIzda(nodoAnterior);
+                                nodoAuxiliar.insertarDcha(nodoActual);
+                                nodoAnterior = nodoActual;
+                            }
+                        }
+                        else
+                        {
+                            nodoAuxiliar = new NodoArbol(".");	
+                            nodoAuxiliar.insertarIzda(nodoAnterior);
+                            nodoAuxiliar.insertarDcha(nodoActual);
+                            nodoAnterior = nodoActual; // nodoAuxiliar
+                            raiz = nodoAuxiliar;
+                        }
+                    }
+                    else if (nodoAnterior.info.equals("."))
+                    {
+                        if (nodoAnterior.padre != null)
+                        {
+                            if (nodoAnterior.padre.cuantificador)
+                            {
+                                if (nodoAnterior.padre.padre != null && nodoAnterior.padre.padre.operacion)
+                                {
+                                    nodoAuxiliar = new NodoArbol(".");
+                                    nodoAnterior.padre.padre.hijoDcho = null;
+                                    nodoAnterior.padre.padre.insertarDcha(nodoAuxiliar);
+                                    nodoAuxiliar.insertarIzda(nodoAnterior.padre);
+                                    nodoAuxiliar.insertarDcha(nodoActual);
+                                    nodoAnterior = nodoActual;
+                                }
+                                else
+                                {
+                                    nodoAuxiliar = new NodoArbol(".");
+                                    nodoAuxiliar.insertarIzda(nodoAnterior.padre);
+                                    nodoAuxiliar.insertarDcha(nodoActual);
+                                    nodoAnterior = nodoActual;
+                                    raiz = nodoAuxiliar;
+                                }
+                            }
+                            else
+                            {
+                                nodoAuxiliar = new NodoArbol(".");
+                                nodoAnterior.padre.hijoDcho = null;
+                                nodoAnterior.padre.insertarDcha(nodoAuxiliar);
+                                nodoAuxiliar.insertarIzda(nodoAnterior);
+                                nodoAuxiliar.insertarDcha(nodoActual);
+                                nodoAnterior = nodoActual;
+                            }
+                        }
+                        else
+                        {
+                            nodoAuxiliar = new NodoArbol(".");
+                            nodoAuxiliar.insertarIzda(nodoAnterior);
+                            nodoAuxiliar.insertarDcha(nodoActual);
+                            nodoAnterior = nodoActual;
+                            raiz = nodoAuxiliar;
+                        }
+                    }
+                }
+                else if (nodoActual.info.equals("|"))
+                {
+                    if (nodoAnterior.hoja || nodoAnterior.cuantificador)
+                    {
+                        if (nodoAnterior.padre != null)
+                        {
+                            if (nodoActual.hijoIzdo != null)
+                            {
+                                if (nodoAnterior.padre.operacion)
+                                {
+                                        nodoAuxiliar = new NodoArbol(".");
+                                        nodoAnterior.padre.hijoDcho = null;
+                                        nodoAnterior.padre.insertarDcha(nodoAuxiliar);
+                                        nodoAuxiliar.insertarIzda(nodoAnterior);
+                                        nodoAuxiliar.insertarDcha(nodoActual);
+                                        nodoAnterior = nodoActual;
+                                }
+                                else
+                                {
+                                    if (nodoAnterior.padre.cuantificador)
+                                    {
+                                        if (nodoAnterior.padre.padre != null && nodoAnterior.padre.padre.operacion)
+                                        {
+                                            nodoAuxiliar = new NodoArbol(".");
+                                            nodoAnterior.padre.padre.hijoDcho = null;
+                                            nodoAnterior.padre.padre.insertarDcha(nodoAuxiliar);
+                                            nodoAuxiliar.insertarIzda(nodoAnterior.padre);
+                                            nodoAuxiliar.insertarDcha(nodoActual);
+                                            nodoAnterior = nodoActual;
+                                        }
+                                        else
+                                        {
+                                            nodoAuxiliar = new NodoArbol(".");
+                                            nodoAuxiliar.insertarIzda(nodoAnterior.padre);
+                                            nodoAuxiliar.insertarDcha(nodoActual);
+                                            nodoAnterior = nodoActual;
+                                            raiz = nodoAuxiliar;
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (nodoAnterior.padre.cuantificador)
+                                {
+                                    if (nodoAnterior.padre.padre != null)
+                                    {
+                                        if (nodoAnterior.padre.padre.info.equals("|"))
+                                        {
+                                            nodoAnterior.padre.padre.hijoDcho = null;
+                                            nodoAnterior.padre.padre.insertarDcha(nodoActual);
+                                            nodoActual.insertarIzda(nodoAnterior.padre);
+                                            nodoAnterior = nodoActual;
+                                        }
+                                        else
+                                        {
+                                            nodoAuxiliar1 = nodoAnterior.padre;
+                                            while (nodoAuxiliar1.padre != null)
+                                                nodoAuxiliar1 = nodoAuxiliar1.padre;
+                                            if (nodoAuxiliar1.info.equals("."))
+                                            {
+                                                nodoActual.insertarIzda(nodoAuxiliar1);
+                                                nodoAnterior = nodoActual;
+                                                raiz = nodoActual;
+                                            }
+                                            else
+                                            {
+                                                nodoAuxiliar = nodoAuxiliar1;
+                                                nodoAuxiliar1 = nodoAuxiliar1.hijoDcho;
+                                                nodoAuxiliar.hijoDcho = null;
+                                                nodoActual.insertarIzda(nodoAuxiliar1);
+                                                nodoAuxiliar.insertarDcha(nodoActual);
+                                                nodoAnterior = nodoActual;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        nodoActual.insertarIzda(nodoAnterior.padre);
+                                        nodoAnterior = nodoActual;
+                                        raiz = nodoActual;
+                                    }
+                                }
+                                else if (nodoAnterior.padre.info.equals("|"))
+                                {
+                                    nodoAnterior.padre.hijoDcho = null;
+                                    nodoAnterior.padre.insertarDcha(nodoActual);
+                                    nodoActual.insertarIzda(nodoAnterior);
+                                    nodoAnterior = nodoActual;
+                                }
+                                else if (nodoAnterior.padre.info.equals("."))
+                                {
+                                    nodoAuxiliar1 = nodoAnterior.padre;
+                                    while (nodoAuxiliar1.padre != null)
+                                        nodoAuxiliar1 = nodoAuxiliar1.padre;
+                                    if (nodoAuxiliar1.info.equals("."))
+                                    {
+                                        nodoActual.insertarIzda(nodoAuxiliar1);
+                                        nodoAnterior = nodoActual;
+                                        raiz = nodoActual;
+                                    }
+                                    else
+                                    {
+                                        nodoAuxiliar = nodoAuxiliar1;
+                                        nodoAuxiliar1 = nodoAuxiliar1.hijoDcho;
+                                        nodoAuxiliar.hijoDcho = null;
+                                        nodoActual.insertarIzda(nodoAuxiliar1);
+                                        nodoAuxiliar.insertarDcha(nodoActual);
+                                        nodoAnterior = nodoActual;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (nodoActual.hijoIzdo != null)
+                            {
+                                nodoAuxiliar = new NodoArbol(".");
+                                nodoAuxiliar.insertarIzda(nodoAnterior);
+                                nodoAuxiliar.insertarDcha(nodoActual);
+                                nodoAnterior = nodoActual;
+                                raiz = nodoAuxiliar;
+                            }
+                            else
+                            {
+                                nodoActual.insertarIzda(nodoAnterior);
+                                nodoAnterior = nodoActual;
+                                raiz = nodoActual;
+                            }
+                        }
+                    }
+                    else if (nodoAnterior.operacion)
+                    {
+                        if (nodoActual.hijoIzdo != null)
+                        {
+                            if (nodoAnterior.hijoDcho != null)
+                            {
+                                if (nodoAnterior.padre != null)
+                                {
+                                    if (nodoAnterior.padre.operacion)
+                                    {
+                                        nodoAuxiliar = new NodoArbol(".");
+                                        nodoAnterior.padre.hijoDcho = null;
+                                        nodoAnterior.padre.insertarDcha(nodoAuxiliar);
+                                        nodoAuxiliar.insertarIzda(nodoAnterior);
+                                        nodoAuxiliar.insertarDcha(nodoActual);
+                                        nodoAnterior = nodoActual;
+                                    }
+                                }
+                                else
+                                {
+                                    nodoAuxiliar = new NodoArbol(".");
+                                    nodoAuxiliar.insertarIzda(nodoAnterior);
+                                    nodoAuxiliar.insertarDcha(nodoActual);
+                                    nodoAnterior = nodoActual;
+                                    raiz = nodoAuxiliar;
+                                }
+                            }
+                            else
+                            {
+                                nodoAnterior.insertarDcha(nodoActual);
+                                nodoAnterior = nodoActual;
+                            }
+                        }
+                        else
+                        {
+                            if (nodoAnterior.padre == null)
+                            {
+                                nodoActual.insertarIzda(nodoAnterior);
+                                nodoAnterior = nodoActual;
+                                raiz = nodoActual;
+                            }
+                            else
+                            {
+                                if (nodoAnterior.padre.cuantificador)
+                                {
+                                    nodoAuxiliar1 = nodoAnterior.padre;
+                                    while (nodoAuxiliar1.padre != null)
+                                        nodoAuxiliar1 = nodoAuxiliar1.padre;
+                                    if (nodoAuxiliar1.info.equals("."))
+                                    {
+                                        nodoActual.insertarIzda(nodoAuxiliar1);
+                                        nodoAnterior = nodoActual;
+                                        raiz = nodoActual;
+                                    }
+                                    else
+                                    {
+                                        nodoAuxiliar = nodoAuxiliar1;
+                                        nodoAuxiliar1 = nodoAuxiliar1.hijoDcho;
+                                        nodoAuxiliar.hijoDcho = null;
+                                        nodoActual.insertarIzda(nodoAuxiliar1);
+                                        nodoAuxiliar.insertarDcha(nodoActual);
+                                        nodoAnterior = nodoActual;
+                                    }
+                                }
+                                else if (nodoAnterior.padre.info.equals("|"))
+                                {
+                                    nodoAnterior.padre.hijoDcho = null;
+                                    nodoAnterior.padre.insertarDcha(nodoActual);
+                                    nodoActual.insertarIzda(nodoAnterior);
+                                    nodoAnterior = nodoActual;
+                                }
+                                else if (nodoAnterior.padre.info.equals("."))
+                                {
+                                    nodoAuxiliar1 = nodoAnterior.padre;
+                                    while (nodoAuxiliar1.padre != null)
+                                        nodoAuxiliar1 = nodoAuxiliar1.padre;
+                                    if (nodoAuxiliar1.info.equals("."))
+                                    {
+                                        nodoActual.insertarIzda(nodoAuxiliar1);
+                                        nodoAnterior = nodoActual;
+                                        raiz = nodoActual;
+                                    }
+                                    else
+                                    {
+                                        nodoAuxiliar = nodoAuxiliar1;
+                                        nodoAuxiliar1 = nodoAuxiliar1.hijoDcho;
+                                        nodoAuxiliar.hijoDcho = null;
+                                        nodoActual.insertarIzda(nodoAuxiliar1);
+                                        nodoAuxiliar.insertarDcha(nodoActual);
+                                        nodoAnterior = nodoActual;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (nodoActual.info.equals("."))
+                {
+                    if (nodoAnterior.hoja)
+                    {
+                        if (nodoAnterior.padre != null)
+                        {
+                            if (nodoAnterior.padre.cuantificador)
+                            {
+                                if (nodoAnterior.padre.padre != null && nodoAnterior.padre.padre.operacion)
+                                {
+                                    nodoAuxiliar = new NodoArbol(".");
+                                    nodoAnterior.padre.padre.hijoDcho = null;
+                                    nodoAnterior.padre.padre.insertarDcha(nodoAuxiliar);
+                                    nodoAuxiliar.insertarIzda(nodoAnterior.padre);
+                                    nodoAuxiliar.insertarDcha(nodoActual);
+                                    nodoAnterior = nodoActual;
+                                }
+                                else
+                                {
+                                    nodoAuxiliar = new NodoArbol(".");
+                                    nodoAuxiliar.insertarIzda(nodoAnterior.padre);
+                                    nodoAuxiliar.insertarDcha(nodoActual);
+                                    nodoAnterior = nodoActual;
+                                    raiz = nodoAuxiliar;
+                                }
+                            }
+                            else
+                            {
+                                nodoAuxiliar = new NodoArbol(".");
+                                nodoAnterior.padre.hijoDcho = null;
+                                nodoAnterior.padre.insertarDcha(nodoAuxiliar);
+                                nodoAuxiliar.insertarIzda(nodoAnterior);
+                                nodoAuxiliar.insertarDcha(nodoActual);
+                                nodoAnterior = nodoActual;
+                            }
+                        }
+                        else
+                        {
+                            nodoAuxiliar = new NodoArbol(".");
+                            nodoAuxiliar.insertarIzda(nodoAnterior);
+                            nodoAuxiliar.insertarDcha(nodoActual);
+                            nodoAnterior = nodoActual;
+                            raiz = nodoAuxiliar;
+                        }
+                    }
+                    else if (nodoAnterior.info.equals("|"))
+                    {
+                        nodoAnterior.insertarDcha(nodoActual);
+                        nodoAnterior = nodoActual;
+                    }
+                    else if (nodoAnterior.info.equals("."))
+                    {
+                        if (nodoAnterior.padre != null)
+                        {
+                            nodoAuxiliar = new NodoArbol(".");
+                            nodoAnterior.padre.hijoDcho = null;
+                            nodoAnterior.padre.insertarDcha(nodoAuxiliar);
+                            nodoAuxiliar.insertarIzda(nodoAnterior);
+                            nodoAuxiliar.insertarDcha(nodoActual);
+                            nodoAnterior = nodoActual;
+                        }
+                        else
+                        {
+                            nodoAuxiliar = new NodoArbol(".");
+                            nodoAuxiliar.insertarIzda(nodoAnterior);
+                            nodoAuxiliar.insertarDcha(nodoActual);
+                            nodoAnterior = nodoActual;
+                            raiz = nodoAuxiliar;
+                        }
+                    }
+                }
+                else
+                {
+                    if (nodoAnterior.hoja)
+                    {
+                        if (nodoAnterior.padre != null)
+                        {
+                            nodoAnterior.padre.hijoDcho = null;
+                            nodoAnterior.padre.insertarDcha(nodoActual);
+                            nodoActual.insertarIzda(nodoAnterior);
+                        }
+                        else
+                        {
+                            nodoActual.insertarIzda(nodoAnterior);
+                            raiz = nodoActual;
+                        }
+                    }
+                    else if (nodoAnterior.operacion)
+                    {
+                        if (nodoAnterior.padre != null)
+                        {
+                            nodoAnterior.padre.hijoDcho = null;
+                            nodoAnterior.padre.insertarDcha(nodoActual);
+                            nodoActual.insertarIzda(nodoAnterior);
+                            nodoAnterior = nodoActual;
+                        }
+                        else
+                        {
+                            nodoActual.insertarIzda(nodoAnterior);
+                            nodoAnterior = nodoActual;
+                            raiz = nodoActual;
+                        }
+                    }
+                }
+            }
+        }
+    return raiz;
+    }
 }

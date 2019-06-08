@@ -65,7 +65,6 @@ public class FPrincipal extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jToggleButton1 = new javax.swing.JToggleButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
@@ -86,8 +85,6 @@ public class FPrincipal extends javax.swing.JFrame {
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
         jMenuItem8 = new javax.swing.JMenuItem();
-        jSeparator4 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem9 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
 
@@ -152,15 +149,6 @@ public class FPrincipal extends javax.swing.JFrame {
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
-            }
-        });
-
-        jToggleButton1.setBackground(new java.awt.Color(240, 203, 104));
-        jToggleButton1.setText("Iniciar Reconocimiento");
-        jToggleButton1.setEnabled(false);
-        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton1ActionPerformed(evt);
             }
         });
 
@@ -236,9 +224,7 @@ public class FPrincipal extends javax.swing.JFrame {
                             .addGap(18, 18, 18)
                             .addComponent(jButton1)
                             .addGap(18, 18, 18)
-                            .addComponent(jButton3)
-                            .addGap(18, 18, 18)
-                            .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButton3))
                         .addComponent(jLabel3)
                         .addComponent(jScrollPane3))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -268,8 +254,7 @@ public class FPrincipal extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton2)
                             .addComponent(jButton1)
-                            .addComponent(jButton3)
-                            .addComponent(jToggleButton1))
+                            .addComponent(jButton3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -357,16 +342,6 @@ public class FPrincipal extends javax.swing.JFrame {
         jMenuItem8.setText("Añadir Entrada..");
         jMenuItem8.setEnabled(false);
         jMenu1.add(jMenuItem8);
-        jMenu1.add(jSeparator4);
-
-        jMenuItem9.setText("Iniciar Reconocimiento");
-        jMenuItem9.setEnabled(false);
-        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem9ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem9);
 
         jMenuBar1.add(jMenu1);
 
@@ -392,6 +367,7 @@ public class FPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    @SuppressWarnings("null")
     private String abrirArchivo() throws Exception {
         String aux;   
         String texto="";
@@ -444,6 +420,11 @@ public class FPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        try {
+            Procesador.crearAutomata();
+        } catch (Exception ex) {
+            Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.jTextArea1.setFocusable(true);
         this.jTextArea1.setText("");
         this.jTextArea1.setFont(new Font("Monospaced",0,13));
@@ -455,8 +436,6 @@ public class FPrincipal extends javax.swing.JFrame {
         this.jMenuItem6.setEnabled(false);
         this.jMenuItem7.setEnabled(true);
         this.jMenuItem8.setEnabled(false);
-        this.jToggleButton1.setEnabled(true);
-        this.jMenuItem9.setEnabled(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -471,27 +450,7 @@ public class FPrincipal extends javax.swing.JFrame {
         this.jMenuItem6.setEnabled(true);
         this.jMenuItem7.setEnabled(false);
         this.jMenuItem8.setEnabled(true);
-        this.jToggleButton1.setEnabled(false);
-        this.jMenuItem9.setEnabled(false);
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        if (this.jToggleButton1.isSelected())
-        {
-            this.jToggleButton1.setText("Detener Reconocimiento");
-            this.jToggleButton1.setBackground(Color.gray);
-            try {
-                Procesador.crearAutomata();
-            } catch (Exception ex) {
-                Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        else
-        {
-            this.jToggleButton1.setText("Iniciar Reconocimiento");
-            this.jToggleButton1.setBackground(new Color(240,203,104));
-        }
-    }//GEN-LAST:event_jToggleButton1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         this.jTextArea3.setEditable(true);
@@ -585,19 +544,21 @@ public class FPrincipal extends javax.swing.JFrame {
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
         this.jButton8ActionPerformed(evt);
     }//GEN-LAST:event_jMenuItem5ActionPerformed
-
-    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
-        this.jToggleButton1ActionPerformed(evt);
-    }//GEN-LAST:event_jMenuItem9ActionPerformed
     /**
      * Información para el cambio de color de fuente en un jTextPane cogida de:
      * http://www.java2s.com/Tutorials/Java/Swing_How_to/JTextPane/Set_foreground_color_for_different_words_in_JTextPane.htm
      * @param evt 
      */
+    @SuppressWarnings("null")
     private void jTextArea1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyTyped
         String tok = Character.toString(evt.getKeyChar());
         this.lEaux = this.lE;
-        List<Integer> expr = Procesador.reconocer(this.lE,this.lnER,tok);
+        List<Integer> expr = null;
+        try {
+            expr = Procesador.reconocer(this.lE,this.lnER,tok);
+        } catch (Exception ex) {
+            Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.lnER.clear();
         for (int n : expr)
         {
@@ -689,7 +650,6 @@ public class FPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
-    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
@@ -697,10 +657,8 @@ public class FPrincipal extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
-    private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea3;
     private javax.swing.JTextPane jTextPane1;
-    private javax.swing.JToggleButton jToggleButton1;
     // End of variables declaration//GEN-END:variables
 }

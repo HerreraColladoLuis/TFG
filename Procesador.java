@@ -1,8 +1,5 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Procesador {
     
@@ -22,32 +19,37 @@ public class Procesador {
         List<String> outList = new LinkedList<>();
         String encodingName = "UTF-8";
         Lexicojf scanner = null;
-        try {
-          java.io.FileInputStream stream = new java.io.FileInputStream(argv);
-          java.io.Reader reader = new java.io.InputStreamReader(stream, encodingName);
-          scanner = new Lexicojf(reader);
-          while ( !scanner.zzAtEOF ) scanner.yylex();
+        try 
+        {
+            java.io.FileInputStream stream = new java.io.FileInputStream(argv);
+            java.io.Reader reader = new java.io.InputStreamReader(stream, encodingName);
+            scanner = new Lexicojf(reader);
+            while ( !scanner.zzAtEOF ) scanner.yylex();
         }
-        catch (java.io.FileNotFoundException e) {
-          System.out.println("File not found : \""+argv+"\"");
+        catch (java.io.FileNotFoundException e) 
+        {
+            System.out.println("File not found : \""+argv+"\"");
         }
-        catch (java.io.IOException e) {
-          System.out.println("IO error scanning file \""+argv+"\"");
-          System.out.println(e);
+        catch (java.io.IOException e) 
+        {
+            System.out.println("IO error scanning file \""+argv+"\"");
+            System.out.println(e);
         }
-        catch (Exception e) {
-          System.out.println("Unexpected exception:");
+        catch (Exception e) 
+        {
+            System.out.println("Unexpected exception:");
         }
         // DECLARACI�N DE VARIABLES A UTILIZAR
         Analizador aux = new Analizador();
-        List<String> auxmacro = aux.translateMacro(scanner.macrosList);
-        List<String> auxregex = aux.translateRegex(scanner.regexList);
-        aux.listaER = auxregex;
-        aux.listaM = auxmacro;
-        outList.addAll(auxmacro);
+        @SuppressWarnings("null")
+        List<String> auxmacro1 = aux.translateMacro(scanner.macrosList);
+        List<String> auxregex1 = aux.translateRegex(scanner.regexList);
+        aux.listaER = auxregex1;
+        aux.listaM = auxmacro1;
+        outList.addAll(auxmacro1);
         //outList.addAll(auxregex);
-        Procesador.auxregex = auxregex;
-        Procesador.auxmacro = auxmacro;
+        Procesador.auxregex = auxregex1;
+        Procesador.auxmacro = auxmacro1;
         return outList;
     }
     /**
@@ -62,7 +64,7 @@ public class Procesador {
         aux.listaM = auxmacro;
         String out, outAux;
         List<String> lParseada, lParseadaAux;
-        Analizador.NodoArbol arbol, arbolAux;
+        Analizador.NodoArbol arbol, arbolAux1;
         List<List<Analizador.Estado>> li;
         // EMPEZAMOS A CREAR EL ÁRBOL DE TODAS LAS EXPRESIONES REGULARES QUE ENCONTREMOS
         String fcad = auxregex.get(0);
@@ -73,8 +75,8 @@ public class Procesador {
         {
             outAux = aux.traducir(auxregex.get(x));
             lParseadaAux = aux.parsear(outAux);
-            arbolAux = aux.crearArbol(lParseadaAux,x);
-            arbol = aux.unirArbol(arbol, arbolAux, "|");
+            arbolAux1 = aux.crearArbol(lParseadaAux,x);
+            arbol = aux.unirArbol(arbol, arbolAux1, "|");
             fcad += "|" + auxregex.get(x);
         } 
         out = aux.traducir(fcad);
@@ -82,7 +84,7 @@ public class Procesador {
         lParseada = aux.parsear(out);
         System.out.print("ER parseada: ");
         for (String n : lParseada)
-                System.out.print(n + " ");
+            System.out.print(n + " ");
         arbol = aux.aumentar(arbol);
         Procesador.arbolAux = arbol;
         aux.numerar(arbol, 0);
@@ -111,15 +113,15 @@ public class Procesador {
                 else
                 {	
                     if (!lEstAux.contains(e))
-                            lEstAux.add(e); // EN PRUEBA
+                        lEstAux.add(e); // EN PRUEBA
                     if (e.esinicial)
-                            System.out.print("I");
+                        System.out.print("I");
                     else
-                            System.out.print("-");
+                        System.out.print("-");
                     if (e.esfinal)
-                            System.out.print("F");
+                        System.out.print("F");
                     else 
-                            System.out.print("-");
+                        System.out.print("-");
                     System.out.print(e.n + "  ");
                 }
             }
