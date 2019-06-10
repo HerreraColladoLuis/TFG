@@ -568,7 +568,7 @@ public class Analizador
                 {
                     aux = aux.padre;
                 }
-                out.addAll(ultimaPos(aux.hijoDcho));
+                //out.addAll(ultimaPos(aux.hijoDcho));
             }
         }
         else
@@ -1081,9 +1081,10 @@ public class Analizador
         List<Estado> lAux;
         String cad;
         int c, a;
-
         int i = 0;
+        boolean comp;
         lAux = tabla.get(0);
+        
         for (@SuppressWarnings("unused") Estado e : lAux) // Este primer bucle es para coger el �ndice de terminal del string le�do
         {
             i++;
@@ -1104,11 +1105,30 @@ public class Analizador
                         if (lER.contains(a))
                             lOut.add(a);
                     }
-                    else
+                    else // Si la lista de ER está vacía, nos encontramos problemas
                     {
-                        lPos = this.devolverPos(arbol,lPos,a);
-                        if (this.comprobarTerminal(lPos.get(0),tok))
-                            lOut.add(a); // Cogemos la ER correspondiente
+                        // Si en ese estado solo se activa una ER, la metemos en la lista
+                        comp = true;
+                        for (int er : est.expRegs)
+                        {
+                            if (er != a)
+                            {
+                                comp = false;
+                                break;
+                            }
+                        }
+                        // Si solo se activa una ER, añadimos la ER
+                        if (comp)
+                            lOut.add(a);
+                        else // Si no son iguales, pasamos aquí
+                        {
+                            // Cogemos la lista con terminales de la ER dada por el índice a
+                            // de la ER correspondiente
+                            lPos = this.devolverPos(arbol,lPos,a);
+                            // Comprobamos el primer terminal de la lista MAL
+                            if (this.comprobarTerminal(lPos.get(0),tok))
+                                lOut.add(a); // Cogemos la ER correspondiente
+                        }
                         lPos.clear();
                     }		
                 }	
