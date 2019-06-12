@@ -864,6 +864,7 @@ public class Analizador
         public boolean esinicial = false;
         public List<Integer> expRegs = new LinkedList<>();
         public List<Integer> lTerm = new LinkedList<>();
+        public List<Estado> anterior = null;
 
         /**
          * Constructor principal
@@ -950,7 +951,10 @@ public class Analizador
                     continue;
                 cad = this.devolverTerminal(arbol,i);
                 if (this.comprobarTerminal(cad,tok))
+                {
+                    e.anterior = lAux;
                     lEst.add(e);
+                }    
             }
         }
         else
@@ -966,7 +970,10 @@ public class Analizador
                         continue;
                     cad = this.devolverTerminal(arbol,i);
                     if (this.comprobarTerminal(cad,tok))
+                    {
+                        e.anterior = lAux;
                         lEst.add(e);
+                    }
                 }
             }
         }
@@ -1096,42 +1103,64 @@ public class Analizador
         {
             for (Integer obj : lInt)
             {
+                // EN PRUEBA
                 c = est.lTerm.indexOf(obj); // Cogemos el �ndice en el que se encuentra ese terminal
                 if (c != -1)
                 {
-                    a = est.expRegs.get(c);
-                    if (!lER.isEmpty())
+                    a = est.expRegs.get(c); // Cogemos el índice de la ER que tiene el terminal c
+                    // Cogemos el estado al que se transita con este terminal, y si coincide con el estado actual, lo activamos
+                    Estado eaux = est.anterior.get(obj-1);
+                    if (eaux.n != 0 && eaux.n == est.n)
                     {
-                        if (lER.contains(a))
-                            lOut.add(a);
+                        lOut.add(a);
                     }
-                    else // Si la lista de ER está vacía, nos encontramos problemas
-                    {
-                        // Si en ese estado solo se activa una ER, la metemos en la lista
-                        comp = true;
-                        for (int er : est.expRegs)
-                        {
-                            if (er != a)
-                            {
-                                comp = false;
-                                break;
-                            }
-                        }
-                        // Si solo se activa una ER, añadimos la ER
-                        if (comp)
-                            lOut.add(a);
-                        else // Si no son iguales, pasamos aquí
-                        {
-                            // Cogemos la lista con terminales de la ER dada por el índice a
-                            // de la ER correspondiente
-                            lPos = this.devolverPos(arbol,lPos,a);
-                            // Comprobamos el primer terminal de la lista MAL
-                            if (this.comprobarTerminal(lPos.get(0),tok))
-                                lOut.add(a); // Cogemos la ER correspondiente
-                        }
-                        lPos.clear();
-                    }		
-                }	
+                }
+                
+//                c = est.lTerm.indexOf(obj); // Cogemos el �ndice en el que se encuentra ese terminal
+//                if (c != -1)
+//                {
+//                    a = est.expRegs.get(c); // Cogemos el índice de la ER que tiene el terminal c
+//                    if (!lER.isEmpty())
+//                    {
+//                        if (lER.contains(a))
+//                            lOut.add(a);
+//                    }
+//                    else // Si la lista de ER está vacía, nos encontramos problemas
+//                    {
+//                        // Si en ese estado solo se activa una ER, la metemos en la lista
+//                        comp = true;
+//                        for (int er : est.expRegs)
+//                        {
+//                            if (er != a)
+//                            {
+//                                comp = false;
+//                                break;
+//                            }
+//                        }
+//                        // Si solo se activa una ER, añadimos la ER
+//                        if (comp)
+//                            lOut.add(a);
+//                        else // Si no son iguales, pasamos aquí
+//                        {
+//                            // Cogemos la lista con terminales de la ER dada por el índice a
+//                            // de la ER correspondiente
+//                            lPos = this.devolverPos(arbol,lPos,a);
+//                            // Si la lista de terminales de esa ER solo tiene 1 elemento, comprobamos
+//                            if (lPos.size() == 1)
+//                            {
+//                                if (this.comprobarTerminal(lPos.get(0), tok))
+//                                    lOut.add(a);
+//                            }
+//                            else // Si tiene más de 1 elemento, problemas si es un OR o una concatencacion
+//                            {
+//                                
+//                            }   
+//                            // if (this.comprobarTerminal(lPos.get(0),tok))
+//                            //    lOut.add(a); // Cogemos la ER correspondiente
+//                        }
+//                        lPos.clear();
+//                    }		
+//                }	
             }
         }
         return lOut;
