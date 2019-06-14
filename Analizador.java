@@ -808,7 +808,13 @@ public class Analizador
         boolean encontrado = false;
         boolean set = false;
         boolean neg = false;
+        boolean escapado = false;
+        String p = "";
         int i = -1;
+        char[] cAux = new char[2];
+//        if (c1.equals("\".\""))
+//            if ((int) c2.toCharArray()[0] != 10)
+//                encontrado = true;
         if (c1.charAt(1) == '^')
                 neg = true;
         if ((c1.charAt(c1.length()-2) == '#') && (c1.charAt(c1.length()-3) == '#') && (c1.charAt(c1.length()-4) == '^'))
@@ -817,6 +823,25 @@ public class Analizador
         {
             for (char t : c1.toCharArray())
             {
+                if (escapado)
+                {
+                    if (t == 'n')
+                        p = "\\n";
+                    if ((int) c2.toCharArray()[0] == 10)
+                        c2 = "\\n";
+                    else
+                        continue;
+                    if (p.equals(c2))
+                    {
+                        encontrado = true;
+                        break;
+                    }
+                }
+                if (t == '\\')
+                {
+                    escapado = true;
+                    continue;
+                }
                 i++;
                 if (i == 0 || i == c1.length()-1)
                     continue;
@@ -846,9 +871,7 @@ public class Analizador
         if (!neg)
             return encontrado;
         else
-        {
             return !encontrado;
-        }
     }
     /**
      * Clase auxiliar para definir un estado del aut�mata
@@ -864,7 +887,7 @@ public class Analizador
         public boolean esinicial = false;
         public List<Integer> expRegs = new LinkedList<>();
         public List<Integer> lTerm = new LinkedList<>();
-        public List<Estado> anterior = null;
+        public List<List<Estado>> anterior = new LinkedList<>();
 
         /**
          * Constructor principal
@@ -952,13 +975,19 @@ public class Analizador
                 cad = this.devolverTerminal(arbol,i);
                 if (this.comprobarTerminal(cad,tok))
                 {
-                    e.anterior = lAux;
+                    e.anterior.add(lAux);
                     lEst.add(e);
                 }    
             }
         }
         else
         {
+            for (Estado es : lIni)
+            {
+                lAux = tabla.get(es.n);
+                for (Estado ea : lAux)
+                    ea.anterior = new LinkedList<>();
+            }
             for (Estado est : lIni)
             {
                 i = 0;
@@ -971,7 +1000,7 @@ public class Analizador
                     cad = this.devolverTerminal(arbol,i);
                     if (this.comprobarTerminal(cad,tok))
                     {
-                        e.anterior = lAux;
+                        e.anterior.add(lAux);
                         lEst.add(e);
                     }
                 }
@@ -1084,12 +1113,13 @@ public class Analizador
     {
         List<Integer> lOut = new LinkedList<>();
         List<Integer> lInt = new LinkedList<>();
-        List<String> lPos = new LinkedList<>();
+        // List<String> lPos = new LinkedList<>();
         List<Estado> lAux;
+        Estado eaux;
         String cad;
         int c, a;
         int i = 0;
-        boolean comp;
+        // boolean comp;
         lAux = tabla.get(0);
         
         for (@SuppressWarnings("unused") Estado e : lAux) // Este primer bucle es para coger el �ndice de terminal del string le�do
@@ -1108,12 +1138,31 @@ public class Analizador
                 if (c != -1)
                 {
                     a = est.expRegs.get(c); // Cogemos el índice de la ER que tiene el terminal c
-                    // Cogemos el estado al que se transita con este terminal, y si coincide con el estado actual, lo activamos
-                    Estado eaux = est.anterior.get(obj-1);
-                    if (eaux.n != 0 && eaux.n == est.n)
-                    {
-                        lOut.add(a);
-                    }
+//                    Si la lista de ER no está vacía, comprobamos si la ER estaba activada,
+//                    si es así, la activamos
+//                    if (!lER.isEmpty())
+//                    {
+//                        if (lER.contains(a))
+//                            lOut.add(a);
+//                    }
+//                    else // Si la lista de ER es vacía
+//                    {
+                        // Cogemos el estado en el que estamos y comprobamos su anterior con el terminal correspondiente,
+                        // si conincide la transición en alguno de sus estados anteriores, activamos la ER
+                        for (List<Estado> listAux : est.anterior)
+                        {
+                            eaux = listAux.get(obj-1);
+                            if (eaux.n != 0 && eaux.n == est.n)
+                            {
+                                lOut.add(a);
+                            }
+                        }
+//                        eaux = est.anterior.get(obj-1);
+//                        if (eaux.n != 0 && eaux.n == est.n)
+//                        {
+//                            lOut.add(a);
+//                        }
+//                    }
                 }
                 
 //                c = est.lTerm.indexOf(obj); // Cogemos el �ndice en el que se encuentra ese terminal
