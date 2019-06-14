@@ -411,6 +411,7 @@ public class FPrincipal extends javax.swing.JFrame {
         this.jLabel3.setEnabled(true);
         this.jTextArea3.setEnabled(true);
         this.jTextArea3.setText(especificacion);
+        this.jTextArea3.setCaretPosition(0);
         this.jMenuItem2.setEnabled(true);
         this.jMenuItem4.setEnabled(true);
         this.jMenuItem5.setEnabled(true);
@@ -524,6 +525,7 @@ public class FPrincipal extends javax.swing.JFrame {
             cad += "\n" + this.lER.get(i);
         }
         this.jTextPane1.setText(cad);
+        this.jTextPane1.setCaretPosition(0);
         this.jLabel1.setEnabled(true);
         this.jLabel2.setEnabled(true);
         this.jButton5.setEnabled(false);
@@ -589,6 +591,7 @@ public class FPrincipal extends javax.swing.JFrame {
                 Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
             }
         } 
+        this.jTextPane1.setCaretPosition(0);
     }//GEN-LAST:event_jTextArea1KeyTyped
     
     /**
