@@ -11,6 +11,7 @@ public class Procesador {
     private static List<String> auxmacro;
     private static List<List<Analizador.Estado>> automata;
     private static Analizador.NodoArbol arbolAux;
+    private static List<List<Analizador.Estado>> estadoEntrada = new LinkedList<>();
     
     /**
      * Método para procesar una especificación. Devuelve una lista de las 
@@ -169,6 +170,7 @@ public class Procesador {
         List<Analizador.Estado> lEAux;
         
         lEAux = aux.siguienteToken(tok, lE, Procesador.automata, Procesador.arbolAux);
+        estadoEntrada.add(lEAux);
         
         return lEAux;
     }

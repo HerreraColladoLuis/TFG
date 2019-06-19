@@ -33,6 +33,8 @@ import javax.swing.text.StyledDocument;
  */
 public class FPrincipal extends javax.swing.JFrame {
     
+    private List<String> entrada = new LinkedList<>();
+    private List<List<Analizador.Estado>> estadoEntrada = new LinkedList<>();
     private List<String> lER;
     private List<Analizador.Estado> lEaux;
     private List<Analizador.Estado> lE = new LinkedList<>();
@@ -554,6 +556,24 @@ public class FPrincipal extends javax.swing.JFrame {
     @SuppressWarnings("null")
     private void jTextArea1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyTyped
         String tok = Character.toString(evt.getKeyChar());
+        if ((int) tok.toCharArray()[0] == 8)
+        {
+            if (this.entrada.isEmpty()){return;}
+            
+            this.entrada.remove(this.entrada.size()-1); // Borramos el último elemento de la entrada
+            
+            if (!this.entrada.isEmpty()){
+                tok = this.entrada.remove(this.entrada.size()-1);
+                this.estadoEntrada.remove(this.estadoEntrada.size()-1); // Borramos los últimos estados activos
+                this.estadoEntrada.remove(this.estadoEntrada.size()-1); // Borramos los estados del caracter que vamos a ver ahora
+                if (!this.estadoEntrada.isEmpty())
+                    this.lE = this.estadoEntrada.get(this.estadoEntrada.size()-1);
+                else
+                    this.lE = new LinkedList<>();
+            } 
+            else
+            {} 
+        }
         this.lEaux = this.lE;
         List<Integer> expr = null;
         try {
@@ -568,6 +588,9 @@ public class FPrincipal extends javax.swing.JFrame {
                 this.lnER.add(n);
         }
         this.lE = Procesador.actualizarLE(this.lEaux, tok);
+        this.estadoEntrada.add(this.lE);
+        if ((int) tok.toCharArray()[0] != 8)
+            this.entrada.add(tok);
         
         this.jTextPane1.setText("");
         StyledDocument doc = this.jTextPane1.getStyledDocument();
