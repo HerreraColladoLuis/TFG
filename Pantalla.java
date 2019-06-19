@@ -1,5 +1,6 @@
 
 import java.awt.Color;
+import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -65,12 +66,12 @@ public class Pantalla extends javax.swing.JFrame {
         cabecera_esp = new javax.swing.JPanel();
         et_especificacion = new javax.swing.JLabel();
         boton_procesar = new javax.swing.JButton();
-        scroll_panel_especificacion = new javax.swing.JScrollPane();
-        panel_especificacion = new javax.swing.JTextPane();
         cabecera_act = new javax.swing.JPanel();
         et_act = new javax.swing.JLabel();
         scroll_panel_activadas = new javax.swing.JScrollPane();
         panel_activadas = new javax.swing.JTextPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        panel_especificacion = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -119,8 +120,9 @@ public class Pantalla extends javax.swing.JFrame {
 
         panel_expr.setEditable(false);
         panel_expr.setBorder(null);
-        panel_expr.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        panel_expr.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        panel_expr.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        panel_expr.setForeground(new java.awt.Color(109, 109, 109));
+        panel_expr.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         panel_expr.setFocusable(false);
         scroll_panel_expr.setViewportView(panel_expr);
 
@@ -148,7 +150,30 @@ public class Pantalla extends javax.swing.JFrame {
 
         scroll_panel_entrada.setBorder(null);
 
+        panel_entrada.setEditable(false);
         panel_entrada.setBorder(null);
+        panel_entrada.setFont(new java.awt.Font("Verdana", 1, 18)); // NOI18N
+        panel_entrada.setForeground(new java.awt.Color(109, 109, 109));
+        panel_entrada.setFocusable(false);
+        panel_entrada.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                panel_entradaFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                panel_entradaFocusLost(evt);
+            }
+        });
+        panel_entrada.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                panel_entradaKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                panel_entradaKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                panel_entradaKeyTyped(evt);
+            }
+        });
         scroll_panel_entrada.setViewportView(panel_entrada);
 
         cabecera_esp.setBackground(new java.awt.Color(183, 188, 192));
@@ -188,14 +213,6 @@ public class Pantalla extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        scroll_panel_especificacion.setBorder(null);
-
-        panel_especificacion.setEditable(false);
-        panel_especificacion.setBorder(null);
-        panel_especificacion.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        panel_especificacion.setFocusable(false);
-        scroll_panel_especificacion.setViewportView(panel_especificacion);
-
         cabecera_act.setBackground(new java.awt.Color(183, 188, 192));
 
         et_act.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
@@ -208,7 +225,7 @@ public class Pantalla extends javax.swing.JFrame {
             .addGroup(cabecera_actLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(et_act)
-                .addContainerGap(460, Short.MAX_VALUE))
+                .addContainerGap(432, Short.MAX_VALUE))
         );
         cabecera_actLayout.setVerticalGroup(
             cabecera_actLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -222,8 +239,19 @@ public class Pantalla extends javax.swing.JFrame {
 
         panel_activadas.setEditable(false);
         panel_activadas.setBorder(null);
+        panel_activadas.setEnabled(false);
         panel_activadas.setFocusable(false);
         scroll_panel_activadas.setViewportView(panel_activadas);
+
+        jScrollPane1.setBorder(null);
+
+        panel_especificacion.setEditable(false);
+        panel_especificacion.setBackground(new java.awt.Color(230, 230, 255));
+        panel_especificacion.setColumns(20);
+        panel_especificacion.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        panel_especificacion.setRows(5);
+        panel_especificacion.setFocusable(false);
+        jScrollPane1.setViewportView(panel_especificacion);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -236,11 +264,11 @@ public class Pantalla extends javax.swing.JFrame {
                     .addComponent(cabecera_entrada, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(scroll_panel_entrada)
                     .addComponent(cabecera_esp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(scroll_panel_especificacion)
                     .addComponent(cabecera_act, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(scroll_panel_activadas)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, 0)
-                        .addComponent(scroll_panel_activadas))))
+                        .addComponent(jScrollPane1))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -255,11 +283,11 @@ public class Pantalla extends javax.swing.JFrame {
                         .addGap(0, 0, 0)
                         .addComponent(cabecera_esp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
-                        .addComponent(scroll_panel_especificacion, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
                         .addComponent(cabecera_act, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
-                        .addComponent(scroll_panel_activadas, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE))))
+                        .addComponent(scroll_panel_activadas, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE))))
         );
 
         pack();
@@ -278,6 +306,9 @@ public class Pantalla extends javax.swing.JFrame {
             this.panel_especificacion.setCaretPosition(0);
             this.boton_procesar.setEnabled(true);
             this.panel_expr.setText("");
+            this.panel_entrada.setText(""); // ojo
+            this.panel_entrada.setEditable(false);
+            this.panel_entrada.setFocusable(false);
         }
         else
         {
@@ -295,7 +326,146 @@ public class Pantalla extends javax.swing.JFrame {
         this.panel_expr.setText(cad);
         this.panel_expr.setCaretPosition(0);
         this.boton_procesar.setEnabled(false);
+        try {
+            Procesador.crearAutomata();
+        } catch (Exception ex) {
+            Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        this.panel_entrada.setEditable(true);
+        this.panel_entrada.setFocusable(true);
     }//GEN-LAST:event_boton_procesarActionPerformed
+
+    @SuppressWarnings("null")
+    private void panel_entradaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_panel_entradaKeyTyped
+        String tok = Character.toString(evt.getKeyChar());
+        boolean retroceso = false;
+        if ((int) tok.toCharArray()[0] == 8)
+        {
+            retroceso = true;
+            if (this.entrada.isEmpty()){return;}
+            
+            this.entrada.remove(this.entrada.size()-1); // Borramos el último elemento de la entrada
+            
+            if (!this.entrada.isEmpty()){
+                tok = this.entrada.remove(this.entrada.size()-1);
+                this.estadoEntrada.remove(this.estadoEntrada.size()-1); // Borramos los últimos estados activos
+                this.estadoEntrada.remove(this.estadoEntrada.size()-1); // Borramos los estados del caracter que vamos a ver ahora
+                if (!this.estadoEntrada.isEmpty())
+                    this.lE = this.estadoEntrada.get(this.estadoEntrada.size()-1);
+                else
+                    this.lE = new LinkedList<>();
+            } 
+            else
+            {} 
+        }
+        this.lEaux = this.lE;
+        List<Integer> expr = null;
+        try {
+            expr = Procesador.reconocer(this.lE,this.lnER,tok);
+        } catch (Exception ex) {
+            Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.lnER.clear();
+        for (int n : expr)
+        {
+            if (!this.lnER.contains(n))
+                this.lnER.add(n);
+        }
+        this.lE = Procesador.actualizarLE(this.lEaux, tok);
+        this.estadoEntrada.add(this.lE);
+        if ((int) tok.toCharArray()[0] != 8)
+            this.entrada.add(tok);
+        
+        this.panel_expr.setText("");
+        StyledDocument doc = this.panel_expr.getStyledDocument();
+        Style style = this.panel_expr.addStyle("Style", null);
+        
+        if (expr.contains(0))
+        {
+            StyleConstants.setForeground(style, Color.BLACK);
+            StyleConstants.setFontSize(style, 18);
+            StyleConstants.setBold(style, true);
+        }
+        try {
+            doc.insertString(doc.getLength(), this.lER.get(0), style);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for (int i = 1; i < this.lER.size(); i++)
+        {
+            StyleConstants.setForeground(style, new Color(109,109,109));
+            StyleConstants.setFontSize(style, 16);
+            StyleConstants.setBold(style, false);
+            if (expr.contains(i))
+            {
+                StyleConstants.setForeground(style, Color.BLACK);
+                StyleConstants.setFontSize(style, 18);
+                StyleConstants.setBold(style, true);
+            }
+            try {
+                doc.insertString(doc.getLength(), "\n" + this.lER.get(i), style);
+            } catch (BadLocationException ex) {
+                Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } 
+        this.panel_expr.setCaretPosition(0);
+        
+        if (!retroceso)
+        {
+            StyledDocument doc0 = this.panel_entrada.getStyledDocument();
+            Style style0 = this.panel_entrada.addStyle("Style0", null);
+            // Aquí vamos a cambiar los colores de la entrada
+            if (expr.isEmpty())
+                StyleConstants.setBackground(style0, new Color(255,255,255));
+            else {
+                StyleConstants.setBackground(style0, new Color(173,216,230));
+            }
+            try {
+                doc0.insertString(doc0.getLength(), tok, style0);
+            } catch (BadLocationException ex) {
+                Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            evt.consume();
+        }
+    }//GEN-LAST:event_panel_entradaKeyTyped
+
+    private void panel_entradaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_panel_entradaFocusGained
+//        this.panel_entrada.setText("");
+//        StyledDocument doc = this.panel_entrada.getStyledDocument();
+//        Style style = this.panel_entrada.addStyle("Style", null);
+//        StyleConstants.setForeground(style, new Color(102,102,102));
+//        StyleConstants.setItalic(style, false);
+//        StyleConstants.setBold(style, true);
+//        try {
+//            doc.insertString(doc.getLength(), " ", style);
+//        } catch (BadLocationException ex) {
+//            Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+    }//GEN-LAST:event_panel_entradaFocusGained
+
+    private void panel_entradaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_panel_entradaFocusLost
+//        this.panel_entrada.setText("");
+//        StyledDocument doc = this.panel_entrada.getStyledDocument();
+//        Style style = this.panel_entrada.addStyle("Style", null);
+//        StyleConstants.setForeground(style, Color.LIGHT_GRAY);
+//        StyleConstants.setItalic(style, true);
+//        StyleConstants.setBold(style, false);
+//        try {
+//            doc.insertString(doc.getLength(), "Introduzca una entrada..", style);
+//        } catch (BadLocationException ex) {
+//            Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+    }//GEN-LAST:event_panel_entradaFocusLost
+
+    private void panel_entradaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_panel_entradaKeyReleased
+        if (evt.getKeyCode() != 8)
+            evt.consume();
+    }//GEN-LAST:event_panel_entradaKeyReleased
+
+    private void panel_entradaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_panel_entradaKeyPressed
+        this.panel_entradaKeyReleased(evt);
+    }//GEN-LAST:event_panel_entradaKeyPressed
 
     @SuppressWarnings("null")
     private String abrirArchivo() throws Exception {
@@ -376,13 +546,13 @@ public class Pantalla extends javax.swing.JFrame {
     private javax.swing.JLabel et_entrada;
     private javax.swing.JLabel et_especificacion;
     private javax.swing.JLabel et_titulo;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextPane panel_activadas;
     private javax.swing.JTextPane panel_entrada;
-    private javax.swing.JTextPane panel_especificacion;
+    private javax.swing.JTextArea panel_especificacion;
     private javax.swing.JTextPane panel_expr;
     private javax.swing.JScrollPane scroll_panel_activadas;
     private javax.swing.JScrollPane scroll_panel_entrada;
-    private javax.swing.JScrollPane scroll_panel_especificacion;
     private javax.swing.JScrollPane scroll_panel_expr;
     // End of variables declaration//GEN-END:variables
 }
