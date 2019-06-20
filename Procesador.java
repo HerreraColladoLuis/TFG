@@ -197,4 +197,21 @@ public class Procesador {
         lnE = aux.activarER(tok, lEAux, Procesador.automata, lnER, Procesador.arbolAux);
         return lnE;
     }
+    /**
+     * Método que devuelve si un estado es final o no.
+     * @param n índice del estado
+     * @return true si es final
+     */
+    public static boolean esEstadoFinal(int n)
+    {
+        for (List<Analizador.Estado> l : Procesador.automata)
+        {
+            for (Analizador.Estado e : l)
+            {
+                if (e.n == n)
+                    return e.esfinal;
+            }
+        }
+        return false;
+    }
 }

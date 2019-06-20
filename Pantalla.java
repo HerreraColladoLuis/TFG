@@ -37,6 +37,9 @@ public class Pantalla extends javax.swing.JFrame {
     private List<Analizador.Estado> lEaux;
     private List<Analizador.Estado> lE = new LinkedList<>();
     private List<Integer> lnER = new LinkedList<>();
+    private int ini = -1;
+    private int fin = -1;
+    private List<Integer> auxl = new LinkedList<>();
     /**
      * Creates new form Pantalla
      */
@@ -309,6 +312,18 @@ public class Pantalla extends javax.swing.JFrame {
             this.panel_entrada.setText(""); // ojo
             this.panel_entrada.setEditable(false);
             this.panel_entrada.setFocusable(false);
+            this.ini = -1;
+            this.fin = -1;
+            this.auxl.clear();
+            this.entrada.clear();
+            this.estadoEntrada.clear();
+            StyledDocument doc1 = this.panel_entrada.getStyledDocument();
+            try {
+                if (doc1.getLength() > 0)
+                    doc1.remove(0, doc1.getLength());
+            } catch (BadLocationException ex) {
+                Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         else
         {
@@ -339,16 +354,31 @@ public class Pantalla extends javax.swing.JFrame {
     @SuppressWarnings("null")
     private void panel_entradaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_panel_entradaKeyTyped
         String tok = Character.toString(evt.getKeyChar());
+        evt.consume();
+        boolean vacio = false;
         boolean retroceso = false;
+        boolean esFinal = false;
+        String aux;
         if ((int) tok.toCharArray()[0] == 8)
         {
             retroceso = true;
             if (this.entrada.isEmpty()){return;}
             
             this.entrada.remove(this.entrada.size()-1); // Borramos el último elemento de la entrada
+            StyledDocument doc1 = this.panel_entrada.getStyledDocument();
+            try {
+                doc1.remove(doc1.getLength()-1,1);
+            } catch (BadLocationException ex) {
+                Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
             if (!this.entrada.isEmpty()){
                 tok = this.entrada.remove(this.entrada.size()-1);
+                try {
+                    doc1.remove(doc1.getLength()-1,1);
+                } catch (BadLocationException ex) {
+                    Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 this.estadoEntrada.remove(this.estadoEntrada.size()-1); // Borramos los últimos estados activos
                 this.estadoEntrada.remove(this.estadoEntrada.size()-1); // Borramos los estados del caracter que vamos a ver ahora
                 if (!this.estadoEntrada.isEmpty())
@@ -356,8 +386,11 @@ public class Pantalla extends javax.swing.JFrame {
                 else
                     this.lE = new LinkedList<>();
             } 
-            else
-            {} 
+            else {
+                vacio = true;
+                this.ini  = -1;
+                this.fin = -1;
+            } 
         }
         this.lEaux = this.lE;
         List<Integer> expr = null;
@@ -411,23 +444,84 @@ public class Pantalla extends javax.swing.JFrame {
         } 
         this.panel_expr.setCaretPosition(0);
         
-        if (!retroceso)
-        {
+        if (!vacio) {
             StyledDocument doc0 = this.panel_entrada.getStyledDocument();
             Style style0 = this.panel_entrada.addStyle("Style0", null);
             // Aquí vamos a cambiar los colores de la entrada
+            for (Analizador.Estado estado : this.lE) {
+                if (Procesador.esEstadoFinal(estado.n)) {
+                    esFinal = true;
+                    break;
+                }
+            }
             if (expr.isEmpty())
+            {
+                if (this.ini != -1 && this.fin == -1)
+                {
+                    StyleConstants.setBackground(style0, new Color(255,255,255));
+                    try {
+                        aux = doc0.getText(this.ini, doc0.getLength() - this.ini);
+                        doc0.remove(this.ini, doc0.getLength() - this.ini);
+                        doc0.insertString(doc0.getLength(), aux, style0);
+                    } catch (BadLocationException ex) {
+                        Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    this.auxl.add(ini);
+                }
+                if (this.ini != -1 && this.fin != -1)
+                {
+                    this.auxl.add(ini);
+                }
+                this.ini = -1;
+                this.fin = -1;
                 StyleConstants.setBackground(style0, new Color(255,255,255));
-            else {
+            }
+            else if (esFinal) {
+                StyleConstants.setForeground(style0, Color.WHITE);
+                StyleConstants.setBackground(style0, new Color(25,25,112));
+                if (retroceso) {
+                    
+                }
+                else if (this.ini != -1) {
+                    this.fin = doc0.getLength();
+                    try {
+                        aux = doc0.getText(this.ini, this.fin - this.ini);
+                        doc0.remove(this.ini, this.fin - this.ini);
+                        doc0.insertString(doc0.getLength(), aux, style0);
+                    } catch (BadLocationException ex) {
+                        Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    this.ini = doc0.getLength();
+                }
+                if (!retroceso)
+                    this.auxl.add(ini);
+            } else {
                 StyleConstants.setBackground(style0, new Color(173,216,230));
+                if (retroceso) {
+                    if (!this.auxl.isEmpty()) {
+                        try {
+                            aux = doc0.getText(auxl.get(auxl.size()-1), doc0.getLength() - auxl.get(auxl.size()-1));
+                            doc0.remove(auxl.get(auxl.size()-1), doc0.getLength() - auxl.get(auxl.size()-1));
+                            doc0.insertString(doc0.getLength(), aux, style0);
+                        } catch (BadLocationException ex) {
+                            Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        this.ini = this.auxl.remove(this.auxl.size()-1);
+                    }
+                } else {
+                    if (this.ini == -1)
+                        this.ini = doc0.getLength();
+                }
             }
             try {
                 doc0.insertString(doc0.getLength(), tok, style0);
             } catch (BadLocationException ex) {
                 Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
             }
-            evt.consume();
         }
+        // MIRAR EL CASO DE P - A - L - < - ESP 
+        // DESPUÉS MIRAR LOS CASOS DE COMENTARIO EN LEX.FLEX
     }//GEN-LAST:event_panel_entradaKeyTyped
 
     private void panel_entradaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_panel_entradaFocusGained
@@ -459,8 +553,7 @@ public class Pantalla extends javax.swing.JFrame {
     }//GEN-LAST:event_panel_entradaFocusLost
 
     private void panel_entradaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_panel_entradaKeyReleased
-        if (evt.getKeyCode() != 8)
-            evt.consume();
+        evt.consume();
     }//GEN-LAST:event_panel_entradaKeyReleased
 
     private void panel_entradaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_panel_entradaKeyPressed
