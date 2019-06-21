@@ -40,6 +40,8 @@ public class Pantalla extends javax.swing.JFrame {
     private int ini = -1;
     private int fin = -1;
     private List<Integer> auxl = new LinkedList<>();
+    private boolean anteriorFinal = false;
+    private boolean anteriorNoRec = false;
     /**
      * Creates new form Pantalla
      */
@@ -454,33 +456,36 @@ public class Pantalla extends javax.swing.JFrame {
                     break;
                 }
             }
-            if (expr.isEmpty())
-            {
-                if (this.ini != -1 && this.fin == -1)
-                {
+            if (expr.isEmpty()) {
+                if (this.ini != -1 && this.fin == -1) {
                     StyleConstants.setBackground(style0, new Color(255,255,255));
                     try {
-                        aux = doc0.getText(this.ini, doc0.getLength() - this.ini);
-                        doc0.remove(this.ini, doc0.getLength() - this.ini);
-                        doc0.insertString(doc0.getLength(), aux, style0);
+                        if (this.ini > doc0.getLength()) {
+                            
+                        }
+                        else {
+                            aux = doc0.getText(this.ini, doc0.getLength() - this.ini);
+                            doc0.remove(this.ini, doc0.getLength() - this.ini);
+                            doc0.insertString(doc0.getLength(), aux, style0);
+                            this.auxl.add(ini);
+                        }
                     } catch (BadLocationException ex) {
                         Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    this.auxl.add(ini);
                 }
-                if (this.ini != -1 && this.fin != -1)
-                {
-                    this.auxl.add(ini);
-                }
+                if (this.anteriorFinal && retroceso)
+                    this.auxl.remove(this.auxl.size()-1);
                 this.ini = -1;
                 this.fin = -1;
                 StyleConstants.setBackground(style0, new Color(255,255,255));
+                this.anteriorNoRec = true;
             }
             else if (esFinal) {
                 StyleConstants.setForeground(style0, Color.WHITE);
                 StyleConstants.setBackground(style0, new Color(25,25,112));
                 if (retroceso) {
-                    
+                    if (this.ini == -1 && this.anteriorFinal && !this.anteriorNoRec)
+                        this.auxl.remove(this.auxl.size()-1);
                 }
                 else if (this.ini != -1) {
                     this.fin = doc0.getLength();
@@ -494,12 +499,25 @@ public class Pantalla extends javax.swing.JFrame {
                 } else {
                     this.ini = doc0.getLength();
                 }
-                if (!retroceso)
+                if (!retroceso) {
                     this.auxl.add(ini);
+                    this.ini = -1;
+                }
+                this.anteriorFinal = true;
+                this.anteriorNoRec = false;
             } else {
                 StyleConstants.setBackground(style0, new Color(173,216,230));
                 if (retroceso) {
-                    if (!this.auxl.isEmpty()) {
+                    if ((this.ini != -1 && !this.auxl.isEmpty() && this.ini != this.auxl.get(this.auxl.size()-1)) || (this.ini != -1 && this.auxl.isEmpty())) {
+                        try {
+                            aux = doc0.getText(this.ini, doc0.getLength() - this.ini);
+                            doc0.remove(this.ini, doc0.getLength() - this.ini);
+                            doc0.insertString(doc0.getLength(), aux, style0);
+                        } catch (BadLocationException ex) {
+                            Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    else if (!this.auxl.isEmpty()) {
                         try {
                             aux = doc0.getText(auxl.get(auxl.size()-1), doc0.getLength() - auxl.get(auxl.size()-1));
                             doc0.remove(auxl.get(auxl.size()-1), doc0.getLength() - auxl.get(auxl.size()-1));
@@ -508,11 +526,14 @@ public class Pantalla extends javax.swing.JFrame {
                             Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         this.ini = this.auxl.remove(this.auxl.size()-1);
+                        this.fin = -1;
                     }
                 } else {
                     if (this.ini == -1)
                         this.ini = doc0.getLength();
                 }
+                this.anteriorFinal = false;
+                this.anteriorNoRec = false;
             }
             try {
                 doc0.insertString(doc0.getLength(), tok, style0);
@@ -520,8 +541,7 @@ public class Pantalla extends javax.swing.JFrame {
                 Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        // MIRAR EL CASO DE P - A - L - < - ESP 
-        // DESPUÉS MIRAR LOS CASOS DE COMENTARIO EN LEX.FLEX
+        // PARECE QUE ESTÁ PERFECTO (SEGUIR PROBANDO)
     }//GEN-LAST:event_panel_entradaKeyTyped
 
     private void panel_entradaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_panel_entradaFocusGained
