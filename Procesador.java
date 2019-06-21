@@ -54,6 +54,7 @@ public class Procesador {
         outList.addAll(auxmacro1);
         if (auxregex1.size() > auxmacro1.size())
         {
+            outList.add("-----------------------------------------------"); // Diferenciar Macro de ER
             for (int cont = auxmacro1.size();cont < auxregex1.size();cont++)
             {
                 outList.add(auxregex1.get(cont));

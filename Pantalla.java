@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.UIDefaults;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
@@ -47,6 +48,14 @@ public class Pantalla extends javax.swing.JFrame {
      */
     public Pantalla() {
         initComponents();
+        
+        Color bgColor = new Color(240,241,242);
+        UIDefaults defaults = new UIDefaults();
+        defaults.put("TextPane[Enabled].backgroundPainter", bgColor);
+        panel_activadas.putClientProperty("Nimbus.Overrides", defaults);
+        panel_activadas.putClientProperty("Nimbus.Overrides.InheritDefaults", true);
+        panel_activadas.setBackground(bgColor);
+        
         this.setExtendedState(MAXIMIZED_BOTH);
     }
 
@@ -244,14 +253,13 @@ public class Pantalla extends javax.swing.JFrame {
 
         panel_activadas.setEditable(false);
         panel_activadas.setBorder(null);
-        panel_activadas.setEnabled(false);
         panel_activadas.setFocusable(false);
         scroll_panel_activadas.setViewportView(panel_activadas);
 
         jScrollPane1.setBorder(null);
 
         panel_especificacion.setEditable(false);
-        panel_especificacion.setBackground(new java.awt.Color(230, 230, 255));
+        panel_especificacion.setBackground(new java.awt.Color(240, 241, 242));
         panel_especificacion.setColumns(20);
         panel_especificacion.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         panel_especificacion.setRows(5);
@@ -271,9 +279,7 @@ public class Pantalla extends javax.swing.JFrame {
                     .addComponent(cabecera_esp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cabecera_act, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(scroll_panel_activadas)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, 0)
-                        .addComponent(jScrollPane1))))
+                    .addComponent(jScrollPane1)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
