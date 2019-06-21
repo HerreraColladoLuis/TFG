@@ -1,6 +1,7 @@
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -9,6 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIDefaults;
@@ -35,6 +38,8 @@ public class Pantalla extends javax.swing.JFrame {
     private List<String> entrada = new LinkedList<>();
     private List<List<Analizador.Estado>> estadoEntrada = new LinkedList<>();
     private List<String> lER;
+    private List<String> lAuxER;
+    private List<String> lAuxMacro;
     private List<Analizador.Estado> lEaux;
     private List<Analizador.Estado> lE = new LinkedList<>();
     private List<Integer> lnER = new LinkedList<>();
@@ -43,6 +48,7 @@ public class Pantalla extends javax.swing.JFrame {
     private List<Integer> auxl = new LinkedList<>();
     private boolean anteriorFinal = false;
     private boolean anteriorNoRec = false;
+    private int ind = -1;
     /**
      * Creates new form Pantalla
      */
@@ -55,6 +61,14 @@ public class Pantalla extends javax.swing.JFrame {
         panel_activadas.putClientProperty("Nimbus.Overrides", defaults);
         panel_activadas.putClientProperty("Nimbus.Overrides.InheritDefaults", true);
         panel_activadas.setBackground(bgColor);
+        
+        ImageIcon settingsImage = new ImageIcon(getClass().getResource(("/Imágenes/settings.png")));
+        Icon iconSettings = new ImageIcon(settingsImage.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        this.lbSettings.setIcon(iconSettings);
+        
+        ImageIcon helpImage = new ImageIcon(getClass().getResource(("/Imágenes/help.png")));
+        Icon iconHelp = new ImageIcon(helpImage.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
+        this.lbHelp.setIcon(iconHelp);
         
         this.setExtendedState(MAXIMIZED_BOTH);
     }
@@ -71,6 +85,9 @@ public class Pantalla extends javax.swing.JFrame {
         cabecera = new javax.swing.JPanel();
         et_titulo = new javax.swing.JLabel();
         boton_nueva = new javax.swing.JButton();
+        boton_procesar = new javax.swing.JButton();
+        lbSettings = new javax.swing.JLabel();
+        lbHelp = new javax.swing.JLabel();
         scroll_panel_expr = new javax.swing.JScrollPane();
         panel_expr = new javax.swing.JTextPane();
         cabecera_entrada = new javax.swing.JPanel();
@@ -79,7 +96,6 @@ public class Pantalla extends javax.swing.JFrame {
         panel_entrada = new javax.swing.JTextPane();
         cabecera_esp = new javax.swing.JPanel();
         et_especificacion = new javax.swing.JLabel();
-        boton_procesar = new javax.swing.JButton();
         cabecera_act = new javax.swing.JPanel();
         et_act = new javax.swing.JLabel();
         scroll_panel_activadas = new javax.swing.JScrollPane();
@@ -108,24 +124,55 @@ public class Pantalla extends javax.swing.JFrame {
             }
         });
 
+        boton_procesar.setBackground(new java.awt.Color(51, 51, 51));
+        boton_procesar.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        boton_procesar.setForeground(new java.awt.Color(112, 176, 224));
+        boton_procesar.setText("Procesar");
+        boton_procesar.setBorder(null);
+        boton_procesar.setBorderPainted(false);
+        boton_procesar.setEnabled(false);
+        boton_procesar.setFocusable(false);
+        boton_procesar.setMaximumSize(new java.awt.Dimension(37, 15));
+        boton_procesar.setMinimumSize(new java.awt.Dimension(37, 15));
+        boton_procesar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boton_procesarActionPerformed(evt);
+            }
+        });
+
+        lbSettings.setForeground(new java.awt.Color(16, 17, 18));
+        lbSettings.setText("aa");
+
+        lbHelp.setForeground(new java.awt.Color(16, 17, 18));
+        lbHelp.setText("aa");
+
         javax.swing.GroupLayout cabeceraLayout = new javax.swing.GroupLayout(cabecera);
         cabecera.setLayout(cabeceraLayout);
         cabeceraLayout.setHorizontalGroup(
             cabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(cabeceraLayout.createSequentialGroup()
-                .addGap(45, 45, 45)
+                .addGap(30, 30, 30)
                 .addComponent(et_titulo)
+                .addGap(14, 14, 14)
+                .addComponent(boton_nueva, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(boton_nueva, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(boton_procesar, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lbSettings)
+                .addGap(18, 18, 18)
+                .addComponent(lbHelp)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         cabeceraLayout.setVerticalGroup(
             cabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cabeceraLayout.createSequentialGroup()
+            .addGroup(cabeceraLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(cabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(boton_nueva, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(et_titulo, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
+                .addGroup(cabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(boton_nueva, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                    .addComponent(et_titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(boton_procesar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbHelp)
+                    .addComponent(lbSettings))
                 .addContainerGap())
         );
 
@@ -138,6 +185,11 @@ public class Pantalla extends javax.swing.JFrame {
         panel_expr.setForeground(new java.awt.Color(109, 109, 109));
         panel_expr.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         panel_expr.setFocusable(false);
+        panel_expr.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                panel_exprMouseClicked(evt);
+            }
+        });
         scroll_panel_expr.setViewportView(panel_expr);
 
         cabecera_entrada.setBackground(new java.awt.Color(112, 176, 224));
@@ -195,17 +247,6 @@ public class Pantalla extends javax.swing.JFrame {
         et_especificacion.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         et_especificacion.setText("Especificación léxica");
 
-        boton_procesar.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        boton_procesar.setText("Procesar");
-        boton_procesar.setBorder(null);
-        boton_procesar.setBorderPainted(false);
-        boton_procesar.setEnabled(false);
-        boton_procesar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                boton_procesarActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout cabecera_espLayout = new javax.swing.GroupLayout(cabecera_esp);
         cabecera_esp.setLayout(cabecera_espLayout);
         cabecera_espLayout.setHorizontalGroup(
@@ -213,17 +254,13 @@ public class Pantalla extends javax.swing.JFrame {
             .addGroup(cabecera_espLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(et_especificacion)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(boton_procesar, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(519, Short.MAX_VALUE))
         );
         cabecera_espLayout.setVerticalGroup(
             cabecera_espLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cabecera_espLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(cabecera_espLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(boton_procesar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(et_especificacion, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
+                .addComponent(et_especificacion, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -285,6 +322,7 @@ public class Pantalla extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(cabecera, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(scroll_panel_expr)
                     .addGroup(layout.createSequentialGroup()
@@ -298,7 +336,7 @@ public class Pantalla extends javax.swing.JFrame {
                         .addGap(0, 0, 0)
                         .addComponent(cabecera_act, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
-                        .addComponent(scroll_panel_activadas, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE))))
+                        .addComponent(scroll_panel_activadas, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE))))
         );
 
         pack();
@@ -341,9 +379,14 @@ public class Pantalla extends javax.swing.JFrame {
     }//GEN-LAST:event_boton_nuevaActionPerformed
 
     private void boton_procesarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_procesarActionPerformed
+        if (this.lAuxER.size() > this.lAuxMacro.size()) {
+            ind = this.lAuxMacro.size();
+        }
         String cad = this.lER.get(0);
         for (int i = 1; i < this.lER.size(); i++)
         {
+            if (i == ind)
+                cad += "\n" + "-----------------------------------------------";
             cad += "\n" + this.lER.get(i);
         }
         this.panel_expr.setText(cad);
@@ -438,6 +481,13 @@ public class Pantalla extends javax.swing.JFrame {
             StyleConstants.setForeground(style, new Color(109,109,109));
             StyleConstants.setFontSize(style, 16);
             StyleConstants.setBold(style, false);
+            if (i == this.ind) {
+                try {
+                    doc.insertString(doc.getLength(), "\n" + "-----------------------------------------------", style);
+                } catch (BadLocationException ex) {
+                    Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
             if (expr.contains(i))
             {
                 StyleConstants.setForeground(style, Color.BLACK);
@@ -586,6 +636,10 @@ public class Pantalla extends javax.swing.JFrame {
         this.panel_entradaKeyReleased(evt);
     }//GEN-LAST:event_panel_entradaKeyPressed
 
+    private void panel_exprMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_exprMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_panel_exprMouseClicked
+
     @SuppressWarnings("null")
     private String abrirArchivo() throws Exception {
         String aux;   
@@ -599,6 +653,8 @@ public class Pantalla extends javax.swing.JFrame {
             file.showOpenDialog(this);
             File abre=file.getSelectedFile();
             lER = Procesador.procesarEsp(abre.getPath());
+            this.lAuxER = Procesador.getER();
+            this.lAuxMacro = Procesador.getMacro();
 
             if(abre!=null)
             {     
@@ -666,6 +722,8 @@ public class Pantalla extends javax.swing.JFrame {
     private javax.swing.JLabel et_especificacion;
     private javax.swing.JLabel et_titulo;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lbHelp;
+    private javax.swing.JLabel lbSettings;
     private javax.swing.JTextPane panel_activadas;
     private javax.swing.JTextPane panel_entrada;
     private javax.swing.JTextArea panel_especificacion;

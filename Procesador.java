@@ -54,7 +54,6 @@ public class Procesador {
         outList.addAll(auxmacro1);
         if (auxregex1.size() > auxmacro1.size())
         {
-            outList.add("-----------------------------------------------"); // Diferenciar Macro de ER
             for (int cont = auxmacro1.size();cont < auxregex1.size();cont++)
             {
                 outList.add(auxregex1.get(cont));
@@ -63,6 +62,14 @@ public class Procesador {
         Procesador.auxregex = auxregex1;
         Procesador.auxmacro = auxmacro1;
         return outList;
+    }
+    
+    public static List<String> getER() {
+        return auxregex;
+    }
+    
+    public static List<String> getMacro() {
+        return auxmacro;
     }
     /**
      * Método para crear un autómata a partir de la información dada por las
