@@ -70,6 +70,10 @@ public class Pantalla extends javax.swing.JFrame {
         Icon iconHelp = new ImageIcon(helpImage.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
         this.lbHelp.setIcon(iconHelp);
         
+        ImageIcon regImage = new ImageIcon(getClass().getResource(("/Imágenes/RegExp.png")));
+        Icon iconReg = new ImageIcon(regImage.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
+        this.lbReg.setIcon(iconReg);
+        
         this.setExtendedState(MAXIMIZED_BOTH);
     }
 
@@ -88,6 +92,7 @@ public class Pantalla extends javax.swing.JFrame {
         boton_procesar = new javax.swing.JButton();
         lbSettings = new javax.swing.JLabel();
         lbHelp = new javax.swing.JLabel();
+        lbReg = new javax.swing.JLabel();
         scroll_panel_expr = new javax.swing.JScrollPane();
         panel_expr = new javax.swing.JTextPane();
         cabecera_entrada = new javax.swing.JPanel();
@@ -112,6 +117,7 @@ public class Pantalla extends javax.swing.JFrame {
         et_titulo.setForeground(new java.awt.Color(112, 176, 224));
         et_titulo.setText("Detector de patrones");
 
+        boton_nueva.setToolTipText("Añadir una nueva especificación léxica");
         boton_nueva.setBackground(new java.awt.Color(51, 51, 51));
         boton_nueva.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         boton_nueva.setForeground(new java.awt.Color(112, 176, 224));
@@ -140,20 +146,27 @@ public class Pantalla extends javax.swing.JFrame {
             }
         });
 
+        lbSettings.setToolTipText("Configuración de usuario");
         lbSettings.setForeground(new java.awt.Color(16, 17, 18));
         lbSettings.setText("aa");
 
+        lbHelp.setToolTipText("Ayuda");
         lbHelp.setForeground(new java.awt.Color(16, 17, 18));
         lbHelp.setText("aa");
+
+        lbReg.setForeground(new java.awt.Color(16, 17, 18));
+        lbReg.setText("a");
 
         javax.swing.GroupLayout cabeceraLayout = new javax.swing.GroupLayout(cabecera);
         cabecera.setLayout(cabeceraLayout);
         cabeceraLayout.setHorizontalGroup(
             cabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(cabeceraLayout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addGap(6, 6, 6)
+                .addComponent(lbReg)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(et_titulo)
-                .addGap(14, 14, 14)
+                .addGap(18, 18, 18)
                 .addComponent(boton_nueva, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(boton_procesar, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -172,7 +185,8 @@ public class Pantalla extends javax.swing.JFrame {
                     .addComponent(et_titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(boton_procesar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbHelp)
-                    .addComponent(lbSettings))
+                    .addComponent(lbSettings)
+                    .addComponent(lbReg))
                 .addContainerGap())
         );
 
@@ -376,6 +390,8 @@ public class Pantalla extends javax.swing.JFrame {
             // Añadir advertencia de archivo nulo
             this.boton_procesar.setEnabled(false);
         }
+        this.ind = -1;
+        this.boton_procesar.setToolTipText("Procesar la especificación léxica");
     }//GEN-LAST:event_boton_nuevaActionPerformed
 
     private void boton_procesarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_procesarActionPerformed
@@ -462,14 +478,31 @@ public class Pantalla extends javax.swing.JFrame {
             this.entrada.add(tok);
         
         this.panel_expr.setText("");
+        this.panel_activadas.setText("");
+        // Cogemos los estilos del panel de expresiones regulares y del panel de activadas
         StyledDocument doc = this.panel_expr.getStyledDocument();
         Style style = this.panel_expr.addStyle("Style", null);
+        StyledDocument doc1 = this.panel_activadas.getStyledDocument();
+        Style style1 = this.panel_activadas.addStyle("Style", null);
         
+        StyleConstants.setForeground(style1, new Color(25,25,112));
+        StyleConstants.setFontSize(style1, 16);
+        StyleConstants.setBold(style1, true);
+
         if (expr.contains(0))
         {
             StyleConstants.setForeground(style, Color.BLACK);
             StyleConstants.setFontSize(style, 18);
             StyleConstants.setBold(style, true);
+            
+            try {
+                if (this.lAuxMacro.size() > 0)
+                    doc1.insertString(doc1.getLength(), this.lER.get(0) + " = " + this.lAuxER.get(0), style1);
+                else
+                    doc1.insertString(doc1.getLength(), this.lER.get(0), style1);
+            } catch (BadLocationException ex) {
+                Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         try {
             doc.insertString(doc.getLength(), this.lER.get(0), style);
@@ -493,6 +526,15 @@ public class Pantalla extends javax.swing.JFrame {
                 StyleConstants.setForeground(style, Color.BLACK);
                 StyleConstants.setFontSize(style, 18);
                 StyleConstants.setBold(style, true);
+                
+                try {
+                    if (this.lAuxMacro.size() > i)
+                        doc1.insertString(doc1.getLength(), "\n" + this.lER.get(i) + " = " + this.lAuxER.get(i), style1);
+                    else
+                        doc1.insertString(doc1.getLength(), "\n" + this.lER.get(i), style1);
+                } catch (BadLocationException ex) {
+                    Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             try {
                 doc.insertString(doc.getLength(), "\n" + this.lER.get(i), style);
@@ -637,7 +679,7 @@ public class Pantalla extends javax.swing.JFrame {
     }//GEN-LAST:event_panel_entradaKeyPressed
 
     private void panel_exprMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_exprMouseClicked
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_panel_exprMouseClicked
 
     @SuppressWarnings("null")
@@ -723,6 +765,7 @@ public class Pantalla extends javax.swing.JFrame {
     private javax.swing.JLabel et_titulo;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbHelp;
+    private javax.swing.JLabel lbReg;
     private javax.swing.JLabel lbSettings;
     private javax.swing.JTextPane panel_activadas;
     private javax.swing.JTextPane panel_entrada;
