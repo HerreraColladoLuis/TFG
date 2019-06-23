@@ -49,6 +49,7 @@ public class Pantalla extends javax.swing.JFrame {
     private boolean anteriorFinal = false;
     private boolean anteriorNoRec = false;
     private int ind = -1;
+    private Pantalla_ajustes pAjustes = new Pantalla_ajustes();
     /**
      * Creates new form Pantalla
      */
@@ -89,7 +90,6 @@ public class Pantalla extends javax.swing.JFrame {
         cabecera = new javax.swing.JPanel();
         et_titulo = new javax.swing.JLabel();
         boton_nueva = new javax.swing.JButton();
-        boton_procesar = new javax.swing.JButton();
         lbSettings = new javax.swing.JLabel();
         lbHelp = new javax.swing.JLabel();
         lbReg = new javax.swing.JLabel();
@@ -130,25 +130,14 @@ public class Pantalla extends javax.swing.JFrame {
             }
         });
 
-        boton_procesar.setBackground(new java.awt.Color(51, 51, 51));
-        boton_procesar.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        boton_procesar.setForeground(new java.awt.Color(112, 176, 224));
-        boton_procesar.setText("Procesar");
-        boton_procesar.setBorder(null);
-        boton_procesar.setBorderPainted(false);
-        boton_procesar.setEnabled(false);
-        boton_procesar.setFocusable(false);
-        boton_procesar.setMaximumSize(new java.awt.Dimension(37, 15));
-        boton_procesar.setMinimumSize(new java.awt.Dimension(37, 15));
-        boton_procesar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                boton_procesarActionPerformed(evt);
-            }
-        });
-
         lbSettings.setToolTipText("Configuración de usuario");
         lbSettings.setForeground(new java.awt.Color(16, 17, 18));
         lbSettings.setText("aa");
+        lbSettings.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbSettingsMouseClicked(evt);
+            }
+        });
 
         lbHelp.setToolTipText("Ayuda");
         lbHelp.setForeground(new java.awt.Color(16, 17, 18));
@@ -164,13 +153,11 @@ public class Pantalla extends javax.swing.JFrame {
             .addGroup(cabeceraLayout.createSequentialGroup()
                 .addGap(6, 6, 6)
                 .addComponent(lbReg)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(37, 37, 37)
                 .addComponent(et_titulo)
-                .addGap(18, 18, 18)
+                .addGap(54, 54, 54)
                 .addComponent(boton_nueva, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(boton_procesar, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(36, 36, 36)
                 .addComponent(lbSettings)
                 .addGap(18, 18, 18)
                 .addComponent(lbHelp)
@@ -183,7 +170,6 @@ public class Pantalla extends javax.swing.JFrame {
                 .addGroup(cabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(boton_nueva, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
                     .addComponent(et_titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(boton_procesar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbHelp)
                     .addComponent(lbSettings)
                     .addComponent(lbReg))
@@ -199,6 +185,11 @@ public class Pantalla extends javax.swing.JFrame {
         panel_expr.setForeground(new java.awt.Color(109, 109, 109));
         panel_expr.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         panel_expr.setFocusable(false);
+        panel_expr.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
+            public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
+                panel_exprHyperlinkUpdate(evt);
+            }
+        });
         panel_expr.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 panel_exprMouseClicked(evt);
@@ -281,7 +272,7 @@ public class Pantalla extends javax.swing.JFrame {
         cabecera_act.setBackground(new java.awt.Color(183, 188, 192));
 
         et_act.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
-        et_act.setText("Expresiones regulares activadas");
+        et_act.setText("Expresiones regulares activadas/completadas");
 
         javax.swing.GroupLayout cabecera_actLayout = new javax.swing.GroupLayout(cabecera_act);
         cabecera_act.setLayout(cabecera_actLayout);
@@ -290,7 +281,7 @@ public class Pantalla extends javax.swing.JFrame {
             .addGroup(cabecera_actLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(et_act)
-                .addContainerGap(432, Short.MAX_VALUE))
+                .addContainerGap(329, Short.MAX_VALUE))
         );
         cabecera_actLayout.setVerticalGroup(
             cabecera_actLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -367,7 +358,6 @@ public class Pantalla extends javax.swing.JFrame {
         {
             this.panel_especificacion.setText(especificacion);
             this.panel_especificacion.setCaretPosition(0);
-            this.boton_procesar.setEnabled(true);
             this.panel_expr.setText("");
             this.panel_entrada.setText(""); // ojo
             this.panel_entrada.setEditable(false);
@@ -388,13 +378,9 @@ public class Pantalla extends javax.swing.JFrame {
         else
         {
             // Añadir advertencia de archivo nulo
-            this.boton_procesar.setEnabled(false);
         }
         this.ind = -1;
-        this.boton_procesar.setToolTipText("Procesar la especificación léxica");
-    }//GEN-LAST:event_boton_nuevaActionPerformed
-
-    private void boton_procesarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_procesarActionPerformed
+        
         if (this.lAuxER.size() > this.lAuxMacro.size()) {
             ind = this.lAuxMacro.size();
         }
@@ -407,7 +393,6 @@ public class Pantalla extends javax.swing.JFrame {
         }
         this.panel_expr.setText(cad);
         this.panel_expr.setCaretPosition(0);
-        this.boton_procesar.setEnabled(false);
         try {
             Procesador.crearAutomata();
         } catch (Exception ex) {
@@ -416,7 +401,7 @@ public class Pantalla extends javax.swing.JFrame {
         
         this.panel_entrada.setEditable(true);
         this.panel_entrada.setFocusable(true);
-    }//GEN-LAST:event_boton_procesarActionPerformed
+    }//GEN-LAST:event_boton_nuevaActionPerformed
 
     @SuppressWarnings("null")
     private void panel_entradaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_panel_entradaKeyTyped
@@ -473,6 +458,14 @@ public class Pantalla extends javax.swing.JFrame {
                 this.lnER.add(n);
         }
         this.lE = Procesador.actualizarLE(this.lEaux, tok);
+        
+        for (Analizador.Estado estado : this.lE) {
+            if (Procesador.esEstadoFinal(estado.n)) {
+                esFinal = true;
+                break;
+            }
+        }
+        
         this.estadoEntrada.add(this.lE);
         if ((int) tok.toCharArray()[0] != 8)
             this.entrada.add(tok);
@@ -548,12 +541,6 @@ public class Pantalla extends javax.swing.JFrame {
             StyledDocument doc0 = this.panel_entrada.getStyledDocument();
             Style style0 = this.panel_entrada.addStyle("Style0", null);
             // Aquí vamos a cambiar los colores de la entrada
-            for (Analizador.Estado estado : this.lE) {
-                if (Procesador.esEstadoFinal(estado.n)) {
-                    esFinal = true;
-                    break;
-                }
-            }
             if (expr.isEmpty()) {
                 if (this.ini != -1 && this.fin == -1) {
                     StyleConstants.setBackground(style0, new Color(255,255,255));
@@ -682,6 +669,19 @@ public class Pantalla extends javax.swing.JFrame {
         
     }//GEN-LAST:event_panel_exprMouseClicked
 
+    private void panel_exprHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_panel_exprHyperlinkUpdate
+        // TODO add your handling code here:
+    }//GEN-LAST:event_panel_exprHyperlinkUpdate
+
+    private void lbSettingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbSettingsMouseClicked
+        this.pAjustes.setVisible(true);
+    }//GEN-LAST:event_lbSettingsMouseClicked
+    
+    /**
+     * Método para abrir un archivo con JFileChooser.
+     * @return texto del archivo
+     * @throws Exception 
+     */
     @SuppressWarnings("null")
     private String abrirArchivo() throws Exception {
         String aux;   
@@ -716,6 +716,24 @@ public class Pantalla extends javax.swing.JFrame {
                       "ADVERTENCIA",JOptionPane.WARNING_MESSAGE);
         }
         return texto;
+    }
+    /**
+     * Método que devuelve las fuentes por defecto de las áreas de texto
+     * @return lista de fuentes
+     */
+    public List<Font> getFuentes() {
+        List<Font> lout = new LinkedList<>();
+        
+        return lout;
+    }
+    /**
+     * Método que devuelve los colores por defecto de las fuentes
+     * @return lista de colores
+     */
+    public List<Color> getColores() {
+        List<Color> lout = new LinkedList<>();
+        
+        return lout;
     }
     /**
      * @param args the command line arguments
@@ -754,7 +772,6 @@ public class Pantalla extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton boton_nueva;
-    private javax.swing.JButton boton_procesar;
     private javax.swing.JPanel cabecera;
     private javax.swing.JPanel cabecera_act;
     private javax.swing.JPanel cabecera_entrada;
