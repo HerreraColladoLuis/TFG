@@ -1,6 +1,9 @@
 
 import java.awt.Color;
+import java.awt.Dialog;
 import java.awt.Font;
+import static java.awt.Font.BOLD;
+import static java.awt.Font.PLAIN;
 import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.File;
@@ -49,7 +52,18 @@ public class Pantalla extends javax.swing.JFrame {
     private boolean anteriorFinal = false;
     private boolean anteriorNoRec = false;
     private int ind = -1;
-    private Pantalla_ajustes pAjustes = new Pantalla_ajustes();
+    private P_ajustes pAjustes;
+    private List<Font> l_fuentes = new LinkedList<>();
+    private List<Color> l_colores = new LinkedList<>();
+
+    public List<Font> getL_fuentes() {
+        return l_fuentes;
+    }
+
+    public List<Color> getL_colores() {
+        return l_colores;
+    }
+
     /**
      * Creates new form Pantalla
      */
@@ -74,6 +88,27 @@ public class Pantalla extends javax.swing.JFrame {
         ImageIcon regImage = new ImageIcon(getClass().getResource(("/Imágenes/RegExp.png")));
         Icon iconReg = new ImageIcon(regImage.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT));
         this.lbReg.setIcon(iconReg);
+        
+        // Seteamos los colores y las fuentes por defecto
+        this.l_fuentes.add(new Font("Tahoma",BOLD,18)); // Fuente ACTIVADAS
+        this.l_colores.add(Color.BLACK); // Color de fuente ACTIVADAS
+        this.l_colores.add(Color.WHITE); // Color de fondo de fuente ACTIVADAS
+        
+        this.l_fuentes.add(new Font("Tahoma",PLAIN,16)); // Fuente NO ACTIVADAS
+        this.l_colores.add(new Color(109,109,109));
+        this.l_colores.add(Color.WHITE);
+        
+        this.l_fuentes.add(new Font("Verdana",BOLD,18)); // Fuente entrada COMPLETA
+        this.l_colores.add(Color.WHITE);
+        this.l_colores.add(new Color(25,25,112));
+        
+        this.l_fuentes.add(new Font("Verdana",BOLD,18)); // Fuente entrada NO activada ni completa
+        this.l_colores.add(new Color(109,109,109));
+        this.l_colores.add(Color.WHITE);
+        
+        this.l_fuentes.add(new Font("Verdana",BOLD,18)); // Fuente entrada ACTIVADA
+        this.l_colores.add(new Color(109,109,109));
+        this.l_colores.add(new Color(173,216,230));
         
         this.setExtendedState(MAXIMIZED_BOTH);
     }
@@ -674,6 +709,7 @@ public class Pantalla extends javax.swing.JFrame {
     }//GEN-LAST:event_panel_exprHyperlinkUpdate
 
     private void lbSettingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbSettingsMouseClicked
+        this.pAjustes = new P_ajustes(this,true,this.getL_fuentes(),this.getL_colores());
         this.pAjustes.setVisible(true);
     }//GEN-LAST:event_lbSettingsMouseClicked
     
@@ -716,24 +752,6 @@ public class Pantalla extends javax.swing.JFrame {
                       "ADVERTENCIA",JOptionPane.WARNING_MESSAGE);
         }
         return texto;
-    }
-    /**
-     * Método que devuelve las fuentes por defecto de las áreas de texto
-     * @return lista de fuentes
-     */
-    public List<Font> getFuentes() {
-        List<Font> lout = new LinkedList<>();
-        
-        return lout;
-    }
-    /**
-     * Método que devuelve los colores por defecto de las fuentes
-     * @return lista de colores
-     */
-    public List<Color> getColores() {
-        List<Color> lout = new LinkedList<>();
-        
-        return lout;
     }
     /**
      * @param args the command line arguments
