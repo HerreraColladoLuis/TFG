@@ -1,12 +1,15 @@
 
 import java.awt.Color;
 import java.awt.Font;
+import static java.awt.Font.BOLD;
+import static java.awt.Font.PLAIN;
 import java.awt.Image;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
+import javax.swing.JOptionPane;
 import say.swing.JFontChooser;
 
 /*
@@ -23,6 +26,8 @@ public class P_ajustes extends javax.swing.JDialog {
 
     private List<Font> l_fuentes = new LinkedList<>();
     private List<Font> l_fuentes_mod = new LinkedList<>();
+    private List<Font> l_fuentes_def = new LinkedList<>();
+    private List<Color> l_colores_def = new LinkedList<>();
     private List<Color> l_colores = new LinkedList<>();
     private List<Color> l_colores_mod = new LinkedList<>();
     /**
@@ -38,12 +43,42 @@ public class P_ajustes extends javax.swing.JDialog {
         this.l_colores.addAll(lc);
         this.l_fuentes_mod.addAll(lf);
         this.l_colores_mod.addAll(lc);
+        
+        // Seteamos los colores y las fuentes por defecto
+        this.l_fuentes_def.add(new Font("Tahoma",BOLD,18)); // Fuente ACTIVADAS
+        this.l_colores_def.add(Color.BLACK); // Color de fuente ACTIVADAS
+        this.l_colores_def.add(Color.WHITE); // Color de fondo de fuente ACTIVADAS
+        
+        this.l_fuentes_def.add(new Font("Tahoma",PLAIN,16)); // Fuente NO ACTIVADAS
+        this.l_colores_def.add(new Color(109,109,109));
+        this.l_colores_def.add(Color.WHITE);
+        
+        this.l_fuentes_def.add(new Font("Verdana",BOLD,18)); // Fuente entrada COMPLETA
+        this.l_colores_def.add(Color.WHITE);
+        this.l_colores_def.add(new Color(25,25,112));
+        
+        this.l_fuentes_def.add(new Font("Verdana",BOLD,18)); // Fuente entrada NO activada ni completa
+        this.l_colores_def.add(new Color(109,109,109));
+        this.l_colores_def.add(Color.WHITE);
+        
+        this.l_fuentes_def.add(new Font("Verdana",BOLD,18)); // Fuente entrada ACTIVADA
+        this.l_colores_def.add(new Color(109,109,109));
+        this.l_colores_def.add(new Color(173,216,230));
+        
         initComponents();
         this.setLocationRelativeTo(null);
         
         ImageIcon helpImage = new ImageIcon(getClass().getResource(("/Imágenes/help.png")));
         Icon iconHelp = new ImageIcon(helpImage.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
         this.jLabel4.setIcon(iconHelp);
+        
+        this.txFuente.setText(this.l_fuentes_mod.get(0).getName() + " " + this.l_fuentes_mod.get(0).getSize());
+        this.txColorFuente.setText(this.l_colores_mod.get(0).getRed() + ", " + this.l_colores_mod.get(0).getGreen() + ", " + this.l_colores_mod.get(0).getBlue());
+        this.txColorFondo.setText(this.l_colores_mod.get(1).getRed() + ", " + this.l_colores_mod.get(1).getGreen() + ", " + this.l_colores_mod.get(1).getBlue());
+        
+        txFuente1.setText(this.l_fuentes_mod.get(2).getName() + " " + this.l_fuentes_mod.get(2).getSize());
+        this.txColorFuente2.setText(this.l_colores_mod.get(4).getRed() + ", " + this.l_colores_mod.get(4).getGreen() + ", " + this.l_colores_mod.get(4).getBlue());
+        this.txColorFondo2.setText(this.l_colores_mod.get(5).getRed() + ", " + this.l_colores_mod.get(5).getGreen() + ", " + this.l_colores_mod.get(5).getBlue());
     }
 
     /**
@@ -85,6 +120,7 @@ public class P_ajustes extends javax.swing.JDialog {
         btFuente2 = new javax.swing.JButton();
         btColorFuente2 = new javax.swing.JButton();
         btColorFondo2 = new javax.swing.JButton();
+        btReestablecer = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Ajustes");
@@ -138,6 +174,7 @@ public class P_ajustes extends javax.swing.JDialog {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        jList1.setSelectedIndex(0);
         jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 jList1ValueChanged(evt);
@@ -150,6 +187,7 @@ public class P_ajustes extends javax.swing.JDialog {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        jList2.setSelectedIndex(0);
         jList2.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 jList2ValueChanged(evt);
@@ -170,6 +208,11 @@ public class P_ajustes extends javax.swing.JDialog {
         txColorFondo.setFocusable(false);
 
         jButton1.setText("Valores por defecto");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         lbFuente2.setText("Fuente:");
 
@@ -204,6 +247,13 @@ public class P_ajustes extends javax.swing.JDialog {
         btColorFondo2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btColorFondo2ActionPerformed(evt);
+            }
+        });
+
+        btReestablecer.setText("Reestablecer");
+        btReestablecer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btReestablecerActionPerformed(evt);
             }
         });
 
@@ -243,15 +293,17 @@ public class P_ajustes extends javax.swing.JDialog {
                                             .addComponent(btColorFuente, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(btColorFondo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton1))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                         .addComponent(jButton3)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(jButton2)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButton1))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(btReestablecer))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(lbColorFuente2, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -332,7 +384,8 @@ public class P_ajustes extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(jButton3)
+                    .addComponent(btReestablecer))
                 .addContainerGap())
         );
 
@@ -357,107 +410,119 @@ public class P_ajustes extends javax.swing.JDialog {
 
     private void btFuenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFuenteActionPerformed
         int i, res;
-        if (this.jList1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
-            i = 0;
-        } else {
-            i = 1;
-        }
-        JFontChooser jf = new JFontChooser();
-        res = jf.showDialog(null);
-        if (res == JFontChooser.OK_OPTION) {
-            Font f = jf.getSelectedFont();
-            this.l_fuentes_mod.set(i, f);
-            this.txFuente.setText(this.l_fuentes_mod.get(i).getName() + " " + this.l_fuentes_mod.get(i).getSize());
+        if (!this.jList1.isSelectionEmpty()) {
+            if (this.jList1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
+                i = 0;
+            } else {
+                i = 1;
+            }
+            JFontChooser jf = new JFontChooser();
+            res = jf.showDialog(null);
+            if (res == JFontChooser.OK_OPTION) {
+                Font f = jf.getSelectedFont();
+                this.l_fuentes_mod.set(i, f);
+                this.txFuente.setText(this.l_fuentes_mod.get(i).getName() + " " + this.l_fuentes_mod.get(i).getSize());
+            }
         }
     }//GEN-LAST:event_btFuenteActionPerformed
 
     private void btColorFuenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btColorFuenteActionPerformed
         int i;
-        if (this.jList1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
-            i = 0;
-        } else {
-            i = 2;
-        }
-        Color c = JColorChooser.showDialog(null, "Selecciona un color", this.l_colores_mod.get(i));
-        if (c!= null) {
-            this.l_colores_mod.set(i, c);
-            this.txColorFuente.setText(this.l_colores_mod.get(i).getRed() + ", " + this.l_colores_mod.get(i).getGreen() + ", " + this.l_colores_mod.get(i).getBlue());
+        if (!this.jList1.isSelectionEmpty()) {
+            if (this.jList1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
+                i = 0;
+            } else {
+                i = 2;
+            }
+            Color c = JColorChooser.showDialog(null, "Selecciona un color", this.l_colores_mod.get(i));
+            if (c!= null) {
+                this.l_colores_mod.set(i, c);
+                this.txColorFuente.setText(this.l_colores_mod.get(i).getRed() + ", " + this.l_colores_mod.get(i).getGreen() + ", " + this.l_colores_mod.get(i).getBlue());
+            }
         }
     }//GEN-LAST:event_btColorFuenteActionPerformed
 
     private void btColorFondoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btColorFondoActionPerformed
         int i;
-        if (this.jList1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
-            i = 1;
-        } else {
-            i = 3;
-        }
-        Color c = JColorChooser.showDialog(null, "Selecciona un color", this.l_colores_mod.get(i));
-        if (c!= null) {
-            this.l_colores_mod.set(i, c);
-            this.txColorFondo.setText(this.l_colores_mod.get(i).getRed() + ", " + this.l_colores_mod.get(i).getGreen() + ", " + this.l_colores_mod.get(i).getBlue());
+        if (!this.jList1.isSelectionEmpty()) {
+            if (this.jList1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
+                i = 1;
+            } else {
+                i = 3;
+            }
+            Color c = JColorChooser.showDialog(null, "Selecciona un color", this.l_colores_mod.get(i));
+            if (c!= null) {
+                this.l_colores_mod.set(i, c);
+                this.txColorFondo.setText(this.l_colores_mod.get(i).getRed() + ", " + this.l_colores_mod.get(i).getGreen() + ", " + this.l_colores_mod.get(i).getBlue());
+            }
         }
     }//GEN-LAST:event_btColorFondoActionPerformed
 
     private void btFuente2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFuente2ActionPerformed
         int i, res;
-        switch (this.jList2.getSelectedValue()) {
-            case "Lexemas COMPLETAMENTE detectados en la entrada":
-                i = 2;
-                break;
-            case "Lexemas NO detectados en la entrada":
-                i = 3;
-                break;
-            default:
-                i = 4;
-                break;
-        }
-        JFontChooser jf = new JFontChooser();
-        res = jf.showDialog(null);
-        if (res == JFontChooser.OK_OPTION) {
-            Font f = jf.getSelectedFont();
-            this.l_fuentes_mod.set(i, f);
-            this.txFuente1.setText(this.l_fuentes_mod.get(i).getName() + " " + this.l_fuentes_mod.get(i).getSize());
+        if (!this.jList2.isSelectionEmpty()) {
+            switch (this.jList2.getSelectedValue()) {
+                case "Lexemas COMPLETAMENTE detectados en la entrada":
+                    i = 2;
+                    break;
+                case "Lexemas NO detectados en la entrada":
+                    i = 3;
+                    break;
+                default:
+                    i = 4;
+                    break;
+            }
+            JFontChooser jf = new JFontChooser();
+            res = jf.showDialog(null);
+            if (res == JFontChooser.OK_OPTION) {
+                Font f = jf.getSelectedFont();
+                this.l_fuentes_mod.set(i, f);
+                this.txFuente1.setText(this.l_fuentes_mod.get(i).getName() + " " + this.l_fuentes_mod.get(i).getSize());
+            }
         }
     }//GEN-LAST:event_btFuente2ActionPerformed
 
     private void btColorFuente2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btColorFuente2ActionPerformed
         int i;
-        switch (this.jList2.getSelectedValue()) {
-            case "Lexemas COMPLETAMENTE detectados en la entrada":
-                i = 4;
-                break;
-            case "Lexemas NO detectados en la entrada":
-                i = 6;
-                break;
-            default:
-                i = 8;
-                break;
-        }
-        Color c = JColorChooser.showDialog(null, "Selecciona un color", this.l_colores_mod.get(i));
-        if (c!= null) {
-            this.l_colores_mod.set(i, c);
-            this.txColorFuente2.setText(this.l_colores_mod.get(i).getRed() + ", " + this.l_colores_mod.get(i).getGreen() + ", " + this.l_colores_mod.get(i).getBlue());
+        if (!this.jList2.isSelectionEmpty()) {
+            switch (this.jList2.getSelectedValue()) {
+                case "Lexemas COMPLETAMENTE detectados en la entrada":
+                    i = 4;
+                    break;
+                case "Lexemas NO detectados en la entrada":
+                    i = 6;
+                    break;
+                default:
+                    i = 8;
+                    break;
+            }
+            Color c = JColorChooser.showDialog(null, "Selecciona un color", this.l_colores_mod.get(i));
+            if (c!= null) {
+                this.l_colores_mod.set(i, c);
+                this.txColorFuente2.setText(this.l_colores_mod.get(i).getRed() + ", " + this.l_colores_mod.get(i).getGreen() + ", " + this.l_colores_mod.get(i).getBlue());
+            }
         }
     }//GEN-LAST:event_btColorFuente2ActionPerformed
 
     private void btColorFondo2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btColorFondo2ActionPerformed
         int i;
-        switch (this.jList2.getSelectedValue()) {
-            case "Lexemas COMPLETAMENTE detectados en la entrada":
-                i = 5;
-                break;
-            case "Lexemas NO detectados en la entrada":
-                i = 7;
-                break;
-            default:
-                i = 9;
-                break;
-        }
-        Color c = JColorChooser.showDialog(null, "Selecciona un color", this.l_colores_mod.get(i));
-        if (c!= null) {
-            this.l_colores_mod.set(i, c);
-            this.txColorFondo2.setText(this.l_colores_mod.get(i).getRed() + ", " + this.l_colores_mod.get(i).getGreen() + ", " + this.l_colores_mod.get(i).getBlue());
+        if (!this.jList2.isSelectionEmpty()) {
+            switch (this.jList2.getSelectedValue()) {
+                case "Lexemas COMPLETAMENTE detectados en la entrada":
+                    i = 5;
+                    break;
+                case "Lexemas NO detectados en la entrada":
+                    i = 7;
+                    break;
+                default:
+                    i = 9;
+                    break;
+            }
+            Color c = JColorChooser.showDialog(null, "Selecciona un color", this.l_colores_mod.get(i));
+            if (c!= null) {
+                this.l_colores_mod.set(i, c);
+                this.txColorFondo2.setText(this.l_colores_mod.get(i).getRed() + ", " + this.l_colores_mod.get(i).getGreen() + ", " + this.l_colores_mod.get(i).getBlue());
+            }
         }
     }//GEN-LAST:event_btColorFondo2ActionPerformed
 
@@ -494,8 +559,96 @@ public class P_ajustes extends javax.swing.JDialog {
     }//GEN-LAST:event_jList2ValueChanged
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        this.dispose();
+        int resp = JOptionPane.showConfirmDialog(null, "¿Está seguro de aplicar los valores actuales?", "Advertencia", JOptionPane.YES_NO_OPTION);
+        if (resp == JOptionPane.YES_OPTION) {
+            this.dispose();
+            JOptionPane.showMessageDialog(null, "¡Valores cambiados con éxito!", "Información", JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        int resp = JOptionPane.showConfirmDialog(null, "¿Está seguro de cambiar a los valores por defecto?", "Advertencia", JOptionPane.YES_NO_OPTION);
+        if (resp == JOptionPane.YES_OPTION) { 
+            this.l_fuentes_mod.clear();
+            this.l_fuentes_mod.addAll(l_fuentes_def);
+            this.l_colores_mod.clear();
+            this.l_colores_mod.addAll(l_colores_def);
+
+            if (!this.jList1.isSelectionEmpty()) {
+                if (this.jList1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
+                    this.txFuente.setText(this.l_fuentes_mod.get(0).getName() + " " + this.l_fuentes_mod.get(0).getSize());
+                    this.txColorFuente.setText(this.l_colores_mod.get(0).getRed() + ", " + this.l_colores_mod.get(0).getGreen() + ", " + this.l_colores_mod.get(0).getBlue());
+                    this.txColorFondo.setText(this.l_colores_mod.get(1).getRed() + ", " + this.l_colores_mod.get(1).getGreen() + ", " + this.l_colores_mod.get(1).getBlue());
+                } else {
+                    this.txFuente.setText(this.l_fuentes_mod.get(1).getName() + " " + this.l_fuentes_mod.get(1).getSize());
+                    this.txColorFuente.setText(this.l_colores_mod.get(2).getRed() + ", " + this.l_colores_mod.get(2).getGreen() + ", " + this.l_colores_mod.get(2).getBlue());
+                    this.txColorFondo.setText(this.l_colores_mod.get(3).getRed() + ", " + this.l_colores_mod.get(3).getGreen() + ", " + this.l_colores_mod.get(3).getBlue());
+                }
+            }
+
+            if (!this.jList2.isSelectionEmpty()) {
+                switch (this.jList2.getSelectedValue()) {
+                    case "Lexemas COMPLETAMENTE detectados en la entrada":
+                        txFuente1.setText(this.l_fuentes_mod.get(2).getName() + " " + this.l_fuentes_mod.get(2).getSize());
+                        this.txColorFuente2.setText(this.l_colores_mod.get(4).getRed() + ", " + this.l_colores_mod.get(4).getGreen() + ", " + this.l_colores_mod.get(4).getBlue());
+                        this.txColorFondo2.setText(this.l_colores_mod.get(5).getRed() + ", " + this.l_colores_mod.get(5).getGreen() + ", " + this.l_colores_mod.get(5).getBlue());
+                        break;
+                    case "Lexemas NO detectados en la entrada":
+                        txFuente1.setText(this.l_fuentes_mod.get(3).getName() + " " + this.l_fuentes_mod.get(3).getSize());
+                        this.txColorFuente2.setText(this.l_colores_mod.get(6).getRed() + ", " + this.l_colores_mod.get(6).getGreen() + ", " + this.l_colores_mod.get(6).getBlue());
+                        this.txColorFondo2.setText(this.l_colores_mod.get(7).getRed() + ", " + this.l_colores_mod.get(7).getGreen() + ", " + this.l_colores_mod.get(7).getBlue());
+                        break;
+                    default:
+                        txFuente1.setText(this.l_fuentes_mod.get(4).getName() + " " + this.l_fuentes_mod.get(4).getSize());
+                        this.txColorFuente2.setText(this.l_colores_mod.get(8).getRed() + ", " + this.l_colores_mod.get(8).getGreen() + ", " + this.l_colores_mod.get(8).getBlue());
+                        this.txColorFondo2.setText(this.l_colores_mod.get(9).getRed() + ", " + this.l_colores_mod.get(9).getGreen() + ", " + this.l_colores_mod.get(9).getBlue());
+                        break;
+                }
+            }
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btReestablecerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btReestablecerActionPerformed
+        int resp = JOptionPane.showConfirmDialog(null, "¿Está seguro de reestablecer los valores?", "Advertencia", JOptionPane.YES_NO_OPTION);
+        if (resp == JOptionPane.YES_OPTION) { 
+            this.l_fuentes_mod.clear();
+            this.l_fuentes_mod.addAll(l_fuentes);
+            this.l_colores_mod.clear();
+            this.l_colores_mod.addAll(l_colores);
+
+            if (!this.jList1.isSelectionEmpty()) {
+                if (this.jList1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
+                    this.txFuente.setText(this.l_fuentes_mod.get(0).getName() + " " + this.l_fuentes_mod.get(0).getSize());
+                    this.txColorFuente.setText(this.l_colores_mod.get(0).getRed() + ", " + this.l_colores_mod.get(0).getGreen() + ", " + this.l_colores_mod.get(0).getBlue());
+                    this.txColorFondo.setText(this.l_colores_mod.get(1).getRed() + ", " + this.l_colores_mod.get(1).getGreen() + ", " + this.l_colores_mod.get(1).getBlue());
+                } else {
+                    this.txFuente.setText(this.l_fuentes_mod.get(1).getName() + " " + this.l_fuentes_mod.get(1).getSize());
+                    this.txColorFuente.setText(this.l_colores_mod.get(2).getRed() + ", " + this.l_colores_mod.get(2).getGreen() + ", " + this.l_colores_mod.get(2).getBlue());
+                    this.txColorFondo.setText(this.l_colores_mod.get(3).getRed() + ", " + this.l_colores_mod.get(3).getGreen() + ", " + this.l_colores_mod.get(3).getBlue());
+                }
+            }
+
+            if (!this.jList2.isSelectionEmpty()) {
+                switch (this.jList2.getSelectedValue()) {
+                    case "Lexemas COMPLETAMENTE detectados en la entrada":
+                        txFuente1.setText(this.l_fuentes_mod.get(2).getName() + " " + this.l_fuentes_mod.get(2).getSize());
+                        this.txColorFuente2.setText(this.l_colores_mod.get(4).getRed() + ", " + this.l_colores_mod.get(4).getGreen() + ", " + this.l_colores_mod.get(4).getBlue());
+                        this.txColorFondo2.setText(this.l_colores_mod.get(5).getRed() + ", " + this.l_colores_mod.get(5).getGreen() + ", " + this.l_colores_mod.get(5).getBlue());
+                        break;
+                    case "Lexemas NO detectados en la entrada":
+                        txFuente1.setText(this.l_fuentes_mod.get(3).getName() + " " + this.l_fuentes_mod.get(3).getSize());
+                        this.txColorFuente2.setText(this.l_colores_mod.get(6).getRed() + ", " + this.l_colores_mod.get(6).getGreen() + ", " + this.l_colores_mod.get(6).getBlue());
+                        this.txColorFondo2.setText(this.l_colores_mod.get(7).getRed() + ", " + this.l_colores_mod.get(7).getGreen() + ", " + this.l_colores_mod.get(7).getBlue());
+                        break;
+                    default:
+                        txFuente1.setText(this.l_fuentes_mod.get(4).getName() + " " + this.l_fuentes_mod.get(4).getSize());
+                        this.txColorFuente2.setText(this.l_colores_mod.get(8).getRed() + ", " + this.l_colores_mod.get(8).getGreen() + ", " + this.l_colores_mod.get(8).getBlue());
+                        this.txColorFondo2.setText(this.l_colores_mod.get(9).getRed() + ", " + this.l_colores_mod.get(9).getGreen() + ", " + this.l_colores_mod.get(9).getBlue());
+                        break;
+                }
+            }
+        }
+    }//GEN-LAST:event_btReestablecerActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btColorFondo;
@@ -504,6 +657,7 @@ public class P_ajustes extends javax.swing.JDialog {
     private javax.swing.JButton btColorFuente2;
     private javax.swing.JButton btFuente;
     private javax.swing.JButton btFuente2;
+    private javax.swing.JButton btReestablecer;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;

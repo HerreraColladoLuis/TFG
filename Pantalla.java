@@ -181,17 +181,9 @@ public class Pantalla extends javax.swing.JFrame {
         lbSettings.setToolTipText("Configuración de usuario");
         lbSettings.setForeground(new java.awt.Color(16, 17, 18));
         lbSettings.setText("aa");
-        lbSettings.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseMoved(java.awt.event.MouseEvent evt) {
-                lbSettingsMouseMoved(evt);
-            }
-        });
         lbSettings.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lbSettingsMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                lbSettingsMouseEntered(evt);
             }
         });
 
@@ -410,7 +402,7 @@ public class Pantalla extends javax.swing.JFrame {
         } catch (Exception ex) {
             Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (especificacion != null)
+        if (!"".equals(especificacion))
         {
             this.panel_especificacion.setText(especificacion);
             this.panel_especificacion.setCaretPosition(0);
@@ -433,6 +425,7 @@ public class Pantalla extends javax.swing.JFrame {
         }
         else
         {
+            return;
             // Añadir advertencia de archivo nulo
         }
         this.ind = -1;
@@ -922,14 +915,6 @@ public class Pantalla extends javax.swing.JFrame {
         this.l_fuentes_mod.addAll(this.pAjustes.getL_fuentes_mod());
         this.l_colores_mod.addAll(this.pAjustes.getL_colores_mod());
     }//GEN-LAST:event_lbSettingsMouseClicked
-
-    private void lbSettingsMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbSettingsMouseMoved
-
-    }//GEN-LAST:event_lbSettingsMouseMoved
-
-    private void lbSettingsMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbSettingsMouseEntered
-
-    }//GEN-LAST:event_lbSettingsMouseEntered
     
     /**
      * Método para abrir un archivo con JFileChooser.
@@ -948,13 +933,13 @@ public class Pantalla extends javax.swing.JFrame {
             file.setFileFilter(filter);
             file.showOpenDialog(this);
             File abre=file.getSelectedFile();
-            lER = Procesador.procesarEsp(abre.getPath());
-            this.lAuxER = Procesador.getER();
-            this.lAuxMacro = Procesador.getMacro();
-
+            
             if(abre!=null)
-            {     
-               FileReader archivos=new FileReader(abre);
+            {
+                lER = Procesador.procesarEsp(abre.getPath());
+                this.lAuxER = Procesador.getER();
+                this.lAuxMacro = Procesador.getMacro();
+                FileReader archivos=new FileReader(abre);
                 try (BufferedReader lee = new BufferedReader(archivos)) {
                     while((aux=lee.readLine())!=null)
                     {
