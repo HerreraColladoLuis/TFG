@@ -55,7 +55,17 @@ public class Pantalla extends javax.swing.JFrame {
     private P_ajustes pAjustes;
     private List<Font> l_fuentes = new LinkedList<>();
     private List<Color> l_colores = new LinkedList<>();
+    private List<Font> l_fuentes_mod = new LinkedList<>();
+    private List<Color> l_colores_mod = new LinkedList<>();
 
+    public List<Font> getL_fuentes_mod() {
+        return l_fuentes_mod;
+    }
+
+    public List<Color> getL_colores_mod() {
+        return l_colores_mod;
+    }
+    
     public List<Font> getL_fuentes() {
         return l_fuentes;
     }
@@ -109,6 +119,9 @@ public class Pantalla extends javax.swing.JFrame {
         this.l_fuentes.add(new Font("Verdana",BOLD,18)); // Fuente entrada ACTIVADA
         this.l_colores.add(new Color(109,109,109));
         this.l_colores.add(new Color(173,216,230));
+        
+        this.l_fuentes_mod.addAll(l_fuentes);
+        this.l_colores_mod.addAll(l_colores);
         
         this.setExtendedState(MAXIMIZED_BOTH);
     }
@@ -168,9 +181,17 @@ public class Pantalla extends javax.swing.JFrame {
         lbSettings.setToolTipText("Configuración de usuario");
         lbSettings.setForeground(new java.awt.Color(16, 17, 18));
         lbSettings.setText("aa");
+        lbSettings.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                lbSettingsMouseMoved(evt);
+            }
+        });
         lbSettings.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lbSettingsMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lbSettingsMouseEntered(evt);
             }
         });
 
@@ -419,12 +440,39 @@ public class Pantalla extends javax.swing.JFrame {
         if (this.lAuxER.size() > this.lAuxMacro.size()) {
             ind = this.lAuxMacro.size();
         }
+        
+        StyledDocument doc = this.panel_expr.getStyledDocument();
+        Style style = this.panel_expr.addStyle("Style", null);
+        StyleConstants.setBackground(style, this.l_colores_mod.get(3));
+        StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(1).getFamily());
+        //StyleConstants.setForeground(style, new Color(109,109,109));
+        StyleConstants.setForeground(style, this.l_colores_mod.get(2));
+        //StyleConstants.setFontSize(style, 16);
+        StyleConstants.setFontSize(style, this.l_fuentes_mod.get(1).getSize());
+        //StyleConstants.setBold(style, false);
+        if (this.l_fuentes_mod.get(1).getStyle() == 0) {
+            StyleConstants.setBold(style, false);
+            StyleConstants.setItalic(style, false);
+        }    
+        else if (this.l_fuentes_mod.get(1).getStyle() == 2) {
+            StyleConstants.setBold(style, false);
+            StyleConstants.setItalic(style, true);
+        } else {
+            StyleConstants.setBold(style, true);
+            StyleConstants.setItalic(style, false);
+        }
+        
         String cad = this.lER.get(0);
         for (int i = 1; i < this.lER.size(); i++)
         {
-            if (i == ind)
-                cad += "\n" + "-----------------------------------------------";
-            cad += "\n" + this.lER.get(i);
+            try {
+                if (i == ind)
+                    doc.insertString(doc.getLength(), "\n" + "-----------------------------------------------", style);
+                cad += "\n" + this.lER.get(i);
+                doc.insertString(doc.getLength(), cad, style);
+            } catch (BadLocationException ex) {
+                Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         this.panel_expr.setText(cad);
         this.panel_expr.setCaretPosition(0);
@@ -513,15 +561,60 @@ public class Pantalla extends javax.swing.JFrame {
         StyledDocument doc1 = this.panel_activadas.getStyledDocument();
         Style style1 = this.panel_activadas.addStyle("Style", null);
         
-        StyleConstants.setForeground(style1, new Color(25,25,112));
-        StyleConstants.setFontSize(style1, 16);
-        StyleConstants.setBold(style1, true);
-
+        StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(0).getFamily());
+        StyleConstants.setForeground(style1, this.l_colores_mod.get(0));
+        StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(0).getSize()-2);
+        if (this.l_fuentes_mod.get(0).getStyle() == 0) {
+            StyleConstants.setBold(style1, false);
+            StyleConstants.setItalic(style1, false);
+        }    
+        else if (this.l_fuentes_mod.get(0).getStyle() == 2) {
+            StyleConstants.setBold(style1, false);
+            StyleConstants.setItalic(style1, true);
+        } else {
+            StyleConstants.setBold(style1, true);
+            StyleConstants.setItalic(style1, false);
+        }
+        
+        StyleConstants.setBackground(style, this.l_colores_mod.get(3));
+        StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(1).getFamily());
+        //StyleConstants.setForeground(style, new Color(109,109,109));
+        StyleConstants.setForeground(style, this.l_colores_mod.get(2));
+        //StyleConstants.setFontSize(style, 16);
+        StyleConstants.setFontSize(style, this.l_fuentes_mod.get(1).getSize());
+        //StyleConstants.setBold(style, false);
+        if (this.l_fuentes_mod.get(1).getStyle() == 0) {
+            StyleConstants.setBold(style, false);
+            StyleConstants.setItalic(style, false);
+        }    
+        else if (this.l_fuentes_mod.get(1).getStyle() == 2) {
+            StyleConstants.setBold(style, false);
+            StyleConstants.setItalic(style, true);
+        } else {
+            StyleConstants.setBold(style, true);
+            StyleConstants.setItalic(style, false);
+        }
+        
         if (expr.contains(0))
         {
-            StyleConstants.setForeground(style, Color.BLACK);
-            StyleConstants.setFontSize(style, 18);
-            StyleConstants.setBold(style, true);
+            StyleConstants.setBackground(style, this.l_colores_mod.get(1));
+            StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(0).getFamily());
+            //StyleConstants.setForeground(style, Color.BLACK);
+            StyleConstants.setForeground(style, this.l_colores_mod.get(0));
+            //StyleConstants.setFontSize(style, 18);
+            StyleConstants.setFontSize(style, this.l_fuentes_mod.get(0).getSize());
+            //StyleConstants.setBold(style, true);
+            if (this.l_fuentes_mod.get(0).getStyle() == 0) {
+                StyleConstants.setBold(style, false);
+                StyleConstants.setItalic(style, false);
+            }    
+            else if (this.l_fuentes_mod.get(0).getStyle() == 2) {
+                StyleConstants.setBold(style, false);
+                StyleConstants.setItalic(style, true);
+            } else {
+                StyleConstants.setBold(style, true);
+                StyleConstants.setItalic(style, false);
+            }
             
             try {
                 if (this.lAuxMacro.size() > 0)
@@ -539,9 +632,25 @@ public class Pantalla extends javax.swing.JFrame {
         }
         for (int i = 1; i < this.lER.size(); i++)
         {
-            StyleConstants.setForeground(style, new Color(109,109,109));
-            StyleConstants.setFontSize(style, 16);
-            StyleConstants.setBold(style, false);
+            StyleConstants.setBackground(style, this.l_colores_mod.get(3));
+            StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(1).getFamily());
+            //StyleConstants.setForeground(style, new Color(109,109,109));
+            StyleConstants.setForeground(style, this.l_colores_mod.get(2));
+            //StyleConstants.setFontSize(style, 16);
+            StyleConstants.setFontSize(style, this.l_fuentes_mod.get(1).getSize());
+            //StyleConstants.setBold(style, false);
+            if (this.l_fuentes_mod.get(1).getStyle() == 0) {
+                StyleConstants.setBold(style, false);
+                StyleConstants.setItalic(style, false);
+            }    
+            else if (this.l_fuentes_mod.get(1).getStyle() == 2) {
+                StyleConstants.setBold(style, false);
+                StyleConstants.setItalic(style, true);
+            } else {
+                StyleConstants.setBold(style, true);
+                StyleConstants.setItalic(style, false);
+            }
+            
             if (i == this.ind) {
                 try {
                     doc.insertString(doc.getLength(), "\n" + "-----------------------------------------------", style);
@@ -551,9 +660,24 @@ public class Pantalla extends javax.swing.JFrame {
             }
             if (expr.contains(i))
             {
-                StyleConstants.setForeground(style, Color.BLACK);
-                StyleConstants.setFontSize(style, 18);
-                StyleConstants.setBold(style, true);
+                StyleConstants.setBackground(style, this.l_colores_mod.get(1));
+                StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(0).getFamily());
+                //StyleConstants.setForeground(style, Color.BLACK);
+                StyleConstants.setForeground(style, this.l_colores_mod.get(0));
+                //StyleConstants.setFontSize(style, 18);
+                StyleConstants.setFontSize(style, this.l_fuentes_mod.get(0).getSize());
+                //StyleConstants.setBold(style, true);
+                if (this.l_fuentes_mod.get(0).getStyle() == 0) {
+                    StyleConstants.setBold(style, false);
+                    StyleConstants.setItalic(style, false);
+                }    
+                else if (this.l_fuentes_mod.get(0).getStyle() == 2) {
+                    StyleConstants.setBold(style, false);
+                    StyleConstants.setItalic(style, true);
+                } else {
+                    StyleConstants.setBold(style, true);
+                    StyleConstants.setItalic(style, false);
+                }
                 
                 try {
                     if (this.lAuxMacro.size() > i)
@@ -578,7 +702,27 @@ public class Pantalla extends javax.swing.JFrame {
             // Aquí vamos a cambiar los colores de la entrada
             if (expr.isEmpty()) {
                 if (this.ini != -1 && this.fin == -1) {
-                    StyleConstants.setBackground(style0, new Color(255,255,255));
+                    
+                    //StyleConstants.setBackground(style0, new Color(255,255,255));
+                    StyleConstants.setBackground(style0, this.l_colores_mod.get(7));
+                    StyleConstants.setFontFamily(style0, this.l_fuentes_mod.get(3).getFamily());
+                    //StyleConstants.setForeground(style, Color.BLACK);
+                    StyleConstants.setForeground(style0, this.l_colores_mod.get(6));
+                    //StyleConstants.setFontSize(style, 18);
+                    StyleConstants.setFontSize(style0, this.l_fuentes_mod.get(3).getSize());
+                    //StyleConstants.setBold(style, true);
+                    if (this.l_fuentes_mod.get(3).getStyle() == 0) {
+                        StyleConstants.setBold(style0, false);
+                        StyleConstants.setItalic(style0, false);
+                    }    
+                    else if (this.l_fuentes_mod.get(3).getStyle() == 2) {
+                        StyleConstants.setBold(style0, false);
+                        StyleConstants.setItalic(style0, true);
+                    } else {
+                        StyleConstants.setBold(style0, true);
+                        StyleConstants.setItalic(style0, false);
+                    }
+                    
                     try {
                         if (this.ini > doc0.getLength()) {
                             
@@ -597,12 +741,53 @@ public class Pantalla extends javax.swing.JFrame {
                     this.auxl.remove(this.auxl.size()-1);
                 this.ini = -1;
                 this.fin = -1;
-                StyleConstants.setBackground(style0, new Color(255,255,255));
+                
+                //StyleConstants.setBackground(style0, new Color(255,255,255));
+                StyleConstants.setBackground(style0, this.l_colores_mod.get(7));
+                StyleConstants.setFontFamily(style0, this.l_fuentes_mod.get(3).getFamily());
+                //StyleConstants.setForeground(style, Color.BLACK);
+                StyleConstants.setForeground(style0, this.l_colores_mod.get(6));
+                //StyleConstants.setFontSize(style, 18);
+                StyleConstants.setFontSize(style0, this.l_fuentes_mod.get(3).getSize());
+                //StyleConstants.setBold(style, true);
+                if (this.l_fuentes_mod.get(3).getStyle() == 0) {
+                    StyleConstants.setBold(style0, false);
+                    StyleConstants.setItalic(style0, false);
+                }    
+                else if (this.l_fuentes_mod.get(3).getStyle() == 2) {
+                    StyleConstants.setBold(style0, false);
+                    StyleConstants.setItalic(style0, true);
+                } else {
+                    StyleConstants.setBold(style0, true);
+                    StyleConstants.setItalic(style0, false);
+                }
+                
                 this.anteriorNoRec = true;
             }
             else if (esFinal) {
-                StyleConstants.setForeground(style0, Color.WHITE);
-                StyleConstants.setBackground(style0, new Color(25,25,112));
+                //StyleConstants.setForeground(style0, Color.WHITE);
+                //StyleConstants.setBackground(style0, new Color(25,25,112));
+                
+                //StyleConstants.setBackground(style0, new Color(255,255,255));
+                StyleConstants.setBackground(style0, this.l_colores_mod.get(5));
+                StyleConstants.setFontFamily(style0, this.l_fuentes_mod.get(2).getFamily());
+                //StyleConstants.setForeground(style, Color.BLACK);
+                StyleConstants.setForeground(style0, this.l_colores_mod.get(4));
+                //StyleConstants.setFontSize(style, 18);
+                StyleConstants.setFontSize(style0, this.l_fuentes_mod.get(2).getSize());
+                //StyleConstants.setBold(style, true);
+                if (this.l_fuentes_mod.get(2).getStyle() == 0) {
+                    StyleConstants.setBold(style0, false);
+                    StyleConstants.setItalic(style0, false);
+                }    
+                else if (this.l_fuentes_mod.get(2).getStyle() == 2) {
+                    StyleConstants.setBold(style0, false);
+                    StyleConstants.setItalic(style0, true);
+                } else {
+                    StyleConstants.setBold(style0, true);
+                    StyleConstants.setItalic(style0, false);
+                }
+                
                 if (retroceso) {
                     if (this.ini == -1 && this.anteriorFinal && !this.anteriorNoRec)
                         this.auxl.remove(this.auxl.size()-1);
@@ -626,7 +811,28 @@ public class Pantalla extends javax.swing.JFrame {
                 this.anteriorFinal = true;
                 this.anteriorNoRec = false;
             } else {
-                StyleConstants.setBackground(style0, new Color(173,216,230));
+                //StyleConstants.setBackground(style0, new Color(173,216,230));
+                
+                //StyleConstants.setBackground(style0, new Color(255,255,255));
+                StyleConstants.setBackground(style0, this.l_colores_mod.get(9));
+                StyleConstants.setFontFamily(style0, this.l_fuentes_mod.get(4).getFamily());
+                //StyleConstants.setForeground(style, Color.BLACK);
+                StyleConstants.setForeground(style0, this.l_colores_mod.get(8));
+                //StyleConstants.setFontSize(style, 18);
+                StyleConstants.setFontSize(style0, this.l_fuentes_mod.get(4).getSize());
+                //StyleConstants.setBold(style, true);
+                if (this.l_fuentes_mod.get(4).getStyle() == 0) {
+                    StyleConstants.setBold(style0, false);
+                    StyleConstants.setItalic(style0, false);
+                }    
+                else if (this.l_fuentes_mod.get(4).getStyle() == 2) {
+                    StyleConstants.setBold(style0, false);
+                    StyleConstants.setItalic(style0, true);
+                } else {
+                    StyleConstants.setBold(style0, true);
+                    StyleConstants.setItalic(style0, false);
+                }
+                
                 if (retroceso) {
                     if ((this.ini != -1 && !this.auxl.isEmpty() && this.ini != this.auxl.get(this.auxl.size()-1)) || (this.ini != -1 && this.auxl.isEmpty())) {
                         try {
@@ -709,9 +915,21 @@ public class Pantalla extends javax.swing.JFrame {
     }//GEN-LAST:event_panel_exprHyperlinkUpdate
 
     private void lbSettingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbSettingsMouseClicked
-        this.pAjustes = new P_ajustes(this,true,this.getL_fuentes(),this.getL_colores());
+        this.pAjustes = new P_ajustes(this,true,this.getL_fuentes_mod(),this.getL_colores_mod());
         this.pAjustes.setVisible(true);
+        this.l_fuentes_mod.clear();
+        this.l_colores_mod.clear();
+        this.l_fuentes_mod.addAll(this.pAjustes.getL_fuentes_mod());
+        this.l_colores_mod.addAll(this.pAjustes.getL_colores_mod());
     }//GEN-LAST:event_lbSettingsMouseClicked
+
+    private void lbSettingsMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbSettingsMouseMoved
+
+    }//GEN-LAST:event_lbSettingsMouseMoved
+
+    private void lbSettingsMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbSettingsMouseEntered
+
+    }//GEN-LAST:event_lbSettingsMouseEntered
     
     /**
      * Método para abrir un archivo con JFileChooser.
