@@ -829,8 +829,10 @@ public class Analizador
                         p = "\\n";
                     if ((int) c2.toCharArray()[0] == 10)
                         c2 = "\\n";
-                    else
+                    else {
+                        escapado = false;
                         continue;
+                    }
                     if (p.equals(c2))
                     {
                         encontrado = true;
