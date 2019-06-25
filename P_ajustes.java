@@ -70,15 +70,15 @@ public class P_ajustes extends javax.swing.JDialog {
         
         ImageIcon helpImage = new ImageIcon(getClass().getResource(("/Imágenes/help.png")));
         Icon iconHelp = new ImageIcon(helpImage.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
-        this.jLabel4.setIcon(iconHelp);
+        this.lb_ayuda.setIcon(iconHelp);
         
-        this.txFuente.setText(this.l_fuentes_mod.get(0).getName() + " " + this.l_fuentes_mod.get(0).getSize());
-        this.txColorFuente.setText(this.l_colores_mod.get(0).getRed() + ", " + this.l_colores_mod.get(0).getGreen() + ", " + this.l_colores_mod.get(0).getBlue());
-        this.txColorFondo.setText(this.l_colores_mod.get(1).getRed() + ", " + this.l_colores_mod.get(1).getGreen() + ", " + this.l_colores_mod.get(1).getBlue());
+        this.tx_fuente_1.setText(this.l_fuentes_mod.get(0).getName() + " " + this.l_fuentes_mod.get(0).getSize());
+        this.tx_color_fuente_1.setText(this.l_colores_mod.get(0).getRed() + ", " + this.l_colores_mod.get(0).getGreen() + ", " + this.l_colores_mod.get(0).getBlue());
+        this.tx_color_fondo_1.setText(this.l_colores_mod.get(1).getRed() + ", " + this.l_colores_mod.get(1).getGreen() + ", " + this.l_colores_mod.get(1).getBlue());
         
-        txFuente1.setText(this.l_fuentes_mod.get(2).getName() + " " + this.l_fuentes_mod.get(2).getSize());
-        this.txColorFuente2.setText(this.l_colores_mod.get(4).getRed() + ", " + this.l_colores_mod.get(4).getGreen() + ", " + this.l_colores_mod.get(4).getBlue());
-        this.txColorFondo2.setText(this.l_colores_mod.get(5).getRed() + ", " + this.l_colores_mod.get(5).getGreen() + ", " + this.l_colores_mod.get(5).getBlue());
+        tx_fuente_2.setText(this.l_fuentes_mod.get(2).getName() + " " + this.l_fuentes_mod.get(2).getSize());
+        this.tx_color_fuente_2.setText(this.l_colores_mod.get(4).getRed() + ", " + this.l_colores_mod.get(4).getGreen() + ", " + this.l_colores_mod.get(4).getBlue());
+        this.tx_color_fondo_2.setText(this.l_colores_mod.get(5).getRed() + ", " + this.l_colores_mod.get(5).getGreen() + ", " + this.l_colores_mod.get(5).getBlue());
     }
 
     /**
@@ -90,170 +90,171 @@ public class P_ajustes extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        txFuente = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        btFuente = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        btColorFuente = new javax.swing.JButton();
-        jSeparator2 = new javax.swing.JSeparator();
-        btColorFondo = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList<>();
-        lbFuente = new javax.swing.JLabel();
-        lbColorFuente = new javax.swing.JLabel();
-        lbColorFondo = new javax.swing.JLabel();
-        txColorFuente = new javax.swing.JTextField();
-        jSeparator1 = new javax.swing.JSeparator();
-        txColorFondo = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        lbFuente2 = new javax.swing.JLabel();
-        lbColorFuente2 = new javax.swing.JLabel();
-        lbColorFondo2 = new javax.swing.JLabel();
-        txColorFuente2 = new javax.swing.JTextField();
-        txFuente1 = new javax.swing.JTextField();
-        txColorFondo2 = new javax.swing.JTextField();
-        btFuente2 = new javax.swing.JButton();
-        btColorFuente2 = new javax.swing.JButton();
-        btColorFondo2 = new javax.swing.JButton();
-        btReestablecer = new javax.swing.JButton();
+        tx_fuente_1 = new javax.swing.JTextField();
+        boton_cancelar = new javax.swing.JButton();
+        boton_fuente_1 = new javax.swing.JButton();
+        boton_aplicar = new javax.swing.JButton();
+        boton_color_fuente_1 = new javax.swing.JButton();
+        Separador_2 = new javax.swing.JSeparator();
+        boton_color_fondo_1 = new javax.swing.JButton();
+        lb_ayuda = new javax.swing.JLabel();
+        lb_titulo_1 = new javax.swing.JLabel();
+        lb_titulo_2 = new javax.swing.JLabel();
+        scroll_lista_1 = new javax.swing.JScrollPane();
+        lista_1 = new javax.swing.JList<>();
+        scroll_lista_2 = new javax.swing.JScrollPane();
+        lista_2 = new javax.swing.JList<>();
+        lb_fuente_1 = new javax.swing.JLabel();
+        lb_color_fuente_1 = new javax.swing.JLabel();
+        lb_color_fondo_1 = new javax.swing.JLabel();
+        tx_color_fuente_1 = new javax.swing.JTextField();
+        separador_1 = new javax.swing.JSeparator();
+        tx_color_fondo_1 = new javax.swing.JTextField();
+        boton_defecto = new javax.swing.JButton();
+        lb_fuente_2 = new javax.swing.JLabel();
+        lb_color_fuente_2 = new javax.swing.JLabel();
+        lb_color_fondo_2 = new javax.swing.JLabel();
+        tx_color_fuente_2 = new javax.swing.JTextField();
+        tx_fuente_2 = new javax.swing.JTextField();
+        tx_color_fondo_2 = new javax.swing.JTextField();
+        boton_fuente_2 = new javax.swing.JButton();
+        boton_color_fuente_2 = new javax.swing.JButton();
+        boton_color_fondo_2 = new javax.swing.JButton();
+        boton_reestablecer = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Ajustes");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("Bundle"); // NOI18N
+        setTitle(bundle.getString("P_ajustes.title")); // NOI18N
 
-        txFuente.setEditable(false);
-        txFuente.setFocusable(false);
+        tx_fuente_1.setEditable(false);
+        tx_fuente_1.setFocusable(false);
 
-        jButton2.setText("Cancelar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        boton_cancelar.setText(bundle.getString("P_ajustes.boton_cancelar.text")); // NOI18N
+        boton_cancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                boton_cancelarActionPerformed(evt);
             }
         });
 
-        btFuente.setText("...");
-        btFuente.addActionListener(new java.awt.event.ActionListener() {
+        boton_fuente_1.setText(bundle.getString("P_ajustes.boton_fuente_1.text")); // NOI18N
+        boton_fuente_1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btFuenteActionPerformed(evt);
+                boton_fuente_1ActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Aplicar");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        boton_aplicar.setText(bundle.getString("P_ajustes.boton_aplicar.text")); // NOI18N
+        boton_aplicar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                boton_aplicarActionPerformed(evt);
             }
         });
 
-        btColorFuente.setText("...");
-        btColorFuente.addActionListener(new java.awt.event.ActionListener() {
+        boton_color_fuente_1.setText(bundle.getString("P_ajustes.boton_color_fuente_1.text")); // NOI18N
+        boton_color_fuente_1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btColorFuenteActionPerformed(evt);
+                boton_color_fuente_1ActionPerformed(evt);
             }
         });
 
-        btColorFondo.setText("...");
-        btColorFondo.addActionListener(new java.awt.event.ActionListener() {
+        boton_color_fondo_1.setText(bundle.getString("P_ajustes.boton_color_fondo_1.text")); // NOI18N
+        boton_color_fondo_1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btColorFondoActionPerformed(evt);
+                boton_color_fondo_1ActionPerformed(evt);
             }
         });
 
-        jLabel4.setText("Ayuda");
+        lb_ayuda.setText(bundle.getString("P_ajustes.lb_ayuda.text")); // NOI18N
 
-        jLabel1.setText("Componentes de texto del área de espresiones regulares:");
+        lb_titulo_1.setText(bundle.getString("P_ajustes.lb_titulo_1.text")); // NOI18N
 
-        jLabel2.setText("Componentes de texto de la cadena de entrada:");
+        lb_titulo_2.setText(bundle.getString("P_ajustes.lb_titulo_2.text")); // NOI18N
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+        lista_1.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Definiciones Regulares/Patrones activos", "Definiciones Regulares/Patrones NO activos" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jList1.setSelectedIndex(0);
-        jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+        lista_1.setSelectedIndex(0);
+        lista_1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                jList1ValueChanged(evt);
+                lista_1ValueChanged(evt);
             }
         });
-        jScrollPane1.setViewportView(jList1);
+        scroll_lista_1.setViewportView(lista_1);
 
-        jList2.setModel(new javax.swing.AbstractListModel<String>() {
+        lista_2.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Lexemas COMPLETAMENTE detectados en la entrada", "Lexemas NO detectados en la entrada", "Lexemas PARCIALMENTE detectados en la entrada" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jList2.setSelectedIndex(0);
-        jList2.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+        lista_2.setSelectedIndex(0);
+        lista_2.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                jList2ValueChanged(evt);
+                lista_2ValueChanged(evt);
             }
         });
-        jScrollPane2.setViewportView(jList2);
+        scroll_lista_2.setViewportView(lista_2);
 
-        lbFuente.setText("Fuente:");
+        lb_fuente_1.setText(bundle.getString("P_ajustes.lb_fuente_1.text")); // NOI18N
 
-        lbColorFuente.setText("Color de fuente:");
+        lb_color_fuente_1.setText(bundle.getString("P_ajustes.lb_color_fuente_1.text")); // NOI18N
 
-        lbColorFondo.setText("Color de fondo:");
+        lb_color_fondo_1.setText(bundle.getString("P_ajustes.lb_color_fondo_1.text")); // NOI18N
 
-        txColorFuente.setEditable(false);
-        txColorFuente.setFocusable(false);
+        tx_color_fuente_1.setEditable(false);
+        tx_color_fuente_1.setFocusable(false);
 
-        txColorFondo.setEditable(false);
-        txColorFondo.setFocusable(false);
+        tx_color_fondo_1.setEditable(false);
+        tx_color_fondo_1.setFocusable(false);
 
-        jButton1.setText("Valores por defecto");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        boton_defecto.setText(bundle.getString("P_ajustes.boton_defecto.text")); // NOI18N
+        boton_defecto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        lbFuente2.setText("Fuente:");
-
-        lbColorFuente2.setText("Color de fuente:");
-
-        lbColorFondo2.setText("Color de fondo:");
-
-        txColorFuente2.setEditable(false);
-        txColorFuente2.setFocusable(false);
-
-        txFuente1.setEditable(false);
-        txFuente1.setFocusable(false);
-
-        txColorFondo2.setEditable(false);
-        txColorFondo2.setFocusable(false);
-
-        btFuente2.setText("...");
-        btFuente2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btFuente2ActionPerformed(evt);
+                boton_defectoActionPerformed(evt);
             }
         });
 
-        btColorFuente2.setText("...");
-        btColorFuente2.addActionListener(new java.awt.event.ActionListener() {
+        lb_fuente_2.setText(bundle.getString("P_ajustes.lb_fuente_2.text")); // NOI18N
+
+        lb_color_fuente_2.setText(bundle.getString("P_ajustes.lb_color_fuente_2.text")); // NOI18N
+
+        lb_color_fondo_2.setText(bundle.getString("P_ajustes.lb_color_fondo_2.text")); // NOI18N
+
+        tx_color_fuente_2.setEditable(false);
+        tx_color_fuente_2.setFocusable(false);
+
+        tx_fuente_2.setEditable(false);
+        tx_fuente_2.setFocusable(false);
+
+        tx_color_fondo_2.setEditable(false);
+        tx_color_fondo_2.setFocusable(false);
+
+        boton_fuente_2.setText(bundle.getString("P_ajustes.boton_fuente_2.text")); // NOI18N
+        boton_fuente_2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btColorFuente2ActionPerformed(evt);
+                boton_fuente_2ActionPerformed(evt);
             }
         });
 
-        btColorFondo2.setText("...");
-        btColorFondo2.addActionListener(new java.awt.event.ActionListener() {
+        boton_color_fuente_2.setText(bundle.getString("P_ajustes.boton_color_fuente_2.text")); // NOI18N
+        boton_color_fuente_2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btColorFondo2ActionPerformed(evt);
+                boton_color_fuente_2ActionPerformed(evt);
             }
         });
 
-        btReestablecer.setText("Reestablecer");
-        btReestablecer.addActionListener(new java.awt.event.ActionListener() {
+        boton_color_fondo_2.setText(bundle.getString("P_ajustes.boton_color_fondo_2.text")); // NOI18N
+        boton_color_fondo_2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btReestablecerActionPerformed(evt);
+                boton_color_fondo_2ActionPerformed(evt);
+            }
+        });
+
+        boton_reestablecer.setText(bundle.getString("P_ajustes.boton_reestablecer.text")); // NOI18N
+        boton_reestablecer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boton_reestablecerActionPerformed(evt);
             }
         });
 
@@ -261,72 +262,72 @@ public class P_ajustes extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator2)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel4))
+                        .addComponent(lb_ayuda))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSeparator1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 344, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(Separador_2)
+                            .addComponent(separador_1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(scroll_lista_1, javax.swing.GroupLayout.DEFAULT_SIZE, 344, Short.MAX_VALUE)
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lbColorFuente, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lbColorFondo)
-                                    .addComponent(lbFuente, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(lb_color_fuente_1, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lb_color_fondo_1)
+                                    .addComponent(lb_fuente_1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txColorFuente, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
-                                    .addComponent(txFuente, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(txColorFondo))
+                                    .addComponent(tx_color_fuente_1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                                    .addComponent(tx_fuente_1, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(tx_color_fondo_1))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(8, 8, 8)
-                                        .addComponent(btFuente, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(boton_fuente_1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(btColorFuente, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(btColorFondo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                            .addComponent(boton_color_fuente_1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(boton_color_fondo_1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButton1))
+                                    .addComponent(scroll_lista_2, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(boton_defecto))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(jButton3)
+                                        .addComponent(boton_aplicar)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jButton2)
+                                        .addComponent(boton_cancelar)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(btReestablecer))
+                                        .addComponent(boton_reestablecer))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(lbColorFuente2, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(lbColorFondo2)
-                                            .addComponent(lbFuente2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(lb_color_fuente_2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(lb_color_fondo_2)
+                                            .addComponent(lb_fuente_2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(txColorFuente2, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(txFuente1, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(txColorFondo2, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(tx_color_fuente_2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(tx_fuente_2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(tx_color_fondo_2, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(layout.createSequentialGroup()
                                                 .addGap(8, 8, 8)
-                                                .addComponent(btFuente2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addComponent(boton_fuente_2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(btColorFuente2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(btColorFondo2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
-                            .addGroup(layout.createSequentialGroup()
+                                                    .addComponent(boton_color_fuente_2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(boton_color_fondo_2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jLabel2))
+                                    .addComponent(lb_titulo_1)
+                                    .addComponent(lb_titulo_2))
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
@@ -334,71 +335,71 @@ public class P_ajustes extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel4)
+                .addComponent(lb_ayuda)
                 .addGap(7, 7, 7)
-                .addComponent(jLabel1)
+                .addComponent(lb_titulo_1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scroll_lista_1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lbFuente)
-                            .addComponent(txFuente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btFuente, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lb_fuente_1)
+                            .addComponent(tx_fuente_1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(boton_fuente_1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lbColorFuente)
-                            .addComponent(txColorFuente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btColorFuente, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lb_color_fuente_1)
+                            .addComponent(tx_color_fuente_1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(boton_color_fuente_1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txColorFondo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbColorFondo)
-                            .addComponent(btColorFondo, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(tx_color_fondo_1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lb_color_fondo_1)
+                            .addComponent(boton_color_fondo_1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(13, 13, 13)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(separador_1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel2)
+                .addComponent(lb_titulo_2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(scroll_lista_2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 17, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lbFuente2)
-                            .addComponent(txFuente1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btFuente2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lb_fuente_2)
+                            .addComponent(tx_fuente_2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(boton_fuente_2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lbColorFuente2)
-                            .addComponent(txColorFuente2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btColorFuente2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lb_color_fuente_2)
+                            .addComponent(tx_color_fuente_2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(boton_color_fuente_2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txColorFondo2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbColorFondo2)
-                            .addComponent(btColorFondo2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(tx_color_fondo_2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lb_color_fondo_2)
+                            .addComponent(boton_color_fondo_2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(18, 18, 18)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Separador_2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(btReestablecer))
+                    .addComponent(boton_defecto)
+                    .addComponent(boton_cancelar)
+                    .addComponent(boton_aplicar)
+                    .addComponent(boton_reestablecer))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void boton_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_cancelarActionPerformed
         this.l_fuentes_mod.clear();
         this.l_colores_mod.clear();
         this.l_fuentes_mod.addAll(l_fuentes);
         this.l_colores_mod.addAll(l_colores);
         this.dispose();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_boton_cancelarActionPerformed
 
     public List<Font> getL_fuentes_mod() {
         return l_fuentes_mod;
@@ -408,10 +409,10 @@ public class P_ajustes extends javax.swing.JDialog {
         return l_colores_mod;
     }
 
-    private void btFuenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFuenteActionPerformed
+    private void boton_fuente_1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_fuente_1ActionPerformed
         int i, res;
-        if (!this.jList1.isSelectionEmpty()) {
-            if (this.jList1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
+        if (!this.lista_1.isSelectionEmpty()) {
+            if (this.lista_1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
                 i = 0;
             } else {
                 i = 1;
@@ -421,15 +422,15 @@ public class P_ajustes extends javax.swing.JDialog {
             if (res == JFontChooser.OK_OPTION) {
                 Font f = jf.getSelectedFont();
                 this.l_fuentes_mod.set(i, f);
-                this.txFuente.setText(this.l_fuentes_mod.get(i).getName() + " " + this.l_fuentes_mod.get(i).getSize());
+                this.tx_fuente_1.setText(this.l_fuentes_mod.get(i).getName() + " " + this.l_fuentes_mod.get(i).getSize());
             }
         }
-    }//GEN-LAST:event_btFuenteActionPerformed
+    }//GEN-LAST:event_boton_fuente_1ActionPerformed
 
-    private void btColorFuenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btColorFuenteActionPerformed
+    private void boton_color_fuente_1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_color_fuente_1ActionPerformed
         int i;
-        if (!this.jList1.isSelectionEmpty()) {
-            if (this.jList1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
+        if (!this.lista_1.isSelectionEmpty()) {
+            if (this.lista_1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
                 i = 0;
             } else {
                 i = 2;
@@ -437,15 +438,15 @@ public class P_ajustes extends javax.swing.JDialog {
             Color c = JColorChooser.showDialog(null, "Selecciona un color", this.l_colores_mod.get(i));
             if (c!= null) {
                 this.l_colores_mod.set(i, c);
-                this.txColorFuente.setText(this.l_colores_mod.get(i).getRed() + ", " + this.l_colores_mod.get(i).getGreen() + ", " + this.l_colores_mod.get(i).getBlue());
+                this.tx_color_fuente_1.setText(this.l_colores_mod.get(i).getRed() + ", " + this.l_colores_mod.get(i).getGreen() + ", " + this.l_colores_mod.get(i).getBlue());
             }
         }
-    }//GEN-LAST:event_btColorFuenteActionPerformed
+    }//GEN-LAST:event_boton_color_fuente_1ActionPerformed
 
-    private void btColorFondoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btColorFondoActionPerformed
+    private void boton_color_fondo_1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_color_fondo_1ActionPerformed
         int i;
-        if (!this.jList1.isSelectionEmpty()) {
-            if (this.jList1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
+        if (!this.lista_1.isSelectionEmpty()) {
+            if (this.lista_1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
                 i = 1;
             } else {
                 i = 3;
@@ -453,15 +454,15 @@ public class P_ajustes extends javax.swing.JDialog {
             Color c = JColorChooser.showDialog(null, "Selecciona un color", this.l_colores_mod.get(i));
             if (c!= null) {
                 this.l_colores_mod.set(i, c);
-                this.txColorFondo.setText(this.l_colores_mod.get(i).getRed() + ", " + this.l_colores_mod.get(i).getGreen() + ", " + this.l_colores_mod.get(i).getBlue());
+                this.tx_color_fondo_1.setText(this.l_colores_mod.get(i).getRed() + ", " + this.l_colores_mod.get(i).getGreen() + ", " + this.l_colores_mod.get(i).getBlue());
             }
         }
-    }//GEN-LAST:event_btColorFondoActionPerformed
+    }//GEN-LAST:event_boton_color_fondo_1ActionPerformed
 
-    private void btFuente2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFuente2ActionPerformed
+    private void boton_fuente_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_fuente_2ActionPerformed
         int i, res;
-        if (!this.jList2.isSelectionEmpty()) {
-            switch (this.jList2.getSelectedValue()) {
+        if (!this.lista_2.isSelectionEmpty()) {
+            switch (this.lista_2.getSelectedValue()) {
                 case "Lexemas COMPLETAMENTE detectados en la entrada":
                     i = 2;
                     break;
@@ -477,15 +478,15 @@ public class P_ajustes extends javax.swing.JDialog {
             if (res == JFontChooser.OK_OPTION) {
                 Font f = jf.getSelectedFont();
                 this.l_fuentes_mod.set(i, f);
-                this.txFuente1.setText(this.l_fuentes_mod.get(i).getName() + " " + this.l_fuentes_mod.get(i).getSize());
+                this.tx_fuente_2.setText(this.l_fuentes_mod.get(i).getName() + " " + this.l_fuentes_mod.get(i).getSize());
             }
         }
-    }//GEN-LAST:event_btFuente2ActionPerformed
+    }//GEN-LAST:event_boton_fuente_2ActionPerformed
 
-    private void btColorFuente2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btColorFuente2ActionPerformed
+    private void boton_color_fuente_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_color_fuente_2ActionPerformed
         int i;
-        if (!this.jList2.isSelectionEmpty()) {
-            switch (this.jList2.getSelectedValue()) {
+        if (!this.lista_2.isSelectionEmpty()) {
+            switch (this.lista_2.getSelectedValue()) {
                 case "Lexemas COMPLETAMENTE detectados en la entrada":
                     i = 4;
                     break;
@@ -499,15 +500,15 @@ public class P_ajustes extends javax.swing.JDialog {
             Color c = JColorChooser.showDialog(null, "Selecciona un color", this.l_colores_mod.get(i));
             if (c!= null) {
                 this.l_colores_mod.set(i, c);
-                this.txColorFuente2.setText(this.l_colores_mod.get(i).getRed() + ", " + this.l_colores_mod.get(i).getGreen() + ", " + this.l_colores_mod.get(i).getBlue());
+                this.tx_color_fuente_2.setText(this.l_colores_mod.get(i).getRed() + ", " + this.l_colores_mod.get(i).getGreen() + ", " + this.l_colores_mod.get(i).getBlue());
             }
         }
-    }//GEN-LAST:event_btColorFuente2ActionPerformed
+    }//GEN-LAST:event_boton_color_fuente_2ActionPerformed
 
-    private void btColorFondo2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btColorFondo2ActionPerformed
+    private void boton_color_fondo_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_color_fondo_2ActionPerformed
         int i;
-        if (!this.jList2.isSelectionEmpty()) {
-            switch (this.jList2.getSelectedValue()) {
+        if (!this.lista_2.isSelectionEmpty()) {
+            switch (this.lista_2.getSelectedValue()) {
                 case "Lexemas COMPLETAMENTE detectados en la entrada":
                     i = 5;
                     break;
@@ -521,52 +522,52 @@ public class P_ajustes extends javax.swing.JDialog {
             Color c = JColorChooser.showDialog(null, "Selecciona un color", this.l_colores_mod.get(i));
             if (c!= null) {
                 this.l_colores_mod.set(i, c);
-                this.txColorFondo2.setText(this.l_colores_mod.get(i).getRed() + ", " + this.l_colores_mod.get(i).getGreen() + ", " + this.l_colores_mod.get(i).getBlue());
+                this.tx_color_fondo_2.setText(this.l_colores_mod.get(i).getRed() + ", " + this.l_colores_mod.get(i).getGreen() + ", " + this.l_colores_mod.get(i).getBlue());
             }
         }
-    }//GEN-LAST:event_btColorFondo2ActionPerformed
+    }//GEN-LAST:event_boton_color_fondo_2ActionPerformed
 
-    private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
-        if (this.jList1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
-            this.txFuente.setText(this.l_fuentes_mod.get(0).getName() + " " + this.l_fuentes_mod.get(0).getSize());
-            this.txColorFuente.setText(this.l_colores_mod.get(0).getRed() + ", " + this.l_colores_mod.get(0).getGreen() + ", " + this.l_colores_mod.get(0).getBlue());
-            this.txColorFondo.setText(this.l_colores_mod.get(1).getRed() + ", " + this.l_colores_mod.get(1).getGreen() + ", " + this.l_colores_mod.get(1).getBlue());
+    private void lista_1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lista_1ValueChanged
+        if (this.lista_1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
+            this.tx_fuente_1.setText(this.l_fuentes_mod.get(0).getName() + " " + this.l_fuentes_mod.get(0).getSize());
+            this.tx_color_fuente_1.setText(this.l_colores_mod.get(0).getRed() + ", " + this.l_colores_mod.get(0).getGreen() + ", " + this.l_colores_mod.get(0).getBlue());
+            this.tx_color_fondo_1.setText(this.l_colores_mod.get(1).getRed() + ", " + this.l_colores_mod.get(1).getGreen() + ", " + this.l_colores_mod.get(1).getBlue());
         } else {
-            this.txFuente.setText(this.l_fuentes_mod.get(1).getName() + " " + this.l_fuentes_mod.get(1).getSize());
-            this.txColorFuente.setText(this.l_colores_mod.get(2).getRed() + ", " + this.l_colores_mod.get(2).getGreen() + ", " + this.l_colores_mod.get(2).getBlue());
-            this.txColorFondo.setText(this.l_colores_mod.get(3).getRed() + ", " + this.l_colores_mod.get(3).getGreen() + ", " + this.l_colores_mod.get(3).getBlue());
+            this.tx_fuente_1.setText(this.l_fuentes_mod.get(1).getName() + " " + this.l_fuentes_mod.get(1).getSize());
+            this.tx_color_fuente_1.setText(this.l_colores_mod.get(2).getRed() + ", " + this.l_colores_mod.get(2).getGreen() + ", " + this.l_colores_mod.get(2).getBlue());
+            this.tx_color_fondo_1.setText(this.l_colores_mod.get(3).getRed() + ", " + this.l_colores_mod.get(3).getGreen() + ", " + this.l_colores_mod.get(3).getBlue());
         }
-    }//GEN-LAST:event_jList1ValueChanged
+    }//GEN-LAST:event_lista_1ValueChanged
 
-    private void jList2ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList2ValueChanged
-        switch (this.jList2.getSelectedValue()) {
+    private void lista_2ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lista_2ValueChanged
+        switch (this.lista_2.getSelectedValue()) {
             case "Lexemas COMPLETAMENTE detectados en la entrada":
-                txFuente1.setText(this.l_fuentes_mod.get(2).getName() + " " + this.l_fuentes_mod.get(2).getSize());
-                this.txColorFuente2.setText(this.l_colores_mod.get(4).getRed() + ", " + this.l_colores_mod.get(4).getGreen() + ", " + this.l_colores_mod.get(4).getBlue());
-                this.txColorFondo2.setText(this.l_colores_mod.get(5).getRed() + ", " + this.l_colores_mod.get(5).getGreen() + ", " + this.l_colores_mod.get(5).getBlue());
+                tx_fuente_2.setText(this.l_fuentes_mod.get(2).getName() + " " + this.l_fuentes_mod.get(2).getSize());
+                this.tx_color_fuente_2.setText(this.l_colores_mod.get(4).getRed() + ", " + this.l_colores_mod.get(4).getGreen() + ", " + this.l_colores_mod.get(4).getBlue());
+                this.tx_color_fondo_2.setText(this.l_colores_mod.get(5).getRed() + ", " + this.l_colores_mod.get(5).getGreen() + ", " + this.l_colores_mod.get(5).getBlue());
                 break;
             case "Lexemas NO detectados en la entrada":
-                txFuente1.setText(this.l_fuentes_mod.get(3).getName() + " " + this.l_fuentes_mod.get(3).getSize());
-                this.txColorFuente2.setText(this.l_colores_mod.get(6).getRed() + ", " + this.l_colores_mod.get(6).getGreen() + ", " + this.l_colores_mod.get(6).getBlue());
-                this.txColorFondo2.setText(this.l_colores_mod.get(7).getRed() + ", " + this.l_colores_mod.get(7).getGreen() + ", " + this.l_colores_mod.get(7).getBlue());
+                tx_fuente_2.setText(this.l_fuentes_mod.get(3).getName() + " " + this.l_fuentes_mod.get(3).getSize());
+                this.tx_color_fuente_2.setText(this.l_colores_mod.get(6).getRed() + ", " + this.l_colores_mod.get(6).getGreen() + ", " + this.l_colores_mod.get(6).getBlue());
+                this.tx_color_fondo_2.setText(this.l_colores_mod.get(7).getRed() + ", " + this.l_colores_mod.get(7).getGreen() + ", " + this.l_colores_mod.get(7).getBlue());
                 break;
             default:
-                txFuente1.setText(this.l_fuentes_mod.get(4).getName() + " " + this.l_fuentes_mod.get(4).getSize());
-                this.txColorFuente2.setText(this.l_colores_mod.get(8).getRed() + ", " + this.l_colores_mod.get(8).getGreen() + ", " + this.l_colores_mod.get(8).getBlue());
-                this.txColorFondo2.setText(this.l_colores_mod.get(9).getRed() + ", " + this.l_colores_mod.get(9).getGreen() + ", " + this.l_colores_mod.get(9).getBlue());
+                tx_fuente_2.setText(this.l_fuentes_mod.get(4).getName() + " " + this.l_fuentes_mod.get(4).getSize());
+                this.tx_color_fuente_2.setText(this.l_colores_mod.get(8).getRed() + ", " + this.l_colores_mod.get(8).getGreen() + ", " + this.l_colores_mod.get(8).getBlue());
+                this.tx_color_fondo_2.setText(this.l_colores_mod.get(9).getRed() + ", " + this.l_colores_mod.get(9).getGreen() + ", " + this.l_colores_mod.get(9).getBlue());
                 break;
         }
-    }//GEN-LAST:event_jList2ValueChanged
+    }//GEN-LAST:event_lista_2ValueChanged
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void boton_aplicarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_aplicarActionPerformed
         int resp = JOptionPane.showConfirmDialog(null, "¿Está seguro de aplicar los valores actuales?", "Advertencia", JOptionPane.YES_NO_OPTION);
         if (resp == JOptionPane.YES_OPTION) {
             this.dispose();
             JOptionPane.showMessageDialog(null, "¡Valores cambiados con éxito!", "Información", JOptionPane.INFORMATION_MESSAGE);
         }
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_boton_aplicarActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void boton_defectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_defectoActionPerformed
         int resp = JOptionPane.showConfirmDialog(null, "¿Está seguro de cambiar a los valores por defecto?", "Advertencia", JOptionPane.YES_NO_OPTION);
         if (resp == JOptionPane.YES_OPTION) { 
             this.l_fuentes_mod.clear();
@@ -574,41 +575,41 @@ public class P_ajustes extends javax.swing.JDialog {
             this.l_colores_mod.clear();
             this.l_colores_mod.addAll(l_colores_def);
 
-            if (!this.jList1.isSelectionEmpty()) {
-                if (this.jList1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
-                    this.txFuente.setText(this.l_fuentes_mod.get(0).getName() + " " + this.l_fuentes_mod.get(0).getSize());
-                    this.txColorFuente.setText(this.l_colores_mod.get(0).getRed() + ", " + this.l_colores_mod.get(0).getGreen() + ", " + this.l_colores_mod.get(0).getBlue());
-                    this.txColorFondo.setText(this.l_colores_mod.get(1).getRed() + ", " + this.l_colores_mod.get(1).getGreen() + ", " + this.l_colores_mod.get(1).getBlue());
+            if (!this.lista_1.isSelectionEmpty()) {
+                if (this.lista_1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
+                    this.tx_fuente_1.setText(this.l_fuentes_mod.get(0).getName() + " " + this.l_fuentes_mod.get(0).getSize());
+                    this.tx_color_fuente_1.setText(this.l_colores_mod.get(0).getRed() + ", " + this.l_colores_mod.get(0).getGreen() + ", " + this.l_colores_mod.get(0).getBlue());
+                    this.tx_color_fondo_1.setText(this.l_colores_mod.get(1).getRed() + ", " + this.l_colores_mod.get(1).getGreen() + ", " + this.l_colores_mod.get(1).getBlue());
                 } else {
-                    this.txFuente.setText(this.l_fuentes_mod.get(1).getName() + " " + this.l_fuentes_mod.get(1).getSize());
-                    this.txColorFuente.setText(this.l_colores_mod.get(2).getRed() + ", " + this.l_colores_mod.get(2).getGreen() + ", " + this.l_colores_mod.get(2).getBlue());
-                    this.txColorFondo.setText(this.l_colores_mod.get(3).getRed() + ", " + this.l_colores_mod.get(3).getGreen() + ", " + this.l_colores_mod.get(3).getBlue());
+                    this.tx_fuente_1.setText(this.l_fuentes_mod.get(1).getName() + " " + this.l_fuentes_mod.get(1).getSize());
+                    this.tx_color_fuente_1.setText(this.l_colores_mod.get(2).getRed() + ", " + this.l_colores_mod.get(2).getGreen() + ", " + this.l_colores_mod.get(2).getBlue());
+                    this.tx_color_fondo_1.setText(this.l_colores_mod.get(3).getRed() + ", " + this.l_colores_mod.get(3).getGreen() + ", " + this.l_colores_mod.get(3).getBlue());
                 }
             }
 
-            if (!this.jList2.isSelectionEmpty()) {
-                switch (this.jList2.getSelectedValue()) {
+            if (!this.lista_2.isSelectionEmpty()) {
+                switch (this.lista_2.getSelectedValue()) {
                     case "Lexemas COMPLETAMENTE detectados en la entrada":
-                        txFuente1.setText(this.l_fuentes_mod.get(2).getName() + " " + this.l_fuentes_mod.get(2).getSize());
-                        this.txColorFuente2.setText(this.l_colores_mod.get(4).getRed() + ", " + this.l_colores_mod.get(4).getGreen() + ", " + this.l_colores_mod.get(4).getBlue());
-                        this.txColorFondo2.setText(this.l_colores_mod.get(5).getRed() + ", " + this.l_colores_mod.get(5).getGreen() + ", " + this.l_colores_mod.get(5).getBlue());
+                        tx_fuente_2.setText(this.l_fuentes_mod.get(2).getName() + " " + this.l_fuentes_mod.get(2).getSize());
+                        this.tx_color_fuente_2.setText(this.l_colores_mod.get(4).getRed() + ", " + this.l_colores_mod.get(4).getGreen() + ", " + this.l_colores_mod.get(4).getBlue());
+                        this.tx_color_fondo_2.setText(this.l_colores_mod.get(5).getRed() + ", " + this.l_colores_mod.get(5).getGreen() + ", " + this.l_colores_mod.get(5).getBlue());
                         break;
                     case "Lexemas NO detectados en la entrada":
-                        txFuente1.setText(this.l_fuentes_mod.get(3).getName() + " " + this.l_fuentes_mod.get(3).getSize());
-                        this.txColorFuente2.setText(this.l_colores_mod.get(6).getRed() + ", " + this.l_colores_mod.get(6).getGreen() + ", " + this.l_colores_mod.get(6).getBlue());
-                        this.txColorFondo2.setText(this.l_colores_mod.get(7).getRed() + ", " + this.l_colores_mod.get(7).getGreen() + ", " + this.l_colores_mod.get(7).getBlue());
+                        tx_fuente_2.setText(this.l_fuentes_mod.get(3).getName() + " " + this.l_fuentes_mod.get(3).getSize());
+                        this.tx_color_fuente_2.setText(this.l_colores_mod.get(6).getRed() + ", " + this.l_colores_mod.get(6).getGreen() + ", " + this.l_colores_mod.get(6).getBlue());
+                        this.tx_color_fondo_2.setText(this.l_colores_mod.get(7).getRed() + ", " + this.l_colores_mod.get(7).getGreen() + ", " + this.l_colores_mod.get(7).getBlue());
                         break;
                     default:
-                        txFuente1.setText(this.l_fuentes_mod.get(4).getName() + " " + this.l_fuentes_mod.get(4).getSize());
-                        this.txColorFuente2.setText(this.l_colores_mod.get(8).getRed() + ", " + this.l_colores_mod.get(8).getGreen() + ", " + this.l_colores_mod.get(8).getBlue());
-                        this.txColorFondo2.setText(this.l_colores_mod.get(9).getRed() + ", " + this.l_colores_mod.get(9).getGreen() + ", " + this.l_colores_mod.get(9).getBlue());
+                        tx_fuente_2.setText(this.l_fuentes_mod.get(4).getName() + " " + this.l_fuentes_mod.get(4).getSize());
+                        this.tx_color_fuente_2.setText(this.l_colores_mod.get(8).getRed() + ", " + this.l_colores_mod.get(8).getGreen() + ", " + this.l_colores_mod.get(8).getBlue());
+                        this.tx_color_fondo_2.setText(this.l_colores_mod.get(9).getRed() + ", " + this.l_colores_mod.get(9).getGreen() + ", " + this.l_colores_mod.get(9).getBlue());
                         break;
                 }
             }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_boton_defectoActionPerformed
 
-    private void btReestablecerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btReestablecerActionPerformed
+    private void boton_reestablecerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_reestablecerActionPerformed
         int resp = JOptionPane.showConfirmDialog(null, "¿Está seguro de reestablecer los valores?", "Advertencia", JOptionPane.YES_NO_OPTION);
         if (resp == JOptionPane.YES_OPTION) { 
             this.l_fuentes_mod.clear();
@@ -616,71 +617,71 @@ public class P_ajustes extends javax.swing.JDialog {
             this.l_colores_mod.clear();
             this.l_colores_mod.addAll(l_colores);
 
-            if (!this.jList1.isSelectionEmpty()) {
-                if (this.jList1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
-                    this.txFuente.setText(this.l_fuentes_mod.get(0).getName() + " " + this.l_fuentes_mod.get(0).getSize());
-                    this.txColorFuente.setText(this.l_colores_mod.get(0).getRed() + ", " + this.l_colores_mod.get(0).getGreen() + ", " + this.l_colores_mod.get(0).getBlue());
-                    this.txColorFondo.setText(this.l_colores_mod.get(1).getRed() + ", " + this.l_colores_mod.get(1).getGreen() + ", " + this.l_colores_mod.get(1).getBlue());
+            if (!this.lista_1.isSelectionEmpty()) {
+                if (this.lista_1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
+                    this.tx_fuente_1.setText(this.l_fuentes_mod.get(0).getName() + " " + this.l_fuentes_mod.get(0).getSize());
+                    this.tx_color_fuente_1.setText(this.l_colores_mod.get(0).getRed() + ", " + this.l_colores_mod.get(0).getGreen() + ", " + this.l_colores_mod.get(0).getBlue());
+                    this.tx_color_fondo_1.setText(this.l_colores_mod.get(1).getRed() + ", " + this.l_colores_mod.get(1).getGreen() + ", " + this.l_colores_mod.get(1).getBlue());
                 } else {
-                    this.txFuente.setText(this.l_fuentes_mod.get(1).getName() + " " + this.l_fuentes_mod.get(1).getSize());
-                    this.txColorFuente.setText(this.l_colores_mod.get(2).getRed() + ", " + this.l_colores_mod.get(2).getGreen() + ", " + this.l_colores_mod.get(2).getBlue());
-                    this.txColorFondo.setText(this.l_colores_mod.get(3).getRed() + ", " + this.l_colores_mod.get(3).getGreen() + ", " + this.l_colores_mod.get(3).getBlue());
+                    this.tx_fuente_1.setText(this.l_fuentes_mod.get(1).getName() + " " + this.l_fuentes_mod.get(1).getSize());
+                    this.tx_color_fuente_1.setText(this.l_colores_mod.get(2).getRed() + ", " + this.l_colores_mod.get(2).getGreen() + ", " + this.l_colores_mod.get(2).getBlue());
+                    this.tx_color_fondo_1.setText(this.l_colores_mod.get(3).getRed() + ", " + this.l_colores_mod.get(3).getGreen() + ", " + this.l_colores_mod.get(3).getBlue());
                 }
             }
 
-            if (!this.jList2.isSelectionEmpty()) {
-                switch (this.jList2.getSelectedValue()) {
+            if (!this.lista_2.isSelectionEmpty()) {
+                switch (this.lista_2.getSelectedValue()) {
                     case "Lexemas COMPLETAMENTE detectados en la entrada":
-                        txFuente1.setText(this.l_fuentes_mod.get(2).getName() + " " + this.l_fuentes_mod.get(2).getSize());
-                        this.txColorFuente2.setText(this.l_colores_mod.get(4).getRed() + ", " + this.l_colores_mod.get(4).getGreen() + ", " + this.l_colores_mod.get(4).getBlue());
-                        this.txColorFondo2.setText(this.l_colores_mod.get(5).getRed() + ", " + this.l_colores_mod.get(5).getGreen() + ", " + this.l_colores_mod.get(5).getBlue());
+                        tx_fuente_2.setText(this.l_fuentes_mod.get(2).getName() + " " + this.l_fuentes_mod.get(2).getSize());
+                        this.tx_color_fuente_2.setText(this.l_colores_mod.get(4).getRed() + ", " + this.l_colores_mod.get(4).getGreen() + ", " + this.l_colores_mod.get(4).getBlue());
+                        this.tx_color_fondo_2.setText(this.l_colores_mod.get(5).getRed() + ", " + this.l_colores_mod.get(5).getGreen() + ", " + this.l_colores_mod.get(5).getBlue());
                         break;
                     case "Lexemas NO detectados en la entrada":
-                        txFuente1.setText(this.l_fuentes_mod.get(3).getName() + " " + this.l_fuentes_mod.get(3).getSize());
-                        this.txColorFuente2.setText(this.l_colores_mod.get(6).getRed() + ", " + this.l_colores_mod.get(6).getGreen() + ", " + this.l_colores_mod.get(6).getBlue());
-                        this.txColorFondo2.setText(this.l_colores_mod.get(7).getRed() + ", " + this.l_colores_mod.get(7).getGreen() + ", " + this.l_colores_mod.get(7).getBlue());
+                        tx_fuente_2.setText(this.l_fuentes_mod.get(3).getName() + " " + this.l_fuentes_mod.get(3).getSize());
+                        this.tx_color_fuente_2.setText(this.l_colores_mod.get(6).getRed() + ", " + this.l_colores_mod.get(6).getGreen() + ", " + this.l_colores_mod.get(6).getBlue());
+                        this.tx_color_fondo_2.setText(this.l_colores_mod.get(7).getRed() + ", " + this.l_colores_mod.get(7).getGreen() + ", " + this.l_colores_mod.get(7).getBlue());
                         break;
                     default:
-                        txFuente1.setText(this.l_fuentes_mod.get(4).getName() + " " + this.l_fuentes_mod.get(4).getSize());
-                        this.txColorFuente2.setText(this.l_colores_mod.get(8).getRed() + ", " + this.l_colores_mod.get(8).getGreen() + ", " + this.l_colores_mod.get(8).getBlue());
-                        this.txColorFondo2.setText(this.l_colores_mod.get(9).getRed() + ", " + this.l_colores_mod.get(9).getGreen() + ", " + this.l_colores_mod.get(9).getBlue());
+                        tx_fuente_2.setText(this.l_fuentes_mod.get(4).getName() + " " + this.l_fuentes_mod.get(4).getSize());
+                        this.tx_color_fuente_2.setText(this.l_colores_mod.get(8).getRed() + ", " + this.l_colores_mod.get(8).getGreen() + ", " + this.l_colores_mod.get(8).getBlue());
+                        this.tx_color_fondo_2.setText(this.l_colores_mod.get(9).getRed() + ", " + this.l_colores_mod.get(9).getGreen() + ", " + this.l_colores_mod.get(9).getBlue());
                         break;
                 }
             }
         }
-    }//GEN-LAST:event_btReestablecerActionPerformed
+    }//GEN-LAST:event_boton_reestablecerActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btColorFondo;
-    private javax.swing.JButton btColorFondo2;
-    private javax.swing.JButton btColorFuente;
-    private javax.swing.JButton btColorFuente2;
-    private javax.swing.JButton btFuente;
-    private javax.swing.JButton btFuente2;
-    private javax.swing.JButton btReestablecer;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JList<String> jList1;
-    private javax.swing.JList<String> jList2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JLabel lbColorFondo;
-    private javax.swing.JLabel lbColorFondo2;
-    private javax.swing.JLabel lbColorFuente;
-    private javax.swing.JLabel lbColorFuente2;
-    private javax.swing.JLabel lbFuente;
-    private javax.swing.JLabel lbFuente2;
-    private javax.swing.JTextField txColorFondo;
-    private javax.swing.JTextField txColorFondo2;
-    private javax.swing.JTextField txColorFuente;
-    private javax.swing.JTextField txColorFuente2;
-    private javax.swing.JTextField txFuente;
-    private javax.swing.JTextField txFuente1;
+    private javax.swing.JSeparator Separador_2;
+    private javax.swing.JButton boton_aplicar;
+    private javax.swing.JButton boton_cancelar;
+    private javax.swing.JButton boton_color_fondo_1;
+    private javax.swing.JButton boton_color_fondo_2;
+    private javax.swing.JButton boton_color_fuente_1;
+    private javax.swing.JButton boton_color_fuente_2;
+    private javax.swing.JButton boton_defecto;
+    private javax.swing.JButton boton_fuente_1;
+    private javax.swing.JButton boton_fuente_2;
+    private javax.swing.JButton boton_reestablecer;
+    private javax.swing.JLabel lb_ayuda;
+    private javax.swing.JLabel lb_color_fondo_1;
+    private javax.swing.JLabel lb_color_fondo_2;
+    private javax.swing.JLabel lb_color_fuente_1;
+    private javax.swing.JLabel lb_color_fuente_2;
+    private javax.swing.JLabel lb_fuente_1;
+    private javax.swing.JLabel lb_fuente_2;
+    private javax.swing.JLabel lb_titulo_1;
+    private javax.swing.JLabel lb_titulo_2;
+    private javax.swing.JList<String> lista_1;
+    private javax.swing.JList<String> lista_2;
+    private javax.swing.JScrollPane scroll_lista_1;
+    private javax.swing.JScrollPane scroll_lista_2;
+    private javax.swing.JSeparator separador_1;
+    private javax.swing.JTextField tx_color_fondo_1;
+    private javax.swing.JTextField tx_color_fondo_2;
+    private javax.swing.JTextField tx_color_fuente_1;
+    private javax.swing.JTextField tx_color_fuente_2;
+    private javax.swing.JTextField tx_fuente_1;
+    private javax.swing.JTextField tx_fuente_2;
     // End of variables declaration//GEN-END:variables
 }

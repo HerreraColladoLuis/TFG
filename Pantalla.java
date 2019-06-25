@@ -153,7 +153,7 @@ public class Pantalla extends javax.swing.JFrame {
         et_act = new javax.swing.JLabel();
         scroll_panel_activadas = new javax.swing.JScrollPane();
         panel_activadas = new javax.swing.JTextPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        scroll_panel_especificacion = new javax.swing.JScrollPane();
         panel_especificacion = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -163,13 +163,14 @@ public class Pantalla extends javax.swing.JFrame {
 
         et_titulo.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         et_titulo.setForeground(new java.awt.Color(112, 176, 224));
-        et_titulo.setText("Detector de patrones");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("Bundle"); // NOI18N
+        et_titulo.setText(bundle.getString("Pantalla.et_titulo.text")); // NOI18N
 
         boton_nueva.setToolTipText("Añadir una nueva especificación léxica");
         boton_nueva.setBackground(new java.awt.Color(51, 51, 51));
         boton_nueva.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         boton_nueva.setForeground(new java.awt.Color(112, 176, 224));
-        boton_nueva.setText("Nueva");
+        boton_nueva.setText(bundle.getString("Pantalla.boton_nueva.text")); // NOI18N
         boton_nueva.setBorder(null);
         boton_nueva.setBorderPainted(false);
         boton_nueva.addActionListener(new java.awt.event.ActionListener() {
@@ -180,7 +181,7 @@ public class Pantalla extends javax.swing.JFrame {
 
         lbSettings.setToolTipText("Configuración de usuario");
         lbSettings.setForeground(new java.awt.Color(16, 17, 18));
-        lbSettings.setText("aa");
+        lbSettings.setText(bundle.getString("Pantalla.lbSettings.text")); // NOI18N
         lbSettings.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lbSettingsMouseClicked(evt);
@@ -189,10 +190,10 @@ public class Pantalla extends javax.swing.JFrame {
 
         lbHelp.setToolTipText("Ayuda");
         lbHelp.setForeground(new java.awt.Color(16, 17, 18));
-        lbHelp.setText("aa");
+        lbHelp.setText(bundle.getString("Pantalla.lbHelp.text")); // NOI18N
 
         lbReg.setForeground(new java.awt.Color(16, 17, 18));
-        lbReg.setText("a");
+        lbReg.setText(bundle.getString("Pantalla.lbReg.text")); // NOI18N
 
         javax.swing.GroupLayout cabeceraLayout = new javax.swing.GroupLayout(cabecera);
         cabecera.setLayout(cabeceraLayout);
@@ -248,7 +249,7 @@ public class Pantalla extends javax.swing.JFrame {
         cabecera_entrada.setBackground(new java.awt.Color(112, 176, 224));
 
         et_entrada.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
-        et_entrada.setText("Entrada");
+        et_entrada.setText(bundle.getString("Pantalla.et_entrada.text")); // NOI18N
 
         javax.swing.GroupLayout cabecera_entradaLayout = new javax.swing.GroupLayout(cabecera_entrada);
         cabecera_entrada.setLayout(cabecera_entradaLayout);
@@ -298,7 +299,7 @@ public class Pantalla extends javax.swing.JFrame {
         cabecera_esp.setBackground(new java.awt.Color(183, 188, 192));
 
         et_especificacion.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
-        et_especificacion.setText("Especificación léxica");
+        et_especificacion.setText(bundle.getString("Pantalla.et_especificacion.text")); // NOI18N
 
         javax.swing.GroupLayout cabecera_espLayout = new javax.swing.GroupLayout(cabecera_esp);
         cabecera_esp.setLayout(cabecera_espLayout);
@@ -320,7 +321,7 @@ public class Pantalla extends javax.swing.JFrame {
         cabecera_act.setBackground(new java.awt.Color(183, 188, 192));
 
         et_act.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
-        et_act.setText("Expresiones regulares activadas/completadas");
+        et_act.setText(bundle.getString("Pantalla.et_act.text")); // NOI18N
 
         javax.swing.GroupLayout cabecera_actLayout = new javax.swing.GroupLayout(cabecera_act);
         cabecera_act.setLayout(cabecera_actLayout);
@@ -329,7 +330,7 @@ public class Pantalla extends javax.swing.JFrame {
             .addGroup(cabecera_actLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(et_act)
-                .addContainerGap(329, Short.MAX_VALUE))
+                .addContainerGap(321, Short.MAX_VALUE))
         );
         cabecera_actLayout.setVerticalGroup(
             cabecera_actLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -346,7 +347,7 @@ public class Pantalla extends javax.swing.JFrame {
         panel_activadas.setFocusable(false);
         scroll_panel_activadas.setViewportView(panel_activadas);
 
-        jScrollPane1.setBorder(null);
+        scroll_panel_especificacion.setBorder(null);
 
         panel_especificacion.setEditable(false);
         panel_especificacion.setBackground(new java.awt.Color(240, 241, 242));
@@ -354,7 +355,7 @@ public class Pantalla extends javax.swing.JFrame {
         panel_especificacion.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         panel_especificacion.setRows(5);
         panel_especificacion.setFocusable(false);
-        jScrollPane1.setViewportView(panel_especificacion);
+        scroll_panel_especificacion.setViewportView(panel_especificacion);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -369,7 +370,7 @@ public class Pantalla extends javax.swing.JFrame {
                     .addComponent(cabecera_esp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cabecera_act, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(scroll_panel_activadas)
-                    .addComponent(jScrollPane1)))
+                    .addComponent(scroll_panel_especificacion)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -385,7 +386,7 @@ public class Pantalla extends javax.swing.JFrame {
                         .addGap(0, 0, 0)
                         .addComponent(cabecera_esp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(scroll_panel_especificacion, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
                         .addComponent(cabecera_act, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
@@ -1001,7 +1002,6 @@ public class Pantalla extends javax.swing.JFrame {
     private javax.swing.JLabel et_entrada;
     private javax.swing.JLabel et_especificacion;
     private javax.swing.JLabel et_titulo;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbHelp;
     private javax.swing.JLabel lbReg;
     private javax.swing.JLabel lbSettings;
@@ -1011,6 +1011,7 @@ public class Pantalla extends javax.swing.JFrame {
     private javax.swing.JTextPane panel_expr;
     private javax.swing.JScrollPane scroll_panel_activadas;
     private javax.swing.JScrollPane scroll_panel_entrada;
+    private javax.swing.JScrollPane scroll_panel_especificacion;
     private javax.swing.JScrollPane scroll_panel_expr;
     // End of variables declaration//GEN-END:variables
 }
