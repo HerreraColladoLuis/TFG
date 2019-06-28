@@ -10,8 +10,8 @@ public class Analizador
     List<String> listaM;
     List<String> listaER;
     /**
-       * M�todo que recibe una lista con strings correspondientes a macros 
-       * y parsea cada uno traduciendolos a un estado com�n
+       * Método que recibe una lista con strings correspondientes a macros 
+       * y parsea cada uno traduciendolos a un estado común
        * @param lista con las macros
        * @return lista con las macros traducidas a un estado com�n
        */
@@ -28,10 +28,10 @@ public class Analizador
         return out;
       }
       /**
-       * M�todo que recibe una lista con strings correspondientes a regex 
-       * y parsea cada una traduciendolos a un estado com�n
+       * Método que recibe una lista con strings correspondientes a regex 
+       * y parsea cada una traduciendolos a un estado común
        * @param lista con las regex
-       * @return lista con las regex traducidas a un estado com�n
+       * @return lista con las regex traducidas a un estado común
        */
       public List<String> translateRegex(List<String> lista)
       {
@@ -113,10 +113,10 @@ public class Analizador
         return out;
     }
     /**
-     * M�todo para traducir una expresi�n regular a un formato
+     * Método para traducir una expresión regular a un formato
      * que pueda reconocer el algoritmo final
-     * @param exp string de la expresi�n
-     * @return string de la expresi�n traducido
+     * @param exp string de la expresión
+     * @return string de la expresión traducido
      * @throws Exception 
      */
     public String traducir(String exp) throws Exception
@@ -135,7 +135,7 @@ public class Analizador
             if (rech[i] == '[') 
             {
                 cadena += "\"";
-                if (rech[i+1] == '^') // Comprobamos si est� negado
+                if (rech[i+1] == '^') // Comprobamos si está negado
                 {
                     cadena+= rech[i+1]; // aux += ^
                     i = i+1; // Apuntamos a la negaci�n
@@ -197,7 +197,7 @@ public class Analizador
                     aux1 += rech[i]; // Guardamos en aux1 la macro 
                     i = i+1;
                 }
-                // Comprobamos que la lista no est� vacia o sea nula
+                // Comprobamos que la lista no esté vacia o sea nula
                 if (listaM != null && !listaM.isEmpty()) 
                 {
                     for (String comp : listaM) // Recorremos la lista buscando la posici�n de la macro dada
@@ -208,14 +208,14 @@ public class Analizador
                     }
                 }
                 else 
-                    throw new Exception("Lista de Macros vac�a o nula"); // Devolvemos una excepci�n 
+                    throw new Exception("Lista de Macros vacía o nula"); // Devolvemos una excepci�n 
                 // Comprobamos que la lista no est� vacia o sea nula
                 if (listaER != null && !listaER.isEmpty()) 
                 {
                     cadAux = traducir(listaER.get(j)); // Hacemos recursividad para parsear una macro
                 }
                 else
-                    throw new Exception("Lista de ER vac�a o nula"); // Devolvemos una excepci�n
+                    throw new Exception("Lista de ER vacía o nula"); // Devolvemos una excepci�n
                 // A�adimos el arbol de la macro como hijo del arbol act�al
                 if (cadAux == null)
                     throw new Exception("Cadena auxiliar nula"); // Devolvemos una excepci�n
@@ -291,10 +291,10 @@ public class Analizador
         return cadena;
     }
     /**
-     * M�todo que devuelve si una Expresi�n Regular est� parseada,
-     * es decir, si no tiene par�ntesis inicial y final.
-     * @param exp Expresi�n Regular
-     * @return True si est� parseada, false en caso contrario
+     * Método que devuelve si una Expresión Regular está parseada,
+     * es decir, si no tiene paréntesis inicial y final.
+     * @param exp Expresión Regular
+     * @return True si está parseada, false en caso contrario
      */
     private boolean parseado(String exp)
     {
@@ -330,13 +330,13 @@ public class Analizador
         return false;
     }
     /**
-     * M�todo que recibe una expresi�n regular en forma de string
+     * Método que recibe una expresión regular en forma de string
      * y devuelve una lista con sus componentes 
      * parseada. Es decir, los componentes que se encuentre sin 
-     * par�ntesis, los a�ade a la lista, y si se encuentra una 
-     * subexpresi�n dentro de par�ntesis, quita �stos y a�ade la 
-     * subexpresi�n como un elemento m�s de la lista.
-     * @param exp Expresi�n regular en forma de string
+     * paréntesis, los añade a la lista, y si se encuentra una 
+     * subexpresión dentro de paréntesis, quita éstos y añade la 
+     * subexpresión como un elemento más de la lista.
+     * @param exp Expresión regular en forma de string
      * @return Lista de componentes 
      * @throws Exception 
      */
@@ -412,8 +412,8 @@ public class Analizador
         return lComp;
     }
     /**
-     * M�todo para recorrer un �rbol binario en pre orden
-     * @param nodo Nodo del �rbol del que empezaremos a recorrer
+     * Método para recorrer un árbol binario en pre orden
+     * @param nodo Nodo del árbol del que empezaremos a recorrer
      */
     public void preOrden(NodoArbol nodo)
     {
@@ -450,7 +450,7 @@ public class Analizador
         return nodoAuxiliar;
     }
     /**
-     * M�todo para numerar las hojas de un arbol sint�ctico
+     * Método para numerar las hojas de un arbol sintáctico
      * en el orden de aparici�n en el mismo
      * @param nodo Nodo inicial del arbol
      * @param pos contador 
@@ -762,7 +762,7 @@ public class Analizador
         return lis;
     }
     /**
-     * M�todo que devuelve si una cadena es un conjunto. Es decir,
+     * Método que devuelve si una cadena es un conjunto. Es decir,
      * "abcdef" ser�a un conjunto determinado por a-f.
      * @param cadena Cadena a evaluar
      * @return Verdadero si es un conjunto
@@ -887,6 +887,9 @@ public class Analizador
         public int n;
         public boolean esfinal = false;
         public boolean esinicial = false;
+        public boolean limitador = false;
+        public boolean esInicio = false;
+        public List<Integer> expRegsLim = new LinkedList<>();
         public List<Integer> expRegs = new LinkedList<>();
         public List<Integer> lTerm = new LinkedList<>();
         public List<List<Estado>> anterior = new LinkedList<>();
@@ -901,6 +904,7 @@ public class Analizador
             if (l != null)
                     this.lposiciones.addAll(l);
             this.marcado = false;
+            //this.n = -1; // NUEVO
         }
         /**
          * M�todo para imprimir por pantalla la informaci�n de un estado
@@ -951,7 +955,7 @@ public class Analizador
         }
     }
     /**
-     * M�todo que dada una entrada en forma de String y un estado del aut�mata,
+     * Método que dada una entrada en forma de String y un estado del autómata,
      * comprueba si con dicho terminal se puede avanzar a otro(s) estado(s). En
      * ese caso, los va introduciendo en una lista de estados.
      * @param tok cadena que se lee
@@ -963,8 +967,12 @@ public class Analizador
     public List<Estado> siguienteToken(String tok, List<Estado> lIni, List<List<Estado>> tabla, NodoArbol arbol)
     {
         List<Estado> lEst = new LinkedList<>();
+        if ((int) tok.toCharArray()[0] == 8)
+            return lEst;
         List<Estado> lAux;
         String cad;
+        boolean esfinal = false;
+        boolean vacio = true;
         int i = 0;
         if (lIni.isEmpty())
         {
@@ -981,17 +989,35 @@ public class Analizador
                     lEst.add(e);
                 }    
             }
+            for (Estado auxE : lEst) {
+                lAux = tabla.get(auxE.n);
+                for (Estado est : lAux) {
+                    if (est.n != 0) {
+                        vacio = false;
+                        break;
+                    }
+                }
+                if (vacio) {
+                    auxE.limitador = true; // SE ME OCURRE GUARDAR EL TERMINAL CON EL QUE SE DELIMITA
+                }
+                vacio = true;
+            }
         }
         else
         {
             for (Estado es : lIni)
             {
+                if (es.n == 0) // OJO
+                    continue;
                 lAux = tabla.get(es.n);
                 for (Estado ea : lAux)
                     ea.anterior = new LinkedList<>();
             }
             for (Estado est : lIni)
             {
+                if (this.esEstadoFinal(est.n, tabla)) {
+                    esfinal = true;
+                }
                 i = 0;
                 lAux = tabla.get(est.n);
                 for (Estado e : lAux)
@@ -1007,14 +1033,46 @@ public class Analizador
                     }
                 }
             }
+            
+            for (Estado auxE : lEst) {
+                lAux = tabla.get(auxE.n);
+                for (Estado est : lAux) {
+                    if (est.n != 0) {
+                        vacio = false;
+                        break;
+                    }
+                }
+                if (vacio) {
+                    auxE.limitador = true;
+                }
+                vacio = true;
+            }
+            
+            if (esfinal || lEst.isEmpty()) {
+                lAux = tabla.get(0);
+                i = 0;
+                for (Estado e : lAux)
+                {
+                    i++;
+                    if (e.n == 0)
+                        continue;
+                    cad = this.devolverTerminal(arbol,i);
+                    if (this.comprobarTerminal(cad,tok))
+                    {
+                        e.anterior.add(lAux);
+                        e.esInicio = true;
+                        lEst.add(e);
+                    }    
+                }
+            }
         }
         return lEst;
     }
     /**
-     * M�todo para crear un aut�mata a partir de un �rbol binario de una
-     * expresi�n regular. Se devolver� una tabla representando las transiciones
-     * desde cada estado con cada s�mbolo de entrada posible.
-     * @param arbol �rbol binario de la expresi�n regular
+     * Método para crear un autómata a partir de un árbol binario de una
+     * expresión regular. Se devolverá una tabla representando las transiciones
+     * desde cada estado con cada símbolo de entrada posible.
+     * @param arbol árbol binario de la expresión regular
      * @return Tabla de transiciones
      */
     public List<List<Estado>> crearAutomata(NodoArbol arbol)
@@ -1027,7 +1085,7 @@ public class Analizador
         int noMarcado = 1;
         int naux = 0;
         int nER;
-        // A�adimos el estado inicial para el automata
+        // Añadimos el estado inicial para el automata
         List<Integer> la = primeraPos(arbol);
         Estado einicial = new Estado(primeraPos(arbol));
         einicial.n = naux;
@@ -1096,11 +1154,29 @@ public class Analizador
             lest.addAll(laux);
         }
         return tabla;
+    }   
+    /**
+     * Método que devuelve si un estado es final o no.
+     * @param n índice del estado
+     * @param aut autómata
+     * @return true si es final
+     */
+    private boolean esEstadoFinal(int n, List<List<Estado>> aut)
+    {
+        for (List<Analizador.Estado> l : aut)
+        {
+            for (Analizador.Estado e : l)
+            {
+                if (e.n == n)
+                    return e.esfinal;
+            }
+        }
+        return false;
     }
     /**
-     * M�todo que devuelve una lista de �ndices de expresiones regulares, dada una lista de estados en los que
-     * se encuentra el aut�mata. Adem�s, se pasa como par�metro una lista de las expresiones regulares que se 
-     * activaron en el �ltimo estado. Con esta lista se comprueba si en el nuevo estado se activa alguna expresi�n
+     * Método que devuelve una lista de índices de expresiones regulares, dada una lista de estados en los que
+     * se encuentra el autómata. Además, se pasa como parámetro una lista de las expresiones regulares que se 
+     * activaron en el último estado. Con esta lista se comprueba si en el nuevo estado se activa alguna expresi�n
      * regular que anteriormente no se encontraba activa, si es as�, no se activa.
      * @param tok cadena que se lee
      * @param lE lista de estados
@@ -1115,7 +1191,6 @@ public class Analizador
     {
         List<Integer> lOut = new LinkedList<>();
         List<Integer> lInt = new LinkedList<>();
-        // List<String> lPos = new LinkedList<>();
         List<Estado> lAux;
         Estado eaux;
         String cad;
@@ -1139,85 +1214,30 @@ public class Analizador
                 c = est.lTerm.indexOf(obj); // Cogemos el �ndice en el que se encuentra ese terminal
                 if (c != -1)
                 {
-                    a = est.expRegs.get(c); // Cogemos el índice de la ER que tiene el terminal c
-//                    Si la lista de ER no está vacía, comprobamos si la ER estaba activada,
-//                    si es así, la activamos
-//                    if (!lER.isEmpty())
-//                    {
-//                        if (lER.contains(a))
-//                            lOut.add(a);
-//                    }
-//                    else // Si la lista de ER es vacía
-//                    {
-                        // Cogemos el estado en el que estamos y comprobamos su anterior con el terminal correspondiente,
-                        // si conincide la transición en alguno de sus estados anteriores, activamos la ER
-                        for (List<Estado> listAux : est.anterior)
+                    a = est.expRegs.get(c) + 1; // Cogemos el índice de la ER que tiene el terminal c
+                    // Cogemos el estado en el que estamos y comprobamos su anterior con el terminal correspondiente,
+                    // si conincide la transición en alguno de sus estados anteriores, activamos la ER
+                    for (List<Estado> listAux : est.anterior)
+                    {
+                        eaux = listAux.get(obj-1);
+                        if (eaux.n != 0 && eaux.n == est.n)
                         {
-                            eaux = listAux.get(obj-1);
-                            if (eaux.n != 0 && eaux.n == est.n)
-                            {
+                            if (est.limitador) {
+                                a = a/-1;
+                                lOut.add(a);
+                                a = a/-1;
+                            } else {
                                 lOut.add(a);
                             }
                         }
-//                        eaux = est.anterior.get(obj-1);
-//                        if (eaux.n != 0 && eaux.n == est.n)
-//                        {
-//                            lOut.add(a);
-//                        }
-//                    }
-                }
-                
-//                c = est.lTerm.indexOf(obj); // Cogemos el �ndice en el que se encuentra ese terminal
-//                if (c != -1)
-//                {
-//                    a = est.expRegs.get(c); // Cogemos el índice de la ER que tiene el terminal c
-//                    if (!lER.isEmpty())
-//                    {
-//                        if (lER.contains(a))
-//                            lOut.add(a);
-//                    }
-//                    else // Si la lista de ER está vacía, nos encontramos problemas
-//                    {
-//                        // Si en ese estado solo se activa una ER, la metemos en la lista
-//                        comp = true;
-//                        for (int er : est.expRegs)
-//                        {
-//                            if (er != a)
-//                            {
-//                                comp = false;
-//                                break;
-//                            }
-//                        }
-//                        // Si solo se activa una ER, añadimos la ER
-//                        if (comp)
-//                            lOut.add(a);
-//                        else // Si no son iguales, pasamos aquí
-//                        {
-//                            // Cogemos la lista con terminales de la ER dada por el índice a
-//                            // de la ER correspondiente
-//                            lPos = this.devolverPos(arbol,lPos,a);
-//                            // Si la lista de terminales de esa ER solo tiene 1 elemento, comprobamos
-//                            if (lPos.size() == 1)
-//                            {
-//                                if (this.comprobarTerminal(lPos.get(0), tok))
-//                                    lOut.add(a);
-//                            }
-//                            else // Si tiene más de 1 elemento, problemas si es un OR o una concatencacion
-//                            {
-//                                
-//                            }   
-//                            // if (this.comprobarTerminal(lPos.get(0),tok))
-//                            //    lOut.add(a); // Cogemos la ER correspondiente
-//                        }
-//                        lPos.clear();
-//                    }		
-//                }	
+                    }
+                }	
             }
         }
         return lOut;
     }
     /**
-     * M�todo para unir dos �rboles mediante un nodo operaci�n que 
+     * Método para unir dos árboles mediante un nodo operación que 
      * se pasa por par�metro.
      * @param r1
      * @param r2
@@ -1232,12 +1252,12 @@ public class Analizador
         return raiz;
     }
     /**
-     * M�todo que recibe una lista con los componentes de una 
-     * expresi�n regular y devuelve un �rbol sint�ctico binario 
+     * Método que recibe una lista con los componentes de una 
+     * expresión regular y devuelve un árbol sintáctico binario 
      * de la misma
-     * @param lExp Lista de componentes de una expresi�n regular
+     * @param lExp Lista de componentes de una expresión regular
      * @param posicion 
-     * @return �rbol sint�ctico binario de una expresi�n regular
+     * @return árbol sintáctico binario de una expresión regular
      * @throws Exception 
      */
     @SuppressWarnings("null")
@@ -1274,9 +1294,9 @@ public class Analizador
                 raiz = nodoActual;
                 nodoAnterior = nodoActual;
             }
-            else // Ya existe alg�n nodo creado anteriormente
+            else // Ya existe algún nodo creado anteriormente
             {
-                if (nodoActual.hoja) // Comprobamos si es una hoja y a�adimos la expresi�n regular que representa
+                if (nodoActual.hoja) // Comprobamos si es una hoja y añadimos la expresión regular que representa
                 {
                     nodoActual.expReg = posicion;
                 }

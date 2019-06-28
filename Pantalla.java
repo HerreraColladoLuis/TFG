@@ -48,9 +48,12 @@ public class Pantalla extends javax.swing.JFrame {
     private List<Integer> lnER = new LinkedList<>();
     private int ini = -1;
     private int fin = -1;
+    private int auxini = -1;
     private List<Integer> auxl = new LinkedList<>();
+    private List<Integer> aux2 = new LinkedList<>();
     private boolean anteriorFinal = false;
     private boolean anteriorNoRec = false;
+    private boolean anteriorBorrado = false;
     private int ind = -1;
     private P_ajustes pAjustes;
     private List<Font> l_fuentes = new LinkedList<>();
@@ -487,6 +490,9 @@ public class Pantalla extends javax.swing.JFrame {
         boolean vacio = false;
         boolean retroceso = false;
         boolean esFinal = false;
+        boolean esLimitador = false;
+        boolean esLimitadorTotal = true;
+        boolean iniciando = false;
         String aux;
         if ((int) tok.toCharArray()[0] == 8)
         {
@@ -537,12 +543,19 @@ public class Pantalla extends javax.swing.JFrame {
         this.lE = Procesador.actualizarLE(this.lEaux, tok);
         
         for (Analizador.Estado estado : this.lE) {
+            if (estado.limitador)
+                esLimitador = true;
+            else
+                esLimitadorTotal = false;
+            if (estado.esInicio) {
+                iniciando = true;
+                estado.esInicio = false;
+            }
             if (Procesador.esEstadoFinal(estado.n)) {
                 esFinal = true;
-                break;
             }
         }
-        
+            
         this.estadoEntrada.add(this.lE);
         if ((int) tok.toCharArray()[0] != 8)
             this.entrada.add(tok);
@@ -589,15 +602,16 @@ public class Pantalla extends javax.swing.JFrame {
             StyleConstants.setItalic(style, false);
         }
         
-        if (expr.contains(0))
+        //if (expr.contains(0))
+        if (expr.contains(1) || expr.contains(-1))
         {
-            StyleConstants.setBackground(style, this.l_colores_mod.get(1));
+            StyleConstants.setBackground(style, this.l_colores_mod.get(1));   
             StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(0).getFamily());
-            //StyleConstants.setForeground(style, Color.BLACK);
-            StyleConstants.setForeground(style, this.l_colores_mod.get(0));
-            //StyleConstants.setFontSize(style, 18);
+            if (expr.contains(-1))
+                StyleConstants.setForeground(style, Color.green);       
+            else
+                StyleConstants.setForeground(style, this.l_colores_mod.get(0));
             StyleConstants.setFontSize(style, this.l_fuentes_mod.get(0).getSize());
-            //StyleConstants.setBold(style, true);
             if (this.l_fuentes_mod.get(0).getStyle() == 0) {
                 StyleConstants.setBold(style, false);
                 StyleConstants.setItalic(style, false);
@@ -628,11 +642,8 @@ public class Pantalla extends javax.swing.JFrame {
         {
             StyleConstants.setBackground(style, this.l_colores_mod.get(3));
             StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(1).getFamily());
-            //StyleConstants.setForeground(style, new Color(109,109,109));
             StyleConstants.setForeground(style, this.l_colores_mod.get(2));
-            //StyleConstants.setFontSize(style, 16);
             StyleConstants.setFontSize(style, this.l_fuentes_mod.get(1).getSize());
-            //StyleConstants.setBold(style, false);
             if (this.l_fuentes_mod.get(1).getStyle() == 0) {
                 StyleConstants.setBold(style, false);
                 StyleConstants.setItalic(style, false);
@@ -652,15 +663,15 @@ public class Pantalla extends javax.swing.JFrame {
                     Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            if (expr.contains(i))
+            if (expr.contains(i+1) || expr.contains(-i-1))
             {
                 StyleConstants.setBackground(style, this.l_colores_mod.get(1));
                 StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(0).getFamily());
-                //StyleConstants.setForeground(style, Color.BLACK);
-                StyleConstants.setForeground(style, this.l_colores_mod.get(0));
-                //StyleConstants.setFontSize(style, 18);
+                if (expr.contains(-i-1))
+                    StyleConstants.setForeground(style, Color.green);               
+                else
+                    StyleConstants.setForeground(style, this.l_colores_mod.get(0));
                 StyleConstants.setFontSize(style, this.l_fuentes_mod.get(0).getSize());
-                //StyleConstants.setBold(style, true);
                 if (this.l_fuentes_mod.get(0).getStyle() == 0) {
                     StyleConstants.setBold(style, false);
                     StyleConstants.setItalic(style, false);
@@ -695,16 +706,15 @@ public class Pantalla extends javax.swing.JFrame {
             Style style0 = this.panel_entrada.addStyle("Style0", null);
             // Aquí vamos a cambiar los colores de la entrada
             if (expr.isEmpty()) {
+                // NUEVO
+                if (this.anteriorNoRec)
+                    this.anteriorFinal = false;
+                // FIN NUEVO
                 if (this.ini != -1 && this.fin == -1) {
-                    
-                    //StyleConstants.setBackground(style0, new Color(255,255,255));
                     StyleConstants.setBackground(style0, this.l_colores_mod.get(7));
                     StyleConstants.setFontFamily(style0, this.l_fuentes_mod.get(3).getFamily());
-                    //StyleConstants.setForeground(style, Color.BLACK);
                     StyleConstants.setForeground(style0, this.l_colores_mod.get(6));
-                    //StyleConstants.setFontSize(style, 18);
                     StyleConstants.setFontSize(style0, this.l_fuentes_mod.get(3).getSize());
-                    //StyleConstants.setBold(style, true);
                     if (this.l_fuentes_mod.get(3).getStyle() == 0) {
                         StyleConstants.setBold(style0, false);
                         StyleConstants.setItalic(style0, false);
@@ -736,14 +746,10 @@ public class Pantalla extends javax.swing.JFrame {
                 this.ini = -1;
                 this.fin = -1;
                 
-                //StyleConstants.setBackground(style0, new Color(255,255,255));
                 StyleConstants.setBackground(style0, this.l_colores_mod.get(7));
                 StyleConstants.setFontFamily(style0, this.l_fuentes_mod.get(3).getFamily());
-                //StyleConstants.setForeground(style, Color.BLACK);
                 StyleConstants.setForeground(style0, this.l_colores_mod.get(6));
-                //StyleConstants.setFontSize(style, 18);
                 StyleConstants.setFontSize(style0, this.l_fuentes_mod.get(3).getSize());
-                //StyleConstants.setBold(style, true);
                 if (this.l_fuentes_mod.get(3).getStyle() == 0) {
                     StyleConstants.setBold(style0, false);
                     StyleConstants.setItalic(style0, false);
@@ -757,19 +763,13 @@ public class Pantalla extends javax.swing.JFrame {
                 }
                 
                 this.anteriorNoRec = true;
+                this.anteriorBorrado = false;
             }
             else if (esFinal) {
-                //StyleConstants.setForeground(style0, Color.WHITE);
-                //StyleConstants.setBackground(style0, new Color(25,25,112));
-                
-                //StyleConstants.setBackground(style0, new Color(255,255,255));
                 StyleConstants.setBackground(style0, this.l_colores_mod.get(5));
                 StyleConstants.setFontFamily(style0, this.l_fuentes_mod.get(2).getFamily());
-                //StyleConstants.setForeground(style, Color.BLACK);
                 StyleConstants.setForeground(style0, this.l_colores_mod.get(4));
-                //StyleConstants.setFontSize(style, 18);
                 StyleConstants.setFontSize(style0, this.l_fuentes_mod.get(2).getSize());
-                //StyleConstants.setBold(style, true);
                 if (this.l_fuentes_mod.get(2).getStyle() == 0) {
                     StyleConstants.setBold(style0, false);
                     StyleConstants.setItalic(style0, false);
@@ -785,6 +785,10 @@ public class Pantalla extends javax.swing.JFrame {
                 if (retroceso) {
                     if (this.ini == -1 && this.anteriorFinal && !this.anteriorNoRec)
                         this.auxl.remove(this.auxl.size()-1);
+                    // NUEVO
+                    if (this.ini != -1)
+                        this.ini = -1;
+                    // FIN NUEVO
                 }
                 else if (this.ini != -1) {
                     this.fin = doc0.getLength();
@@ -804,17 +808,45 @@ public class Pantalla extends javax.swing.JFrame {
                 }
                 this.anteriorFinal = true;
                 this.anteriorNoRec = false;
+                this.anteriorBorrado = false;
             } else {
-                //StyleConstants.setBackground(style0, new Color(173,216,230));
                 
-                //StyleConstants.setBackground(style0, new Color(255,255,255));
+                if (iniciando) {
+                    StyleConstants.setBackground(style0, this.l_colores_mod.get(7));
+                    StyleConstants.setFontFamily(style0, this.l_fuentes_mod.get(3).getFamily());
+                    StyleConstants.setForeground(style0, this.l_colores_mod.get(6));
+                    StyleConstants.setFontSize(style0, this.l_fuentes_mod.get(3).getSize());
+                    if (this.l_fuentes_mod.get(3).getStyle() == 0) {
+                        StyleConstants.setBold(style0, false);
+                        StyleConstants.setItalic(style0, false);
+                    }    
+                    else if (this.l_fuentes_mod.get(3).getStyle() == 2) {
+                        StyleConstants.setBold(style0, false);
+                        StyleConstants.setItalic(style0, true);
+                    } else {
+                        StyleConstants.setBold(style0, true);
+                        StyleConstants.setItalic(style0, false);
+                    }
+                    
+                    try {
+                        if (this.ini > doc0.getLength() || this.ini == -1) {
+                            
+                        }
+                        else {
+                            aux = doc0.getText(this.ini, doc0.getLength() - this.ini);
+                            doc0.remove(this.ini, doc0.getLength() - this.ini);
+                            doc0.insertString(doc0.getLength(), aux, style0);
+                            this.auxl.add(ini);
+                        }
+                    } catch (BadLocationException ex) {
+                        Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
                 StyleConstants.setBackground(style0, this.l_colores_mod.get(9));
                 StyleConstants.setFontFamily(style0, this.l_fuentes_mod.get(4).getFamily());
-                //StyleConstants.setForeground(style, Color.BLACK);
                 StyleConstants.setForeground(style0, this.l_colores_mod.get(8));
-                //StyleConstants.setFontSize(style, 18);
                 StyleConstants.setFontSize(style0, this.l_fuentes_mod.get(4).getSize());
-                //StyleConstants.setBold(style, true);
                 if (this.l_fuentes_mod.get(4).getStyle() == 0) {
                     StyleConstants.setBold(style0, false);
                     StyleConstants.setItalic(style0, false);
@@ -828,7 +860,7 @@ public class Pantalla extends javax.swing.JFrame {
                 }
                 
                 if (retroceso) {
-                    if ((this.ini != -1 && !this.auxl.isEmpty() && this.ini != this.auxl.get(this.auxl.size()-1)) || (this.ini != -1 && this.auxl.isEmpty())) {
+                    if ((this.ini != -1 && !this.auxl.isEmpty() && this.ini != this.auxl.get(this.auxl.size()-1) && this.ini < doc0.getLength()) || (this.ini != -1 && this.auxl.isEmpty() && this.ini < doc0.getLength())) {
                         try {
                             aux = doc0.getText(this.ini, doc0.getLength() - this.ini);
                             doc0.remove(this.ini, doc0.getLength() - this.ini);
@@ -839,21 +871,39 @@ public class Pantalla extends javax.swing.JFrame {
                     }
                     else if (!this.auxl.isEmpty()) {
                         try {
-                            aux = doc0.getText(auxl.get(auxl.size()-1), doc0.getLength() - auxl.get(auxl.size()-1));
-                            doc0.remove(auxl.get(auxl.size()-1), doc0.getLength() - auxl.get(auxl.size()-1));
+                            if (this.anteriorBorrado && auxini != -1 && auxini <= doc0.getLength()){
+                                aux = doc0.getText(auxini, doc0.getLength() - auxini);
+                                doc0.remove(auxini, doc0.getLength() - auxini);
+                                auxini = -1;
+                            } else {
+                                int a = doc0.getLength();
+                                aux = doc0.getText(auxl.get(auxl.size()-1), doc0.getLength() - auxl.get(auxl.size()-1));
+                                doc0.remove(auxl.get(auxl.size()-1), doc0.getLength() - auxl.get(auxl.size()-1));
+                                //auxini = -1;
+                            }
                             doc0.insertString(doc0.getLength(), aux, style0);
                         } catch (BadLocationException ex) {
                             Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        this.ini = this.auxl.remove(this.auxl.size()-1);
+                        if (!anteriorBorrado) {
+                            this.ini = this.auxl.remove(this.auxl.size()-1);
+                            this.auxini = this.ini;
+                            this.anteriorBorrado = true;
+                        }
                         this.fin = -1;
                     }
                 } else {
                     if (this.ini == -1)
                         this.ini = doc0.getLength();
+                    if (iniciando && !anteriorFinal) {
+                        //this.auxl.remove(this.auxl.size()-1);
+                        //this.auxl.add(doc0.getLength());
+                        this.ini = doc0.getLength();
+                    }
                 }
                 this.anteriorFinal = false;
                 this.anteriorNoRec = false;
+                this.fin = -1;
             }
             try {
                 doc0.insertString(doc0.getLength(), tok, style0);
