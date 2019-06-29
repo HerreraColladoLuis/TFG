@@ -40,6 +40,7 @@ public class Pantalla extends javax.swing.JFrame {
 
     private List<String> entrada = new LinkedList<>();
     private List<List<Analizador.Estado>> estadoEntrada = new LinkedList<>();
+    private List<List<Integer>> erAux = new LinkedList<>();
     private List<String> lER;
     private List<String> lAuxER;
     private List<String> lAuxMacro;
@@ -516,10 +517,18 @@ public class Pantalla extends javax.swing.JFrame {
                 }
                 this.estadoEntrada.remove(this.estadoEntrada.size()-1); // Borramos los últimos estados activos
                 this.estadoEntrada.remove(this.estadoEntrada.size()-1); // Borramos los estados del caracter que vamos a ver ahora
+                this.erAux.remove(this.erAux.size()-1);
+                this.erAux.remove(this.erAux.size()-1);
                 if (!this.estadoEntrada.isEmpty())
                     this.lE = this.estadoEntrada.get(this.estadoEntrada.size()-1);
                 else
                     this.lE = new LinkedList<>();
+                if (!this.erAux.isEmpty()) {
+                    this.lnER = new LinkedList<>();
+                    this.lnER.addAll(this.erAux.get(this.erAux.size()-1));
+                }
+                else
+                    this.lnER = new LinkedList<>();
             } 
             else {
                 vacio = true;
@@ -534,12 +543,20 @@ public class Pantalla extends javax.swing.JFrame {
         } catch (Exception ex) {
             Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         this.lnER.clear();
         for (int n : expr)
         {
             if (!this.lnER.contains(n))
                 this.lnER.add(n);
         }
+        
+        List<Integer> al = new LinkedList<>();
+        for (Integer i : this.lnER) {
+            al.add(i);
+        }
+        this.erAux.add(al); // Añadimos la información de lnER en cada iteracion
+        
         this.lE = Procesador.actualizarLE(this.lEaux, tok);
         
         for (Analizador.Estado estado : this.lE) {
@@ -585,11 +602,8 @@ public class Pantalla extends javax.swing.JFrame {
         
         StyleConstants.setBackground(style, this.l_colores_mod.get(3));
         StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(1).getFamily());
-        //StyleConstants.setForeground(style, new Color(109,109,109));
         StyleConstants.setForeground(style, this.l_colores_mod.get(2));
-        //StyleConstants.setFontSize(style, 16);
         StyleConstants.setFontSize(style, this.l_fuentes_mod.get(1).getSize());
-        //StyleConstants.setBold(style, false);
         if (this.l_fuentes_mod.get(1).getStyle() == 0) {
             StyleConstants.setBold(style, false);
             StyleConstants.setItalic(style, false);

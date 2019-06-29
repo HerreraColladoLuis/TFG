@@ -979,6 +979,7 @@ public class Analizador
             lAux = tabla.get(0);
             for (Estado e : lAux)
             {
+                e.anterior = new LinkedList<>();
                 i++;
                 if (e.n == 0)
                     continue;
@@ -989,6 +990,7 @@ public class Analizador
                     lEst.add(e);
                 }    
             }
+            
             for (Estado auxE : lEst) {
                 lAux = tabla.get(auxE.n);
                 for (Estado est : lAux) {
@@ -1007,7 +1009,7 @@ public class Analizador
         {
             for (Estado es : lIni)
             {
-                if (es.n == 0) // OJO
+                if (es.n == 0)
                     continue;
                 lAux = tabla.get(es.n);
                 for (Estado ea : lAux)
@@ -1017,6 +1019,9 @@ public class Analizador
             {
                 if (this.esEstadoFinal(est.n, tabla)) {
                     esfinal = true;
+                }
+                if (est.limitador) {
+                    continue;
                 }
                 i = 0;
                 lAux = tabla.get(est.n);
@@ -1032,20 +1037,6 @@ public class Analizador
                         lEst.add(e);
                     }
                 }
-            }
-            
-            for (Estado auxE : lEst) {
-                lAux = tabla.get(auxE.n);
-                for (Estado est : lAux) {
-                    if (est.n != 0) {
-                        vacio = false;
-                        break;
-                    }
-                }
-                if (vacio) {
-                    auxE.limitador = true;
-                }
-                vacio = true;
             }
             
             if (esfinal || lEst.isEmpty()) {
@@ -1064,6 +1055,20 @@ public class Analizador
                         lEst.add(e);
                     }    
                 }
+            }
+            
+            for (Estado auxE : lEst) {
+                lAux = tabla.get(auxE.n);
+                for (Estado est : lAux) {
+                    if (est.n != 0) {
+                        vacio = false;
+                        break;
+                    }
+                }
+                if (vacio) {
+                    auxE.limitador = true;
+                }
+                vacio = true;
             }
         }
         return lEst;
