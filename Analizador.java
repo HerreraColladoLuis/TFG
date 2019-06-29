@@ -1000,7 +1000,7 @@ public class Analizador
                     }
                 }
                 if (vacio) {
-                    auxE.limitador = true; // SE ME OCURRE GUARDAR EL TERMINAL CON EL QUE SE DELIMITA
+                    auxE.limitador = true;
                 }
                 vacio = true;
             }
@@ -1044,6 +1044,12 @@ public class Analizador
                 i = 0;
                 for (Estado e : lAux)
                 {
+                    
+                    if (lEst.isEmpty())
+                        e.anterior = new LinkedList<>();
+                    // ESTO CREO QUE ESTÁ BIEN, PERO SI NO ES VACIA TAMBIÉN HAY QUE BORRAR
+                    // LOS ANTERIORES ALGUNA VEZ. DETERMINAR CUAL
+                    
                     i++;
                     if (e.n == 0)
                         continue;
