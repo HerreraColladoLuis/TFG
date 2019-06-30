@@ -420,6 +420,7 @@ public class Pantalla extends javax.swing.JFrame {
             this.auxl.clear();
             this.entrada.clear();
             this.estadoEntrada.clear();
+            this.erAux = new LinkedList<>();
             StyledDocument doc1 = this.panel_entrada.getStyledDocument();
             try {
                 if (doc1.getLength() > 0)

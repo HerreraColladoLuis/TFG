@@ -978,14 +978,14 @@ public class Analizador
         {
             lAux = tabla.get(0);
             for (Estado e : lAux)
-            {
-                e.anterior = new LinkedList<>();
+            {    
                 i++;
                 if (e.n == 0)
                     continue;
                 cad = this.devolverTerminal(arbol,i);
                 if (this.comprobarTerminal(cad,tok))
                 {
+                    e.anterior = new LinkedList<>(); // OJO, PROBAR
                     e.anterior.add(lAux);
                     lEst.add(e);
                 }    
@@ -1045,10 +1045,8 @@ public class Analizador
                 for (Estado e : lAux)
                 {
                     
-                    if (lEst.isEmpty())
+                    if (lEst.isEmpty() || !lEst.contains(e))
                         e.anterior = new LinkedList<>();
-                    // ESTO CREO QUE ESTÁ BIEN, PERO SI NO ES VACIA TAMBIÉN HAY QUE BORRAR
-                    // LOS ANTERIORES ALGUNA VEZ. DETERMINAR CUAL
                     
                     i++;
                     if (e.n == 0)
