@@ -49,6 +49,7 @@ public class Pantalla extends javax.swing.JFrame {
     private List<Integer> lnER = new LinkedList<>();
     private int ini = -1;
     private int fin = -1;
+    private int iniTR = -1;
     private int auxini = -1;
     private List<Integer> auxl = new LinkedList<>();
     private List<Integer> aux2 = new LinkedList<>();
@@ -493,8 +494,7 @@ public class Pantalla extends javax.swing.JFrame {
         boolean vacio = false;
         boolean retroceso = false;
         boolean esFinal = false;
-        boolean esLimitador = false;
-        boolean esLimitadorTotal = true;
+        boolean completo = true;
         boolean iniciando = false;
         String aux;
         if ((int) tok.toCharArray()[0] == 8)
@@ -562,10 +562,6 @@ public class Pantalla extends javax.swing.JFrame {
         this.lE = Procesador.actualizarLE(this.lEaux, tok);
         
         for (Analizador.Estado estado : this.lE) {
-            if (estado.limitador)
-                esLimitador = true;
-            else
-                esLimitadorTotal = false;
             if (estado.esInicio) {
                 iniciando = true;
                 estado.esInicio = false;
@@ -622,10 +618,12 @@ public class Pantalla extends javax.swing.JFrame {
         {
             StyleConstants.setBackground(style, this.l_colores_mod.get(1));   
             StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(0).getFamily());
-            if (expr.contains(-1))
-                StyleConstants.setForeground(style, this.l_colores_mod.get(10));       
-            else
+            if (expr.contains(-1)) {
+                StyleConstants.setForeground(style, this.l_colores_mod.get(10));
+            } else {
+                completo = false;
                 StyleConstants.setForeground(style, this.l_colores_mod.get(0));
+            }
             StyleConstants.setFontSize(style, this.l_fuentes_mod.get(0).getSize());
             if (this.l_fuentes_mod.get(0).getStyle() == 0) {
                 StyleConstants.setBold(style, false);
@@ -682,10 +680,12 @@ public class Pantalla extends javax.swing.JFrame {
             {
                 StyleConstants.setBackground(style, this.l_colores_mod.get(1));
                 StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(0).getFamily());
-                if (expr.contains(-i-1))
+                if (expr.contains(-i-1)) {
                     StyleConstants.setForeground(style, this.l_colores_mod.get(10));               
-                else
+                } else {
+                    completo = false;
                     StyleConstants.setForeground(style, this.l_colores_mod.get(0));
+                }
                 StyleConstants.setFontSize(style, this.l_fuentes_mod.get(0).getSize());
                 if (this.l_fuentes_mod.get(0).getStyle() == 0) {
                     StyleConstants.setBold(style, false);
@@ -781,7 +781,10 @@ public class Pantalla extends javax.swing.JFrame {
                 this.anteriorBorrado = false;
             }
             else if (esFinal) {
-                StyleConstants.setBackground(style0, this.l_colores_mod.get(5));
+                if (!completo)
+                    StyleConstants.setBackground(style0, new Color(50,205,50));
+                else
+                    StyleConstants.setBackground(style0, this.l_colores_mod.get(5));
                 StyleConstants.setFontFamily(style0, this.l_fuentes_mod.get(2).getFamily());
                 StyleConstants.setForeground(style0, this.l_colores_mod.get(4));
                 StyleConstants.setFontSize(style0, this.l_fuentes_mod.get(2).getSize());
@@ -813,9 +816,12 @@ public class Pantalla extends javax.swing.JFrame {
                         doc0.insertString(doc0.getLength(), aux, style0);
                     } catch (BadLocationException ex) {
                         Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    } 
                 } else {
                     this.ini = doc0.getLength();
+                }
+                if (!completo && this.iniTR == -1) {
+                    this.iniTR = this.ini;
                 }
                 if (!retroceso) {
                     this.auxl.add(ini);
@@ -857,7 +863,6 @@ public class Pantalla extends javax.swing.JFrame {
                         Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                
                 StyleConstants.setBackground(style0, this.l_colores_mod.get(9));
                 StyleConstants.setFontFamily(style0, this.l_fuentes_mod.get(4).getFamily());
                 StyleConstants.setForeground(style0, this.l_colores_mod.get(8));
@@ -894,7 +899,6 @@ public class Pantalla extends javax.swing.JFrame {
                                 int a = doc0.getLength();
                                 aux = doc0.getText(auxl.get(auxl.size()-1), doc0.getLength() - auxl.get(auxl.size()-1));
                                 doc0.remove(auxl.get(auxl.size()-1), doc0.getLength() - auxl.get(auxl.size()-1));
-                                //auxini = -1;
                             }
                             doc0.insertString(doc0.getLength(), aux, style0);
                         } catch (BadLocationException ex) {
