@@ -105,7 +105,7 @@ public class Pantalla extends javax.swing.JFrame {
         
         // Seteamos los colores y las fuentes por defecto
         this.l_fuentes.add(new Font("Tahoma",BOLD,18)); // Fuente ACTIVADAS
-        this.l_colores.add(Color.BLACK); // Color de fuente ACTIVADAS
+        this.l_colores.add(new Color(106,90,205)); // Color de fuente ACTIVADAS
         this.l_colores.add(Color.WHITE); // Color de fondo de fuente ACTIVADAS
         
         this.l_fuentes.add(new Font("Tahoma",PLAIN,16)); // Fuente NO ACTIVADAS
@@ -123,6 +123,10 @@ public class Pantalla extends javax.swing.JFrame {
         this.l_fuentes.add(new Font("Verdana",BOLD,18)); // Fuente entrada ACTIVADA
         this.l_colores.add(new Color(109,109,109));
         this.l_colores.add(new Color(173,216,230));
+        
+        this.l_fuentes.add(new Font("Tahoma",BOLD,18)); // Fuente COMPLETAS
+        this.l_colores.add(Color.BLACK); // Color de fuente COMPLETAS
+        this.l_colores.add(Color.WHITE); // Color de fondo de fuente COMPLETAS
         
         this.l_fuentes_mod.addAll(l_fuentes);
         this.l_colores_mod.addAll(l_colores);
@@ -444,11 +448,8 @@ public class Pantalla extends javax.swing.JFrame {
         Style style = this.panel_expr.addStyle("Style", null);
         StyleConstants.setBackground(style, this.l_colores_mod.get(3));
         StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(1).getFamily());
-        //StyleConstants.setForeground(style, new Color(109,109,109));
         StyleConstants.setForeground(style, this.l_colores_mod.get(2));
-        //StyleConstants.setFontSize(style, 16);
         StyleConstants.setFontSize(style, this.l_fuentes_mod.get(1).getSize());
-        //StyleConstants.setBold(style, false);
         if (this.l_fuentes_mod.get(1).getStyle() == 0) {
             StyleConstants.setBold(style, false);
             StyleConstants.setItalic(style, false);
@@ -617,13 +618,12 @@ public class Pantalla extends javax.swing.JFrame {
             StyleConstants.setItalic(style, false);
         }
         
-        //if (expr.contains(0))
         if (expr.contains(1) || expr.contains(-1))
         {
             StyleConstants.setBackground(style, this.l_colores_mod.get(1));   
             StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(0).getFamily());
             if (expr.contains(-1))
-                StyleConstants.setForeground(style, Color.green);       
+                StyleConstants.setForeground(style, this.l_colores_mod.get(10));       
             else
                 StyleConstants.setForeground(style, this.l_colores_mod.get(0));
             StyleConstants.setFontSize(style, this.l_fuentes_mod.get(0).getSize());
@@ -683,7 +683,7 @@ public class Pantalla extends javax.swing.JFrame {
                 StyleConstants.setBackground(style, this.l_colores_mod.get(1));
                 StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(0).getFamily());
                 if (expr.contains(-i-1))
-                    StyleConstants.setForeground(style, Color.green);               
+                    StyleConstants.setForeground(style, this.l_colores_mod.get(10));               
                 else
                     StyleConstants.setForeground(style, this.l_colores_mod.get(0));
                 StyleConstants.setFontSize(style, this.l_fuentes_mod.get(0).getSize());
