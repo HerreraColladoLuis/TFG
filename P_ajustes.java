@@ -46,12 +46,16 @@ public class P_ajustes extends javax.swing.JDialog {
         
         // Seteamos los colores y las fuentes por defecto
         this.l_fuentes_def.add(new Font("Tahoma",BOLD,18)); // Fuente ACTIVADAS
-        this.l_colores_def.add(Color.BLACK); // Color de fuente ACTIVADAS
+        this.l_colores_def.add(new Color(106,90,205)); // Color de fuente ACTIVADAS
         this.l_colores_def.add(Color.WHITE); // Color de fondo de fuente ACTIVADAS
         
         this.l_fuentes_def.add(new Font("Tahoma",PLAIN,16)); // Fuente NO ACTIVADAS
         this.l_colores_def.add(new Color(109,109,109));
         this.l_colores_def.add(Color.WHITE);
+        
+        this.l_fuentes_def.add(new Font("Tahoma",BOLD,18)); // Fuente COMPLETAS
+        this.l_colores_def.add(Color.BLACK); // Color de fuente COMPLETAS
+        this.l_colores_def.add(Color.WHITE); // Color de fondo de fuente COMPLETAS
         
         this.l_fuentes_def.add(new Font("Verdana",BOLD,18)); // Fuente entrada COMPLETA
         this.l_colores_def.add(Color.WHITE);
@@ -76,9 +80,9 @@ public class P_ajustes extends javax.swing.JDialog {
         this.tx_color_fuente_1.setText(this.l_colores_mod.get(0).getRed() + ", " + this.l_colores_mod.get(0).getGreen() + ", " + this.l_colores_mod.get(0).getBlue());
         this.tx_color_fondo_1.setText(this.l_colores_mod.get(1).getRed() + ", " + this.l_colores_mod.get(1).getGreen() + ", " + this.l_colores_mod.get(1).getBlue());
         
-        tx_fuente_2.setText(this.l_fuentes_mod.get(2).getName() + " " + this.l_fuentes_mod.get(2).getSize());
-        this.tx_color_fuente_2.setText(this.l_colores_mod.get(4).getRed() + ", " + this.l_colores_mod.get(4).getGreen() + ", " + this.l_colores_mod.get(4).getBlue());
-        this.tx_color_fondo_2.setText(this.l_colores_mod.get(5).getRed() + ", " + this.l_colores_mod.get(5).getGreen() + ", " + this.l_colores_mod.get(5).getBlue());
+        this.tx_fuente_2.setText(this.l_fuentes_mod.get(3).getName() + " " + this.l_fuentes_mod.get(3).getSize());
+        this.tx_color_fuente_2.setText(this.l_colores_mod.get(6).getRed() + ", " + this.l_colores_mod.get(6).getGreen() + ", " + this.l_colores_mod.get(6).getBlue());
+        this.tx_color_fondo_2.setText(this.l_colores_mod.get(7).getRed() + ", " + this.l_colores_mod.get(7).getGreen() + ", " + this.l_colores_mod.get(7).getBlue());
     }
 
     /**
@@ -171,7 +175,7 @@ public class P_ajustes extends javax.swing.JDialog {
         lb_titulo_2.setText(bundle.getString("P_ajustes.lb_titulo_2.text")); // NOI18N
 
         lista_1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Definiciones Regulares/Patrones activos", "Definiciones Regulares/Patrones NO activos" };
+            String[] strings = { "Definiciones Regulares/Patrones activos", "Definiciones Regulares/Patrones NO activos", "Definiciones Regulares/Patrones completos" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
@@ -412,10 +416,16 @@ public class P_ajustes extends javax.swing.JDialog {
     private void boton_fuente_1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_fuente_1ActionPerformed
         int i, res;
         if (!this.lista_1.isSelectionEmpty()) {
-            if (this.lista_1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
-                i = 0;
-            } else {
-                i = 1;
+            switch (this.lista_1.getSelectedValue()) {
+                case "Definiciones Regulares/Patrones activos":
+                    i = 0;
+                    break;
+                case "Definiciones Regulares/Patrones NO activos":
+                    i = 1;
+                    break;
+                default:
+                    i = 2;
+                    break;
             }
             JFontChooser jf = new JFontChooser();
             res = jf.showDialog(null);
@@ -430,10 +440,16 @@ public class P_ajustes extends javax.swing.JDialog {
     private void boton_color_fuente_1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_color_fuente_1ActionPerformed
         int i;
         if (!this.lista_1.isSelectionEmpty()) {
-            if (this.lista_1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
-                i = 0;
-            } else {
-                i = 2;
+            switch (this.lista_1.getSelectedValue()) {
+                case "Definiciones Regulares/Patrones activos":
+                    i = 0;
+                    break;
+                case "Definiciones Regulares/Patrones NO activos":
+                    i = 2;
+                    break;
+                default:
+                    i = 4;
+                    break;
             }
             Color c = JColorChooser.showDialog(null, "Selecciona un color", this.l_colores_mod.get(i));
             if (c!= null) {
@@ -446,10 +462,16 @@ public class P_ajustes extends javax.swing.JDialog {
     private void boton_color_fondo_1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_color_fondo_1ActionPerformed
         int i;
         if (!this.lista_1.isSelectionEmpty()) {
-            if (this.lista_1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
-                i = 1;
-            } else {
-                i = 3;
+            switch (this.lista_1.getSelectedValue()) {
+                case "Definiciones Regulares/Patrones activos":
+                    i = 1;
+                    break;
+                case "Definiciones Regulares/Patrones NO activos":
+                    i = 3;
+                    break;
+                default:
+                    i = 5;
+                    break;
             }
             Color c = JColorChooser.showDialog(null, "Selecciona un color", this.l_colores_mod.get(i));
             if (c!= null) {
@@ -464,13 +486,13 @@ public class P_ajustes extends javax.swing.JDialog {
         if (!this.lista_2.isSelectionEmpty()) {
             switch (this.lista_2.getSelectedValue()) {
                 case "Lexemas COMPLETAMENTE detectados en la entrada":
-                    i = 2;
-                    break;
-                case "Lexemas NO detectados en la entrada":
                     i = 3;
                     break;
-                default:
+                case "Lexemas NO detectados en la entrada":
                     i = 4;
+                    break;
+                default:
+                    i = 5;
                     break;
             }
             JFontChooser jf = new JFontChooser();
@@ -488,13 +510,13 @@ public class P_ajustes extends javax.swing.JDialog {
         if (!this.lista_2.isSelectionEmpty()) {
             switch (this.lista_2.getSelectedValue()) {
                 case "Lexemas COMPLETAMENTE detectados en la entrada":
-                    i = 4;
-                    break;
-                case "Lexemas NO detectados en la entrada":
                     i = 6;
                     break;
-                default:
+                case "Lexemas NO detectados en la entrada":
                     i = 8;
+                    break;
+                default:
+                    i = 10;
                     break;
             }
             Color c = JColorChooser.showDialog(null, "Selecciona un color", this.l_colores_mod.get(i));
@@ -510,13 +532,13 @@ public class P_ajustes extends javax.swing.JDialog {
         if (!this.lista_2.isSelectionEmpty()) {
             switch (this.lista_2.getSelectedValue()) {
                 case "Lexemas COMPLETAMENTE detectados en la entrada":
-                    i = 5;
-                    break;
-                case "Lexemas NO detectados en la entrada":
                     i = 7;
                     break;
-                default:
+                case "Lexemas NO detectados en la entrada":
                     i = 9;
+                    break;
+                default:
+                    i = 11;
                     break;
             }
             Color c = JColorChooser.showDialog(null, "Selecciona un color", this.l_colores_mod.get(i));
@@ -528,33 +550,41 @@ public class P_ajustes extends javax.swing.JDialog {
     }//GEN-LAST:event_boton_color_fondo_2ActionPerformed
 
     private void lista_1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lista_1ValueChanged
-        if (this.lista_1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
-            this.tx_fuente_1.setText(this.l_fuentes_mod.get(0).getName() + " " + this.l_fuentes_mod.get(0).getSize());
-            this.tx_color_fuente_1.setText(this.l_colores_mod.get(0).getRed() + ", " + this.l_colores_mod.get(0).getGreen() + ", " + this.l_colores_mod.get(0).getBlue());
-            this.tx_color_fondo_1.setText(this.l_colores_mod.get(1).getRed() + ", " + this.l_colores_mod.get(1).getGreen() + ", " + this.l_colores_mod.get(1).getBlue());
-        } else {
-            this.tx_fuente_1.setText(this.l_fuentes_mod.get(1).getName() + " " + this.l_fuentes_mod.get(1).getSize());
-            this.tx_color_fuente_1.setText(this.l_colores_mod.get(2).getRed() + ", " + this.l_colores_mod.get(2).getGreen() + ", " + this.l_colores_mod.get(2).getBlue());
-            this.tx_color_fondo_1.setText(this.l_colores_mod.get(3).getRed() + ", " + this.l_colores_mod.get(3).getGreen() + ", " + this.l_colores_mod.get(3).getBlue());
+        switch (this.lista_1.getSelectedValue()) {
+            case "Definiciones Regulares/Patrones activos":
+                this.tx_fuente_1.setText(this.l_fuentes_mod.get(0).getName() + " " + this.l_fuentes_mod.get(0).getSize());
+                this.tx_color_fuente_1.setText(this.l_colores_mod.get(0).getRed() + ", " + this.l_colores_mod.get(0).getGreen() + ", " + this.l_colores_mod.get(0).getBlue());
+                this.tx_color_fondo_1.setText(this.l_colores_mod.get(1).getRed() + ", " + this.l_colores_mod.get(1).getGreen() + ", " + this.l_colores_mod.get(1).getBlue());
+                break;
+            case "Definiciones Regulares/Patrones NO activos":
+                this.tx_fuente_1.setText(this.l_fuentes_mod.get(1).getName() + " " + this.l_fuentes_mod.get(1).getSize());
+                this.tx_color_fuente_1.setText(this.l_colores_mod.get(2).getRed() + ", " + this.l_colores_mod.get(2).getGreen() + ", " + this.l_colores_mod.get(2).getBlue());
+                this.tx_color_fondo_1.setText(this.l_colores_mod.get(3).getRed() + ", " + this.l_colores_mod.get(3).getGreen() + ", " + this.l_colores_mod.get(3).getBlue());
+                break;
+            default:
+                this.tx_fuente_1.setText(this.l_fuentes_mod.get(2).getName() + " " + this.l_fuentes_mod.get(2).getSize());
+                this.tx_color_fuente_1.setText(this.l_colores_mod.get(4).getRed() + ", " + this.l_colores_mod.get(4).getGreen() + ", " + this.l_colores_mod.get(4).getBlue());
+                this.tx_color_fondo_1.setText(this.l_colores_mod.get(5).getRed() + ", " + this.l_colores_mod.get(5).getGreen() + ", " + this.l_colores_mod.get(5).getBlue());
+                break;
         }
     }//GEN-LAST:event_lista_1ValueChanged
 
     private void lista_2ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lista_2ValueChanged
         switch (this.lista_2.getSelectedValue()) {
             case "Lexemas COMPLETAMENTE detectados en la entrada":
-                tx_fuente_2.setText(this.l_fuentes_mod.get(2).getName() + " " + this.l_fuentes_mod.get(2).getSize());
-                this.tx_color_fuente_2.setText(this.l_colores_mod.get(4).getRed() + ", " + this.l_colores_mod.get(4).getGreen() + ", " + this.l_colores_mod.get(4).getBlue());
-                this.tx_color_fondo_2.setText(this.l_colores_mod.get(5).getRed() + ", " + this.l_colores_mod.get(5).getGreen() + ", " + this.l_colores_mod.get(5).getBlue());
-                break;
-            case "Lexemas NO detectados en la entrada":
                 tx_fuente_2.setText(this.l_fuentes_mod.get(3).getName() + " " + this.l_fuentes_mod.get(3).getSize());
                 this.tx_color_fuente_2.setText(this.l_colores_mod.get(6).getRed() + ", " + this.l_colores_mod.get(6).getGreen() + ", " + this.l_colores_mod.get(6).getBlue());
                 this.tx_color_fondo_2.setText(this.l_colores_mod.get(7).getRed() + ", " + this.l_colores_mod.get(7).getGreen() + ", " + this.l_colores_mod.get(7).getBlue());
                 break;
-            default:
+            case "Lexemas NO detectados en la entrada":
                 tx_fuente_2.setText(this.l_fuentes_mod.get(4).getName() + " " + this.l_fuentes_mod.get(4).getSize());
                 this.tx_color_fuente_2.setText(this.l_colores_mod.get(8).getRed() + ", " + this.l_colores_mod.get(8).getGreen() + ", " + this.l_colores_mod.get(8).getBlue());
                 this.tx_color_fondo_2.setText(this.l_colores_mod.get(9).getRed() + ", " + this.l_colores_mod.get(9).getGreen() + ", " + this.l_colores_mod.get(9).getBlue());
+                break;
+            default:
+                tx_fuente_2.setText(this.l_fuentes_mod.get(5).getName() + " " + this.l_fuentes_mod.get(5).getSize());
+                this.tx_color_fuente_2.setText(this.l_colores_mod.get(10).getRed() + ", " + this.l_colores_mod.get(10).getGreen() + ", " + this.l_colores_mod.get(10).getBlue());
+                this.tx_color_fondo_2.setText(this.l_colores_mod.get(11).getRed() + ", " + this.l_colores_mod.get(11).getGreen() + ", " + this.l_colores_mod.get(11).getBlue());
                 break;
         }
     }//GEN-LAST:event_lista_2ValueChanged
@@ -576,33 +606,41 @@ public class P_ajustes extends javax.swing.JDialog {
             this.l_colores_mod.addAll(l_colores_def);
 
             if (!this.lista_1.isSelectionEmpty()) {
-                if (this.lista_1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
-                    this.tx_fuente_1.setText(this.l_fuentes_mod.get(0).getName() + " " + this.l_fuentes_mod.get(0).getSize());
-                    this.tx_color_fuente_1.setText(this.l_colores_mod.get(0).getRed() + ", " + this.l_colores_mod.get(0).getGreen() + ", " + this.l_colores_mod.get(0).getBlue());
-                    this.tx_color_fondo_1.setText(this.l_colores_mod.get(1).getRed() + ", " + this.l_colores_mod.get(1).getGreen() + ", " + this.l_colores_mod.get(1).getBlue());
-                } else {
-                    this.tx_fuente_1.setText(this.l_fuentes_mod.get(1).getName() + " " + this.l_fuentes_mod.get(1).getSize());
-                    this.tx_color_fuente_1.setText(this.l_colores_mod.get(2).getRed() + ", " + this.l_colores_mod.get(2).getGreen() + ", " + this.l_colores_mod.get(2).getBlue());
-                    this.tx_color_fondo_1.setText(this.l_colores_mod.get(3).getRed() + ", " + this.l_colores_mod.get(3).getGreen() + ", " + this.l_colores_mod.get(3).getBlue());
+                switch (this.lista_1.getSelectedValue()) {
+                    case "Definiciones Regulares/Patrones activos":
+                        this.tx_fuente_1.setText(this.l_fuentes_mod.get(0).getName() + " " + this.l_fuentes_mod.get(0).getSize());
+                        this.tx_color_fuente_1.setText(this.l_colores_mod.get(0).getRed() + ", " + this.l_colores_mod.get(0).getGreen() + ", " + this.l_colores_mod.get(0).getBlue());
+                        this.tx_color_fondo_1.setText(this.l_colores_mod.get(1).getRed() + ", " + this.l_colores_mod.get(1).getGreen() + ", " + this.l_colores_mod.get(1).getBlue());
+                        break;
+                    case "Definiciones Regulares/Patrones NO activos":
+                        this.tx_fuente_1.setText(this.l_fuentes_mod.get(1).getName() + " " + this.l_fuentes_mod.get(1).getSize());
+                        this.tx_color_fuente_1.setText(this.l_colores_mod.get(2).getRed() + ", " + this.l_colores_mod.get(2).getGreen() + ", " + this.l_colores_mod.get(2).getBlue());
+                        this.tx_color_fondo_1.setText(this.l_colores_mod.get(3).getRed() + ", " + this.l_colores_mod.get(3).getGreen() + ", " + this.l_colores_mod.get(3).getBlue());
+                        break;
+                    default:
+                        this.tx_fuente_1.setText(this.l_fuentes_mod.get(2).getName() + " " + this.l_fuentes_mod.get(2).getSize());
+                        this.tx_color_fuente_1.setText(this.l_colores_mod.get(4).getRed() + ", " + this.l_colores_mod.get(4).getGreen() + ", " + this.l_colores_mod.get(4).getBlue());
+                        this.tx_color_fondo_1.setText(this.l_colores_mod.get(5).getRed() + ", " + this.l_colores_mod.get(5).getGreen() + ", " + this.l_colores_mod.get(5).getBlue());
+                        break;
                 }
             }
 
             if (!this.lista_2.isSelectionEmpty()) {
                 switch (this.lista_2.getSelectedValue()) {
                     case "Lexemas COMPLETAMENTE detectados en la entrada":
-                        tx_fuente_2.setText(this.l_fuentes_mod.get(2).getName() + " " + this.l_fuentes_mod.get(2).getSize());
-                        this.tx_color_fuente_2.setText(this.l_colores_mod.get(4).getRed() + ", " + this.l_colores_mod.get(4).getGreen() + ", " + this.l_colores_mod.get(4).getBlue());
-                        this.tx_color_fondo_2.setText(this.l_colores_mod.get(5).getRed() + ", " + this.l_colores_mod.get(5).getGreen() + ", " + this.l_colores_mod.get(5).getBlue());
-                        break;
-                    case "Lexemas NO detectados en la entrada":
                         tx_fuente_2.setText(this.l_fuentes_mod.get(3).getName() + " " + this.l_fuentes_mod.get(3).getSize());
                         this.tx_color_fuente_2.setText(this.l_colores_mod.get(6).getRed() + ", " + this.l_colores_mod.get(6).getGreen() + ", " + this.l_colores_mod.get(6).getBlue());
                         this.tx_color_fondo_2.setText(this.l_colores_mod.get(7).getRed() + ", " + this.l_colores_mod.get(7).getGreen() + ", " + this.l_colores_mod.get(7).getBlue());
                         break;
-                    default:
+                    case "Lexemas NO detectados en la entrada":
                         tx_fuente_2.setText(this.l_fuentes_mod.get(4).getName() + " " + this.l_fuentes_mod.get(4).getSize());
                         this.tx_color_fuente_2.setText(this.l_colores_mod.get(8).getRed() + ", " + this.l_colores_mod.get(8).getGreen() + ", " + this.l_colores_mod.get(8).getBlue());
                         this.tx_color_fondo_2.setText(this.l_colores_mod.get(9).getRed() + ", " + this.l_colores_mod.get(9).getGreen() + ", " + this.l_colores_mod.get(9).getBlue());
+                        break;
+                    default:
+                        tx_fuente_2.setText(this.l_fuentes_mod.get(5).getName() + " " + this.l_fuentes_mod.get(5).getSize());
+                        this.tx_color_fuente_2.setText(this.l_colores_mod.get(10).getRed() + ", " + this.l_colores_mod.get(10).getGreen() + ", " + this.l_colores_mod.get(10).getBlue());
+                        this.tx_color_fondo_2.setText(this.l_colores_mod.get(11).getRed() + ", " + this.l_colores_mod.get(11).getGreen() + ", " + this.l_colores_mod.get(11).getBlue());
                         break;
                 }
             }
@@ -618,33 +656,41 @@ public class P_ajustes extends javax.swing.JDialog {
             this.l_colores_mod.addAll(l_colores);
 
             if (!this.lista_1.isSelectionEmpty()) {
-                if (this.lista_1.getSelectedValue().equals("Definiciones Regulares/Patrones activos")) {
-                    this.tx_fuente_1.setText(this.l_fuentes_mod.get(0).getName() + " " + this.l_fuentes_mod.get(0).getSize());
-                    this.tx_color_fuente_1.setText(this.l_colores_mod.get(0).getRed() + ", " + this.l_colores_mod.get(0).getGreen() + ", " + this.l_colores_mod.get(0).getBlue());
-                    this.tx_color_fondo_1.setText(this.l_colores_mod.get(1).getRed() + ", " + this.l_colores_mod.get(1).getGreen() + ", " + this.l_colores_mod.get(1).getBlue());
-                } else {
-                    this.tx_fuente_1.setText(this.l_fuentes_mod.get(1).getName() + " " + this.l_fuentes_mod.get(1).getSize());
-                    this.tx_color_fuente_1.setText(this.l_colores_mod.get(2).getRed() + ", " + this.l_colores_mod.get(2).getGreen() + ", " + this.l_colores_mod.get(2).getBlue());
-                    this.tx_color_fondo_1.setText(this.l_colores_mod.get(3).getRed() + ", " + this.l_colores_mod.get(3).getGreen() + ", " + this.l_colores_mod.get(3).getBlue());
+                switch (this.lista_1.getSelectedValue()) {
+                    case "Definiciones Regulares/Patrones activos":
+                        this.tx_fuente_1.setText(this.l_fuentes_mod.get(0).getName() + " " + this.l_fuentes_mod.get(0).getSize());
+                        this.tx_color_fuente_1.setText(this.l_colores_mod.get(0).getRed() + ", " + this.l_colores_mod.get(0).getGreen() + ", " + this.l_colores_mod.get(0).getBlue());
+                        this.tx_color_fondo_1.setText(this.l_colores_mod.get(1).getRed() + ", " + this.l_colores_mod.get(1).getGreen() + ", " + this.l_colores_mod.get(1).getBlue());
+                        break;
+                    case "Definiciones Regulares/Patrones NO activos":
+                        this.tx_fuente_1.setText(this.l_fuentes_mod.get(1).getName() + " " + this.l_fuentes_mod.get(1).getSize());
+                        this.tx_color_fuente_1.setText(this.l_colores_mod.get(2).getRed() + ", " + this.l_colores_mod.get(2).getGreen() + ", " + this.l_colores_mod.get(2).getBlue());
+                        this.tx_color_fondo_1.setText(this.l_colores_mod.get(3).getRed() + ", " + this.l_colores_mod.get(3).getGreen() + ", " + this.l_colores_mod.get(3).getBlue());
+                        break;
+                    default:
+                        this.tx_fuente_1.setText(this.l_fuentes_mod.get(2).getName() + " " + this.l_fuentes_mod.get(2).getSize());
+                        this.tx_color_fuente_1.setText(this.l_colores_mod.get(4).getRed() + ", " + this.l_colores_mod.get(4).getGreen() + ", " + this.l_colores_mod.get(4).getBlue());
+                        this.tx_color_fondo_1.setText(this.l_colores_mod.get(5).getRed() + ", " + this.l_colores_mod.get(5).getGreen() + ", " + this.l_colores_mod.get(5).getBlue());
+                        break;
                 }
             }
 
             if (!this.lista_2.isSelectionEmpty()) {
                 switch (this.lista_2.getSelectedValue()) {
                     case "Lexemas COMPLETAMENTE detectados en la entrada":
-                        tx_fuente_2.setText(this.l_fuentes_mod.get(2).getName() + " " + this.l_fuentes_mod.get(2).getSize());
-                        this.tx_color_fuente_2.setText(this.l_colores_mod.get(4).getRed() + ", " + this.l_colores_mod.get(4).getGreen() + ", " + this.l_colores_mod.get(4).getBlue());
-                        this.tx_color_fondo_2.setText(this.l_colores_mod.get(5).getRed() + ", " + this.l_colores_mod.get(5).getGreen() + ", " + this.l_colores_mod.get(5).getBlue());
+                        tx_fuente_2.setText(this.l_fuentes_mod.get(3).getName() + " " + this.l_fuentes_mod.get(3).getSize());
+                        this.tx_color_fuente_2.setText(this.l_colores_mod.get(6).getRed() + ", " + this.l_colores_mod.get(6).getGreen() + ", " + this.l_colores_mod.get(4).getBlue());
+                        this.tx_color_fondo_2.setText(this.l_colores_mod.get(7).getRed() + ", " + this.l_colores_mod.get(7).getGreen() + ", " + this.l_colores_mod.get(5).getBlue());
                         break;
                     case "Lexemas NO detectados en la entrada":
-                        tx_fuente_2.setText(this.l_fuentes_mod.get(3).getName() + " " + this.l_fuentes_mod.get(3).getSize());
-                        this.tx_color_fuente_2.setText(this.l_colores_mod.get(6).getRed() + ", " + this.l_colores_mod.get(6).getGreen() + ", " + this.l_colores_mod.get(6).getBlue());
-                        this.tx_color_fondo_2.setText(this.l_colores_mod.get(7).getRed() + ", " + this.l_colores_mod.get(7).getGreen() + ", " + this.l_colores_mod.get(7).getBlue());
-                        break;
-                    default:
                         tx_fuente_2.setText(this.l_fuentes_mod.get(4).getName() + " " + this.l_fuentes_mod.get(4).getSize());
                         this.tx_color_fuente_2.setText(this.l_colores_mod.get(8).getRed() + ", " + this.l_colores_mod.get(8).getGreen() + ", " + this.l_colores_mod.get(8).getBlue());
                         this.tx_color_fondo_2.setText(this.l_colores_mod.get(9).getRed() + ", " + this.l_colores_mod.get(9).getGreen() + ", " + this.l_colores_mod.get(9).getBlue());
+                        break;
+                    default:
+                        tx_fuente_2.setText(this.l_fuentes_mod.get(5).getName() + " " + this.l_fuentes_mod.get(5).getSize());
+                        this.tx_color_fuente_2.setText(this.l_colores_mod.get(10).getRed() + ", " + this.l_colores_mod.get(10).getGreen() + ", " + this.l_colores_mod.get(10).getBlue());
+                        this.tx_color_fondo_2.setText(this.l_colores_mod.get(11).getRed() + ", " + this.l_colores_mod.get(11).getGreen() + ", " + this.l_colores_mod.get(11).getBlue());
                         break;
                 }
             }
