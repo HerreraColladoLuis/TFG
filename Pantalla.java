@@ -161,7 +161,7 @@ public class Pantalla extends javax.swing.JFrame {
         scroll_panel_especificacion = new javax.swing.JScrollPane();
         panel_especificacion = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextPane3 = new javax.swing.JTextPane();
+        panel_def = new javax.swing.JTextPane();
         jPanel1 = new javax.swing.JPanel();
         et_patrones = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
@@ -341,8 +341,10 @@ public class Pantalla extends javax.swing.JFrame {
 
         jScrollPane3.setBorder(null);
 
-        jTextPane3.setBorder(null);
-        jScrollPane3.setViewportView(jTextPane3);
+        panel_def.setEditable(false);
+        panel_def.setBorder(null);
+        panel_def.setFocusable(false);
+        jScrollPane3.setViewportView(panel_def);
 
         jPanel1.setBackground(new java.awt.Color(112, 176, 224));
 
@@ -471,14 +473,12 @@ public class Pantalla extends javax.swing.JFrame {
             return;
             // Añadir advertencia de archivo nulo
         }
-        this.ind = -1;
-        
-        if (this.lAuxER.size() > this.lAuxMacro.size()) {
-            ind = this.lAuxMacro.size();
-        }
         
         StyledDocument doc = this.panel_expr.getStyledDocument();
         Style style = this.panel_expr.addStyle("Style", null);
+        StyledDocument doc1 = this.panel_def.getStyledDocument();
+        Style style1 = this.panel_def.addStyle("Style", null);
+        
         StyleConstants.setBackground(style, this.l_colores_mod.get(3));
         StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(1).getFamily());
         StyleConstants.setForeground(style, this.l_colores_mod.get(2));
@@ -495,19 +495,46 @@ public class Pantalla extends javax.swing.JFrame {
             StyleConstants.setItalic(style, false);
         }
         
+        StyleConstants.setBackground(style1, this.l_colores_mod.get(3));
+        StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(1).getFamily());
+        StyleConstants.setForeground(style1, this.l_colores_mod.get(2));
+        StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(1).getSize());
+        if (this.l_fuentes_mod.get(1).getStyle() == 0) {
+            StyleConstants.setBold(style1, false);
+            StyleConstants.setItalic(style1, false);
+        }    
+        else if (this.l_fuentes_mod.get(1).getStyle() == 2) {
+            StyleConstants.setBold(style1, false);
+            StyleConstants.setItalic(style1, true);
+        } else {
+            StyleConstants.setBold(style1, true);
+            StyleConstants.setItalic(style1, false);
+        }
+        
         String cad = this.lER.get(0);
+        try {
+            if (this.lAuxMacro.size() > 0)
+                doc.insertString(doc.getLength(), cad, style);
+            else
+                doc1.insertString(doc1.getLength(), cad, style1);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+        }
         for (int i = 1; i < this.lER.size(); i++)
         {
             try {
-                if (i == ind)
-                    doc.insertString(doc.getLength(), "\n" + "-----------------------------------------------", style);
-                cad += "\n" + this.lER.get(i);
-                doc.insertString(doc.getLength(), cad, style);
+                cad = "\n" + this.lER.get(i);
+                if (this.lAuxMacro.size() > i)
+                    doc.insertString(doc.getLength(), cad, style);
+                else if (this.lAuxMacro.size() == i)
+                    doc1.insertString(doc1.getLength(), this.lER.get(i), style1);
+                else
+                    doc1.insertString(doc1.getLength(), cad, style1);
             } catch (BadLocationException ex) {
                 Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        this.panel_expr.setText(cad);
+        this.panel_def.setCaretPosition(0);
         this.panel_expr.setCaretPosition(0);
         try {
             Procesador.crearAutomata();
@@ -608,27 +635,12 @@ public class Pantalla extends javax.swing.JFrame {
             this.entrada.add(tok);
         
         this.panel_expr.setText("");
-        //this.panel_activadas.setText("");
-        // Cogemos los estilos del panel de expresiones regulares y del panel de activadas
+        this.panel_def.setText("");
+        // Cogemos los estilos del panel de expresiones regulares
         StyledDocument doc = this.panel_expr.getStyledDocument();
         Style style = this.panel_expr.addStyle("Style", null);
-        //StyledDocument doc1 = this.panel_activadas.getStyledDocument();
-        //Style style1 = this.panel_activadas.addStyle("Style", null);
-        
-//        StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(0).getFamily());
-//        StyleConstants.setForeground(style1, this.l_colores_mod.get(0));
-//        StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(0).getSize()-2);
-//        if (this.l_fuentes_mod.get(0).getStyle() == 0) {
-//            StyleConstants.setBold(style1, false);
-//            StyleConstants.setItalic(style1, false);
-//        }    
-//        else if (this.l_fuentes_mod.get(0).getStyle() == 2) {
-//            StyleConstants.setBold(style1, false);
-//            StyleConstants.setItalic(style1, true);
-//        } else {
-//            StyleConstants.setBold(style1, true);
-//            StyleConstants.setItalic(style1, false);
-//        }
+        StyledDocument doc1 = this.panel_def.getStyledDocument();
+        Style style1 = this.panel_def.addStyle("Style", null);
         
         StyleConstants.setBackground(style, this.l_colores_mod.get(3));
         StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(1).getFamily());
@@ -644,6 +656,22 @@ public class Pantalla extends javax.swing.JFrame {
         } else {
             StyleConstants.setBold(style, true);
             StyleConstants.setItalic(style, false);
+        }
+        
+        StyleConstants.setBackground(style1, this.l_colores_mod.get(3));
+        StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(1).getFamily());
+        StyleConstants.setForeground(style1, this.l_colores_mod.get(2));
+        StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(1).getSize());
+        if (this.l_fuentes_mod.get(1).getStyle() == 0) {
+            StyleConstants.setBold(style1, false);
+            StyleConstants.setItalic(style1, false);
+        }    
+        else if (this.l_fuentes_mod.get(1).getStyle() == 2) {
+            StyleConstants.setBold(style1, false);
+            StyleConstants.setItalic(style1, true);
+        } else {
+            StyleConstants.setBold(style1, true);
+            StyleConstants.setItalic(style1, false);
         }
         
         if (expr.contains(1) || expr.contains(-1))
@@ -664,6 +692,22 @@ public class Pantalla extends javax.swing.JFrame {
                     StyleConstants.setBold(style, true);
                     StyleConstants.setItalic(style, false);
                 }
+                
+                StyleConstants.setBackground(style1, this.l_colores_mod.get(5));   
+                StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(2).getFamily());
+                StyleConstants.setForeground(style1, this.l_colores_mod.get(4));
+                StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(2).getSize());
+                if (this.l_fuentes_mod.get(2).getStyle() == 0) {
+                    StyleConstants.setBold(style1, false);
+                    StyleConstants.setItalic(style1, false);
+                }    
+                else if (this.l_fuentes_mod.get(2).getStyle() == 2) {
+                    StyleConstants.setBold(style1, false);
+                    StyleConstants.setItalic(style1, true);
+                } else {
+                    StyleConstants.setBold(style1, true);
+                    StyleConstants.setItalic(style1, false);
+                }
             } else {
                 completo = false;
                 StyleConstants.setBackground(style, this.l_colores_mod.get(1));   
@@ -681,19 +725,29 @@ public class Pantalla extends javax.swing.JFrame {
                     StyleConstants.setBold(style, true);
                     StyleConstants.setItalic(style, false);
                 }
+                
+                StyleConstants.setBackground(style1, this.l_colores_mod.get(1));   
+                StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(0).getFamily());
+                StyleConstants.setForeground(style1, this.l_colores_mod.get(0));
+                StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(0).getSize());
+                if (this.l_fuentes_mod.get(0).getStyle() == 0) {
+                    StyleConstants.setBold(style1, false);
+                    StyleConstants.setItalic(style1, false);
+                }    
+                else if (this.l_fuentes_mod.get(0).getStyle() == 2) {
+                    StyleConstants.setBold(style1, false);
+                    StyleConstants.setItalic(style1, true);
+                } else {
+                    StyleConstants.setBold(style1, true);
+                    StyleConstants.setItalic(style1, false);
+                }
             }
-            
-//            try {
-//                if (this.lAuxMacro.size() > 0)
-//                    doc1.insertString(doc1.getLength(), this.lER.get(0) + " = " + this.lAuxER.get(0), style1);
-//                else
-//                    doc1.insertString(doc1.getLength(), this.lER.get(0), style1);
-//            } catch (BadLocationException ex) {
-//                Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
-//            }
         }
         try {
-            doc.insertString(doc.getLength(), this.lER.get(0), style);
+            if (this.lAuxMacro.size() > 0)
+                doc.insertString(doc.getLength(), this.lER.get(0), style);
+            else
+                doc1.insertString(doc1.getLength(), this.lER.get(0), style1);
         } catch (BadLocationException ex) {
             Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -715,13 +769,22 @@ public class Pantalla extends javax.swing.JFrame {
                 StyleConstants.setItalic(style, false);
             }
             
-            if (i == this.ind) {
-                try {
-                    doc.insertString(doc.getLength(), "\n" + "-----------------------------------------------", style);
-                } catch (BadLocationException ex) {
-                    Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            StyleConstants.setBackground(style1, this.l_colores_mod.get(3));
+            StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(1).getFamily());
+            StyleConstants.setForeground(style1, this.l_colores_mod.get(2));
+            StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(1).getSize());
+            if (this.l_fuentes_mod.get(1).getStyle() == 0) {
+                StyleConstants.setBold(style1, false);
+                StyleConstants.setItalic(style1, false);
+            }    
+            else if (this.l_fuentes_mod.get(1).getStyle() == 2) {
+                StyleConstants.setBold(style1, false);
+                StyleConstants.setItalic(style1, true);
+            } else {
+                StyleConstants.setBold(style1, true);
+                StyleConstants.setItalic(style1, false);
             }
+            
             if (expr.contains(i+1) || expr.contains(-i-1))
             {
                 if (expr.contains(-i-1)) {
@@ -740,6 +803,22 @@ public class Pantalla extends javax.swing.JFrame {
                         StyleConstants.setBold(style, true);
                         StyleConstants.setItalic(style, false);
                     }
+                    
+                    StyleConstants.setBackground(style1, this.l_colores_mod.get(5));   
+                    StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(2).getFamily());
+                    StyleConstants.setForeground(style1, this.l_colores_mod.get(4));
+                    StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(2).getSize());
+                    if (this.l_fuentes_mod.get(2).getStyle() == 0) {
+                        StyleConstants.setBold(style1, false);
+                        StyleConstants.setItalic(style1, false);
+                    }    
+                    else if (this.l_fuentes_mod.get(2).getStyle() == 2) {
+                        StyleConstants.setBold(style1, false);
+                        StyleConstants.setItalic(style1, true);
+                    } else {
+                        StyleConstants.setBold(style1, true);
+                        StyleConstants.setItalic(style1, false);
+                    }
                 } else {
                     completo = false;
                     StyleConstants.setBackground(style, this.l_colores_mod.get(1));   
@@ -757,24 +836,38 @@ public class Pantalla extends javax.swing.JFrame {
                         StyleConstants.setBold(style, true);
                         StyleConstants.setItalic(style, false);
                     }
+                    
+                    StyleConstants.setBackground(style1, this.l_colores_mod.get(1));   
+                    StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(0).getFamily());
+                    StyleConstants.setForeground(style1, this.l_colores_mod.get(0));
+                    StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(0).getSize());
+                    if (this.l_fuentes_mod.get(0).getStyle() == 0) {
+                        StyleConstants.setBold(style1, false);
+                        StyleConstants.setItalic(style1, false);
+                    }    
+                    else if (this.l_fuentes_mod.get(0).getStyle() == 2) {
+                        StyleConstants.setBold(style1, false);
+                        StyleConstants.setItalic(style1, true);
+                    } else {
+                        StyleConstants.setBold(style1, true);
+                        StyleConstants.setItalic(style1, false);
+                    }
                 }
-                
-//                try {
-//                    if (this.lAuxMacro.size() > i)
-//                        doc1.insertString(doc1.getLength(), "\n" + this.lER.get(i) + " = " + this.lAuxER.get(i), style1);
-//                    else
-//                        doc1.insertString(doc1.getLength(), "\n" + this.lER.get(i), style1);
-//                } catch (BadLocationException ex) {
-//                    Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
-//                }
             }
             try {
-                doc.insertString(doc.getLength(), "\n" + this.lER.get(i), style);
+                String cad = "\n" + this.lER.get(i);
+                if (this.lAuxMacro.size() > i)
+                    doc.insertString(doc.getLength(), cad, style);
+                else if (this.lAuxMacro.size() == i)
+                    doc1.insertString(doc1.getLength(), this.lER.get(i), style1);
+                else
+                    doc1.insertString(doc1.getLength(), cad, style1);
             } catch (BadLocationException ex) {
                 Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
             }
         } 
         this.panel_expr.setCaretPosition(0);
+        this.panel_def.setCaretPosition(0);
         
         if (!vacio) {
             StyledDocument doc0 = this.panel_entrada.getStyledDocument();
@@ -1128,10 +1221,10 @@ public class Pantalla extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextPane jTextPane3;
     private javax.swing.JLabel lbHelp;
     private javax.swing.JLabel lbReg;
     private javax.swing.JLabel lbSettings;
+    private javax.swing.JTextPane panel_def;
     private javax.swing.JTextPane panel_entrada;
     private javax.swing.JTextArea panel_especificacion;
     private javax.swing.JTextPane panel_expr;
