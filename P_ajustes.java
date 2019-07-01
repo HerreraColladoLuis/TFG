@@ -101,7 +101,7 @@ public class P_ajustes extends javax.swing.JDialog {
         StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(0).getFamily());
         StyleConstants.setForeground(style, this.l_colores_mod.get(0));
         StyleConstants.setBackground(style, this.l_colores_mod.get(1));
-        StyleConstants.setFontSize(style, 22);
+        StyleConstants.setFontSize(style, this.l_fuentes_mod.get(0).getSize());
         if (this.l_fuentes_mod.get(0).getStyle() == 0) {
             StyleConstants.setBold(style, false);
             StyleConstants.setItalic(style, false);
@@ -117,7 +117,7 @@ public class P_ajustes extends javax.swing.JDialog {
         StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(3).getFamily());
         StyleConstants.setForeground(style1, this.l_colores_mod.get(6));
         StyleConstants.setBackground(style1, this.l_colores_mod.get(7));
-        StyleConstants.setFontSize(style1, 22);
+        StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(3).getSize());
         if (this.l_fuentes_mod.get(3).getStyle() == 0) {
             StyleConstants.setBold(style1, false);
             StyleConstants.setItalic(style1, false);
@@ -517,7 +517,7 @@ public class P_ajustes extends javax.swing.JDialog {
                 StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(i).getFamily());
                 StyleConstants.setForeground(style, this.l_colores_mod.get(i*2));
                 StyleConstants.setBackground(style, this.l_colores_mod.get((i*2)+1));
-                StyleConstants.setFontSize(style, 22);
+                StyleConstants.setFontSize(style, this.l_fuentes_mod.get(i).getSize());
                 if (this.l_fuentes_mod.get(i).getStyle() == 0) {
                     StyleConstants.setBold(style, false);
                     StyleConstants.setItalic(style, false);
@@ -563,7 +563,7 @@ public class P_ajustes extends javax.swing.JDialog {
                 StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(i/2).getFamily());
                 StyleConstants.setForeground(style, this.l_colores_mod.get(i));
                 StyleConstants.setBackground(style, this.l_colores_mod.get(i+1));
-                StyleConstants.setFontSize(style, 22);
+                StyleConstants.setFontSize(style, this.l_fuentes_mod.get(i/2).getSize());
                 if (this.l_fuentes_mod.get(i/2).getStyle() == 0) {
                     StyleConstants.setBold(style, false);
                     StyleConstants.setItalic(style, false);
@@ -609,7 +609,7 @@ public class P_ajustes extends javax.swing.JDialog {
                 StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(i/2).getFamily());
                 StyleConstants.setForeground(style, this.l_colores_mod.get(i-1));
                 StyleConstants.setBackground(style, this.l_colores_mod.get(i));
-                StyleConstants.setFontSize(style, 22);
+                StyleConstants.setFontSize(style, this.l_fuentes_mod.get(i/2).getSize());
                 if (this.l_fuentes_mod.get(i/2).getStyle() == 0) {
                     StyleConstants.setBold(style, false);
                     StyleConstants.setItalic(style, false);
@@ -631,6 +631,8 @@ public class P_ajustes extends javax.swing.JDialog {
     }//GEN-LAST:event_boton_color_fondo_1ActionPerformed
 
     private void boton_fuente_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_fuente_2ActionPerformed
+        StyledDocument doc1 = this.tx_pv_2.getStyledDocument();
+        Style style1 = this.tx_pv_2.addStyle("Style", null);
         int i, res;
         if (!this.lista_2.isSelectionEmpty()) {
             switch (this.lista_2.getSelectedValue()) {
@@ -650,11 +652,40 @@ public class P_ajustes extends javax.swing.JDialog {
                 Font f = jf.getSelectedFont();
                 this.l_fuentes_mod.set(i, f);
                 this.tx_fuente_2.setText(this.l_fuentes_mod.get(i).getName() + " " + this.l_fuentes_mod.get(i).getSize());
+                
+                this.tx_pv_2.setText("");
+                StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(i).getFamily());
+                StyleConstants.setForeground(style1, this.l_colores_mod.get(i*2));
+                StyleConstants.setBackground(style1, this.l_colores_mod.get((i*2)+1));
+                StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(i).getSize());
+                if (this.l_fuentes_mod.get(i).getStyle() == 0) {
+                    StyleConstants.setBold(style1, false);
+                    StyleConstants.setItalic(style1, false);
+                }    
+                else if (this.l_fuentes_mod.get(i).getStyle() == 2) {
+                    StyleConstants.setBold(style1, false);
+                    StyleConstants.setItalic(style1, true);
+                } else {
+                    StyleConstants.setBold(style1, true);
+                    StyleConstants.setItalic(style1, false);
+                }
+                try {
+                    if (i == 3)
+                        doc1.insertString(doc1.getLength(), "while", style1);
+                    else if (i == 4)
+                        doc1.insertString(doc1.getLength(), "6&€?l", style1);
+                    else
+                        doc1.insertString(doc1.getLength(), "whi", style1);
+                } catch (BadLocationException ex) {
+                    Logger.getLogger(P_ajustes.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }//GEN-LAST:event_boton_fuente_2ActionPerformed
 
     private void boton_color_fuente_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_color_fuente_2ActionPerformed
+        StyledDocument doc1 = this.tx_pv_2.getStyledDocument();
+        Style style1 = this.tx_pv_2.addStyle("Style", null);
         int i;
         if (!this.lista_2.isSelectionEmpty()) {
             switch (this.lista_2.getSelectedValue()) {
@@ -672,11 +703,40 @@ public class P_ajustes extends javax.swing.JDialog {
             if (c!= null) {
                 this.l_colores_mod.set(i, c);
                 this.tx_color_fuente_2.setText(this.l_colores_mod.get(i).getRed() + ", " + this.l_colores_mod.get(i).getGreen() + ", " + this.l_colores_mod.get(i).getBlue());
+                
+                this.tx_pv_2.setText("");
+                StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(i/2).getFamily());
+                StyleConstants.setForeground(style1, this.l_colores_mod.get(i));
+                StyleConstants.setBackground(style1, this.l_colores_mod.get(i+1));
+                StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(i/2).getSize());
+                if (this.l_fuentes_mod.get(i/2).getStyle() == 0) {
+                    StyleConstants.setBold(style1, false);
+                    StyleConstants.setItalic(style1, false);
+                }    
+                else if (this.l_fuentes_mod.get(i/2).getStyle() == 2) {
+                    StyleConstants.setBold(style1, false);
+                    StyleConstants.setItalic(style1, true);
+                } else {
+                    StyleConstants.setBold(style1, true);
+                    StyleConstants.setItalic(style1, false);
+                }
+                try {
+                    if (i == 6)
+                        doc1.insertString(doc1.getLength(), "while", style1);
+                    else if (i == 8)
+                        doc1.insertString(doc1.getLength(), "6&€?l", style1);
+                    else
+                        doc1.insertString(doc1.getLength(), "whi", style1);
+                } catch (BadLocationException ex) {
+                    Logger.getLogger(P_ajustes.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }//GEN-LAST:event_boton_color_fuente_2ActionPerformed
 
     private void boton_color_fondo_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_color_fondo_2ActionPerformed
+        StyledDocument doc1 = this.tx_pv_2.getStyledDocument();
+        Style style1 = this.tx_pv_2.addStyle("Style", null);
         int i;
         if (!this.lista_2.isSelectionEmpty()) {
             switch (this.lista_2.getSelectedValue()) {
@@ -694,6 +754,33 @@ public class P_ajustes extends javax.swing.JDialog {
             if (c!= null) {
                 this.l_colores_mod.set(i, c);
                 this.tx_color_fondo_2.setText(this.l_colores_mod.get(i).getRed() + ", " + this.l_colores_mod.get(i).getGreen() + ", " + this.l_colores_mod.get(i).getBlue());
+                
+                this.tx_pv_2.setText("");
+                StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(i/2).getFamily());
+                StyleConstants.setForeground(style1, this.l_colores_mod.get(i-1));
+                StyleConstants.setBackground(style1, this.l_colores_mod.get(i));
+                StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(i/2).getSize());
+                if (this.l_fuentes_mod.get(i/2).getStyle() == 0) {
+                    StyleConstants.setBold(style1, false);
+                    StyleConstants.setItalic(style1, false);
+                }    
+                else if (this.l_fuentes_mod.get(i/2).getStyle() == 2) {
+                    StyleConstants.setBold(style1, false);
+                    StyleConstants.setItalic(style1, true);
+                } else {
+                    StyleConstants.setBold(style1, true);
+                    StyleConstants.setItalic(style1, false);
+                }
+                try {
+                    if (i == 7)
+                        doc1.insertString(doc1.getLength(), "while", style1);
+                    else if (i == 9)
+                        doc1.insertString(doc1.getLength(), "6&€?l", style1);
+                    else
+                        doc1.insertString(doc1.getLength(), "whi", style1);
+                } catch (BadLocationException ex) {
+                    Logger.getLogger(P_ajustes.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }//GEN-LAST:event_boton_color_fondo_2ActionPerformed
@@ -712,7 +799,7 @@ public class P_ajustes extends javax.swing.JDialog {
                 StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(0).getFamily());
                 StyleConstants.setForeground(style, this.l_colores_mod.get(0));
                 StyleConstants.setBackground(style, this.l_colores_mod.get(1));
-                StyleConstants.setFontSize(style, 22);
+                StyleConstants.setFontSize(style, this.l_fuentes_mod.get(0).getSize());
                 if (this.l_fuentes_mod.get(0).getStyle() == 0) {
                     StyleConstants.setBold(style, false);
                     StyleConstants.setItalic(style, false);
@@ -734,7 +821,7 @@ public class P_ajustes extends javax.swing.JDialog {
                 StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(1).getFamily());
                 StyleConstants.setForeground(style, this.l_colores_mod.get(2));
                 StyleConstants.setBackground(style, this.l_colores_mod.get(3));
-                StyleConstants.setFontSize(style, 22);
+                StyleConstants.setFontSize(style, this.l_fuentes_mod.get(1).getSize());
                 if (this.l_fuentes_mod.get(1).getStyle() == 0) {
                     StyleConstants.setBold(style, false);
                     StyleConstants.setItalic(style, false);
@@ -756,7 +843,7 @@ public class P_ajustes extends javax.swing.JDialog {
                 StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(2).getFamily());
                 StyleConstants.setForeground(style, this.l_colores_mod.get(4));
                 StyleConstants.setBackground(style, this.l_colores_mod.get(5));
-                StyleConstants.setFontSize(style, 22);
+                StyleConstants.setFontSize(style, this.l_fuentes_mod.get(2).getSize());
                 if (this.l_fuentes_mod.get(2).getStyle() == 0) {
                     StyleConstants.setBold(style, false);
                     StyleConstants.setItalic(style, false);
@@ -791,7 +878,7 @@ public class P_ajustes extends javax.swing.JDialog {
                 StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(3).getFamily());
                 StyleConstants.setForeground(style1, this.l_colores_mod.get(6));
                 StyleConstants.setBackground(style1, this.l_colores_mod.get(7));
-                StyleConstants.setFontSize(style1, 22);
+                StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(3).getSize());
                 if (this.l_fuentes_mod.get(3).getStyle() == 0) {
                     StyleConstants.setBold(style1, false);
                     StyleConstants.setItalic(style1, false);
@@ -818,7 +905,7 @@ public class P_ajustes extends javax.swing.JDialog {
                 StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(4).getFamily());
                 StyleConstants.setForeground(style1, this.l_colores_mod.get(8));
                 StyleConstants.setBackground(style1, this.l_colores_mod.get(9));
-                StyleConstants.setFontSize(style1, 22);
+                StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(4).getSize());
                 if (this.l_fuentes_mod.get(4).getStyle() == 0) {
                     StyleConstants.setBold(style1, false);
                     StyleConstants.setItalic(style1, false);
@@ -845,7 +932,7 @@ public class P_ajustes extends javax.swing.JDialog {
                 StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(5).getFamily());
                 StyleConstants.setForeground(style1, this.l_colores_mod.get(10));
                 StyleConstants.setBackground(style1, this.l_colores_mod.get(11));
-                StyleConstants.setFontSize(style1, 22);
+                StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(5).getSize());
                 if (this.l_fuentes_mod.get(5).getStyle() == 0) {
                     StyleConstants.setBold(style1, false);
                     StyleConstants.setItalic(style1, false);
@@ -875,6 +962,10 @@ public class P_ajustes extends javax.swing.JDialog {
     }//GEN-LAST:event_boton_aplicarActionPerformed
 
     private void boton_defectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_defectoActionPerformed
+        StyledDocument doc = this.tx_pv_1.getStyledDocument();
+        Style style = this.tx_pv_1.addStyle("Style", null);
+        StyledDocument doc1 = this.tx_pv_2.getStyledDocument();
+        Style style1 = this.tx_pv_2.addStyle("Style", null);
         int resp = JOptionPane.showConfirmDialog(null, "¿Está seguro de cambiar a los valores por defecto?", "Advertencia", JOptionPane.YES_NO_OPTION);
         if (resp == JOptionPane.YES_OPTION) { 
             this.l_fuentes_mod.clear();
@@ -883,22 +974,77 @@ public class P_ajustes extends javax.swing.JDialog {
             this.l_colores_mod.addAll(l_colores_def);
 
             if (!this.lista_1.isSelectionEmpty()) {
+                this.tx_pv_1.setText("");
+                this.tx_pv_2.setText("");
                 switch (this.lista_1.getSelectedValue()) {
                     case "Definiciones Regulares/Patrones activos":
                         this.tx_fuente_1.setText(this.l_fuentes_mod.get(0).getName() + " " + this.l_fuentes_mod.get(0).getSize());
                         this.tx_color_fuente_1.setText(this.l_colores_mod.get(0).getRed() + ", " + this.l_colores_mod.get(0).getGreen() + ", " + this.l_colores_mod.get(0).getBlue());
                         this.tx_color_fondo_1.setText(this.l_colores_mod.get(1).getRed() + ", " + this.l_colores_mod.get(1).getGreen() + ", " + this.l_colores_mod.get(1).getBlue());
+                        // Configuración previsualización
+                        StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(0).getFamily());
+                        StyleConstants.setForeground(style, this.l_colores_mod.get(0));
+                        StyleConstants.setBackground(style, this.l_colores_mod.get(1));
+                        StyleConstants.setFontSize(style, this.l_fuentes_mod.get(0).getSize());
+                        if (this.l_fuentes_mod.get(0).getStyle() == 0) {
+                            StyleConstants.setBold(style, false);
+                            StyleConstants.setItalic(style, false);
+                        }    
+                        else if (this.l_fuentes_mod.get(0).getStyle() == 2) {
+                            StyleConstants.setBold(style, false);
+                            StyleConstants.setItalic(style, true);
+                        } else {
+                            StyleConstants.setBold(style, true);
+                            StyleConstants.setItalic(style, false);
+                        }
                         break;
                     case "Definiciones Regulares/Patrones NO activos":
                         this.tx_fuente_1.setText(this.l_fuentes_mod.get(1).getName() + " " + this.l_fuentes_mod.get(1).getSize());
                         this.tx_color_fuente_1.setText(this.l_colores_mod.get(2).getRed() + ", " + this.l_colores_mod.get(2).getGreen() + ", " + this.l_colores_mod.get(2).getBlue());
                         this.tx_color_fondo_1.setText(this.l_colores_mod.get(3).getRed() + ", " + this.l_colores_mod.get(3).getGreen() + ", " + this.l_colores_mod.get(3).getBlue());
+                        // Configuración previsualización
+                        StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(1).getFamily());
+                        StyleConstants.setForeground(style, this.l_colores_mod.get(2));
+                        StyleConstants.setBackground(style, this.l_colores_mod.get(3));
+                        StyleConstants.setFontSize(style, this.l_fuentes_mod.get(1).getSize());
+                        if (this.l_fuentes_mod.get(1).getStyle() == 0) {
+                            StyleConstants.setBold(style, false);
+                            StyleConstants.setItalic(style, false);
+                        }    
+                        else if (this.l_fuentes_mod.get(1).getStyle() == 2) {
+                            StyleConstants.setBold(style, false);
+                            StyleConstants.setItalic(style, true);
+                        } else {
+                            StyleConstants.setBold(style, true);
+                            StyleConstants.setItalic(style, false);
+                        }
                         break;
                     default:
                         this.tx_fuente_1.setText(this.l_fuentes_mod.get(2).getName() + " " + this.l_fuentes_mod.get(2).getSize());
                         this.tx_color_fuente_1.setText(this.l_colores_mod.get(4).getRed() + ", " + this.l_colores_mod.get(4).getGreen() + ", " + this.l_colores_mod.get(4).getBlue());
                         this.tx_color_fondo_1.setText(this.l_colores_mod.get(5).getRed() + ", " + this.l_colores_mod.get(5).getGreen() + ", " + this.l_colores_mod.get(5).getBlue());
+                        // Configuración previsualización
+                        StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(2).getFamily());
+                        StyleConstants.setForeground(style, this.l_colores_mod.get(4));
+                        StyleConstants.setBackground(style, this.l_colores_mod.get(5));
+                        StyleConstants.setFontSize(style, this.l_fuentes_mod.get(2).getSize());
+                        if (this.l_fuentes_mod.get(2).getStyle() == 0) {
+                            StyleConstants.setBold(style, false);
+                            StyleConstants.setItalic(style, false);
+                        }    
+                        else if (this.l_fuentes_mod.get(2).getStyle() == 2) {
+                            StyleConstants.setBold(style, false);
+                            StyleConstants.setItalic(style, true);
+                        } else {
+                            StyleConstants.setBold(style, true);
+                            StyleConstants.setItalic(style, false);
+                        }
                         break;
+                }
+                try {
+                    doc.insertString(doc.getLength(), "Palabra reservada", style);
+                } catch (BadLocationException ex) {
+                    Logger.getLogger(P_ajustes.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
 
@@ -908,16 +1054,79 @@ public class P_ajustes extends javax.swing.JDialog {
                         tx_fuente_2.setText(this.l_fuentes_mod.get(3).getName() + " " + this.l_fuentes_mod.get(3).getSize());
                         this.tx_color_fuente_2.setText(this.l_colores_mod.get(6).getRed() + ", " + this.l_colores_mod.get(6).getGreen() + ", " + this.l_colores_mod.get(6).getBlue());
                         this.tx_color_fondo_2.setText(this.l_colores_mod.get(7).getRed() + ", " + this.l_colores_mod.get(7).getGreen() + ", " + this.l_colores_mod.get(7).getBlue());
+                        // Configuración previsualización
+                        StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(3).getFamily());
+                        StyleConstants.setForeground(style1, this.l_colores_mod.get(6));
+                        StyleConstants.setBackground(style1, this.l_colores_mod.get(7));
+                        StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(3).getSize());
+                        if (this.l_fuentes_mod.get(3).getStyle() == 0) {
+                            StyleConstants.setBold(style1, false);
+                            StyleConstants.setItalic(style1, false);
+                        }    
+                        else if (this.l_fuentes_mod.get(3).getStyle() == 2) {
+                            StyleConstants.setBold(style1, false);
+                            StyleConstants.setItalic(style1, true);
+                        } else {
+                            StyleConstants.setBold(style1, true);
+                            StyleConstants.setItalic(style1, false);
+                        }
+                        try {
+                            doc1.insertString(doc1.getLength(), "while", style1);
+                        } catch (BadLocationException ex) {
+                            Logger.getLogger(P_ajustes.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                         break;
                     case "Lexemas NO detectados en la entrada":
                         tx_fuente_2.setText(this.l_fuentes_mod.get(4).getName() + " " + this.l_fuentes_mod.get(4).getSize());
                         this.tx_color_fuente_2.setText(this.l_colores_mod.get(8).getRed() + ", " + this.l_colores_mod.get(8).getGreen() + ", " + this.l_colores_mod.get(8).getBlue());
                         this.tx_color_fondo_2.setText(this.l_colores_mod.get(9).getRed() + ", " + this.l_colores_mod.get(9).getGreen() + ", " + this.l_colores_mod.get(9).getBlue());
+                        // Configuración previsualización
+                        StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(4).getFamily());
+                        StyleConstants.setForeground(style1, this.l_colores_mod.get(8));
+                        StyleConstants.setBackground(style1, this.l_colores_mod.get(9));
+                        StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(4).getSize());
+                        if (this.l_fuentes_mod.get(4).getStyle() == 0) {
+                            StyleConstants.setBold(style1, false);
+                            StyleConstants.setItalic(style1, false);
+                        }    
+                        else if (this.l_fuentes_mod.get(4).getStyle() == 2) {
+                            StyleConstants.setBold(style1, false);
+                            StyleConstants.setItalic(style1, true);
+                        } else {
+                            StyleConstants.setBold(style1, true);
+                            StyleConstants.setItalic(style1, false);
+                        }
+                        try {
+                            doc1.insertString(doc1.getLength(), "6&€?l", style1);
+                        } catch (BadLocationException ex) {
+                            Logger.getLogger(P_ajustes.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                         break;
                     default:
                         tx_fuente_2.setText(this.l_fuentes_mod.get(5).getName() + " " + this.l_fuentes_mod.get(5).getSize());
                         this.tx_color_fuente_2.setText(this.l_colores_mod.get(10).getRed() + ", " + this.l_colores_mod.get(10).getGreen() + ", " + this.l_colores_mod.get(10).getBlue());
                         this.tx_color_fondo_2.setText(this.l_colores_mod.get(11).getRed() + ", " + this.l_colores_mod.get(11).getGreen() + ", " + this.l_colores_mod.get(11).getBlue());
+                        // Configuración previsualización
+                        StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(5).getFamily());
+                        StyleConstants.setForeground(style1, this.l_colores_mod.get(10));
+                        StyleConstants.setBackground(style1, this.l_colores_mod.get(11));
+                        StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(5).getSize());
+                        if (this.l_fuentes_mod.get(5).getStyle() == 0) {
+                            StyleConstants.setBold(style1, false);
+                            StyleConstants.setItalic(style1, false);
+                        }    
+                        else if (this.l_fuentes_mod.get(5).getStyle() == 2) {
+                            StyleConstants.setBold(style1, false);
+                            StyleConstants.setItalic(style1, true);
+                        } else {
+                            StyleConstants.setBold(style1, true);
+                            StyleConstants.setItalic(style1, false);
+                        }
+                        try {
+                            doc1.insertString(doc1.getLength(), "whi", style1);
+                        } catch (BadLocationException ex) {
+                            Logger.getLogger(P_ajustes.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                         break;
                 }
             }
@@ -925,6 +1134,10 @@ public class P_ajustes extends javax.swing.JDialog {
     }//GEN-LAST:event_boton_defectoActionPerformed
 
     private void boton_reestablecerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_reestablecerActionPerformed
+        StyledDocument doc = this.tx_pv_1.getStyledDocument();
+        Style style = this.tx_pv_1.addStyle("Style", null);
+        StyledDocument doc1 = this.tx_pv_2.getStyledDocument();
+        Style style1 = this.tx_pv_2.addStyle("Style", null);
         int resp = JOptionPane.showConfirmDialog(null, "¿Está seguro de reestablecer los valores?", "Advertencia", JOptionPane.YES_NO_OPTION);
         if (resp == JOptionPane.YES_OPTION) { 
             this.l_fuentes_mod.clear();
@@ -933,22 +1146,77 @@ public class P_ajustes extends javax.swing.JDialog {
             this.l_colores_mod.addAll(l_colores);
 
             if (!this.lista_1.isSelectionEmpty()) {
+                this.tx_pv_1.setText("");
+                this.tx_pv_2.setText("");
                 switch (this.lista_1.getSelectedValue()) {
                     case "Definiciones Regulares/Patrones activos":
                         this.tx_fuente_1.setText(this.l_fuentes_mod.get(0).getName() + " " + this.l_fuentes_mod.get(0).getSize());
                         this.tx_color_fuente_1.setText(this.l_colores_mod.get(0).getRed() + ", " + this.l_colores_mod.get(0).getGreen() + ", " + this.l_colores_mod.get(0).getBlue());
                         this.tx_color_fondo_1.setText(this.l_colores_mod.get(1).getRed() + ", " + this.l_colores_mod.get(1).getGreen() + ", " + this.l_colores_mod.get(1).getBlue());
+                        // Configuración previsualización
+                        StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(0).getFamily());
+                        StyleConstants.setForeground(style, this.l_colores_mod.get(0));
+                        StyleConstants.setBackground(style, this.l_colores_mod.get(1));
+                        StyleConstants.setFontSize(style, this.l_fuentes_mod.get(0).getSize());
+                        if (this.l_fuentes_mod.get(0).getStyle() == 0) {
+                            StyleConstants.setBold(style, false);
+                            StyleConstants.setItalic(style, false);
+                        }    
+                        else if (this.l_fuentes_mod.get(0).getStyle() == 2) {
+                            StyleConstants.setBold(style, false);
+                            StyleConstants.setItalic(style, true);
+                        } else {
+                            StyleConstants.setBold(style, true);
+                            StyleConstants.setItalic(style, false);
+                        }
                         break;
                     case "Definiciones Regulares/Patrones NO activos":
                         this.tx_fuente_1.setText(this.l_fuentes_mod.get(1).getName() + " " + this.l_fuentes_mod.get(1).getSize());
                         this.tx_color_fuente_1.setText(this.l_colores_mod.get(2).getRed() + ", " + this.l_colores_mod.get(2).getGreen() + ", " + this.l_colores_mod.get(2).getBlue());
                         this.tx_color_fondo_1.setText(this.l_colores_mod.get(3).getRed() + ", " + this.l_colores_mod.get(3).getGreen() + ", " + this.l_colores_mod.get(3).getBlue());
+                        // Configuración previsualización
+                        StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(1).getFamily());
+                        StyleConstants.setForeground(style, this.l_colores_mod.get(2));
+                        StyleConstants.setBackground(style, this.l_colores_mod.get(3));
+                        StyleConstants.setFontSize(style, this.l_fuentes_mod.get(1).getSize());
+                        if (this.l_fuentes_mod.get(1).getStyle() == 0) {
+                            StyleConstants.setBold(style, false);
+                            StyleConstants.setItalic(style, false);
+                        }    
+                        else if (this.l_fuentes_mod.get(1).getStyle() == 2) {
+                            StyleConstants.setBold(style, false);
+                            StyleConstants.setItalic(style, true);
+                        } else {
+                            StyleConstants.setBold(style, true);
+                            StyleConstants.setItalic(style, false);
+                        }
                         break;
                     default:
                         this.tx_fuente_1.setText(this.l_fuentes_mod.get(2).getName() + " " + this.l_fuentes_mod.get(2).getSize());
                         this.tx_color_fuente_1.setText(this.l_colores_mod.get(4).getRed() + ", " + this.l_colores_mod.get(4).getGreen() + ", " + this.l_colores_mod.get(4).getBlue());
                         this.tx_color_fondo_1.setText(this.l_colores_mod.get(5).getRed() + ", " + this.l_colores_mod.get(5).getGreen() + ", " + this.l_colores_mod.get(5).getBlue());
+                        // Configuración previsualización
+                        StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(2).getFamily());
+                        StyleConstants.setForeground(style, this.l_colores_mod.get(4));
+                        StyleConstants.setBackground(style, this.l_colores_mod.get(5));
+                        StyleConstants.setFontSize(style, this.l_fuentes_mod.get(2).getSize());
+                        if (this.l_fuentes_mod.get(2).getStyle() == 0) {
+                            StyleConstants.setBold(style, false);
+                            StyleConstants.setItalic(style, false);
+                        }    
+                        else if (this.l_fuentes_mod.get(2).getStyle() == 2) {
+                            StyleConstants.setBold(style, false);
+                            StyleConstants.setItalic(style, true);
+                        } else {
+                            StyleConstants.setBold(style, true);
+                            StyleConstants.setItalic(style, false);
+                        }
                         break;
+                }
+                try {
+                    doc.insertString(doc.getLength(), "Palabra reservada", style);
+                } catch (BadLocationException ex) {
+                    Logger.getLogger(P_ajustes.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
 
@@ -958,16 +1226,79 @@ public class P_ajustes extends javax.swing.JDialog {
                         tx_fuente_2.setText(this.l_fuentes_mod.get(3).getName() + " " + this.l_fuentes_mod.get(3).getSize());
                         this.tx_color_fuente_2.setText(this.l_colores_mod.get(6).getRed() + ", " + this.l_colores_mod.get(6).getGreen() + ", " + this.l_colores_mod.get(4).getBlue());
                         this.tx_color_fondo_2.setText(this.l_colores_mod.get(7).getRed() + ", " + this.l_colores_mod.get(7).getGreen() + ", " + this.l_colores_mod.get(5).getBlue());
+                        // Configuración previsualización
+                        StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(3).getFamily());
+                        StyleConstants.setForeground(style1, this.l_colores_mod.get(6));
+                        StyleConstants.setBackground(style1, this.l_colores_mod.get(7));
+                        StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(3).getSize());
+                        if (this.l_fuentes_mod.get(3).getStyle() == 0) {
+                            StyleConstants.setBold(style1, false);
+                            StyleConstants.setItalic(style1, false);
+                        }    
+                        else if (this.l_fuentes_mod.get(3).getStyle() == 2) {
+                            StyleConstants.setBold(style1, false);
+                            StyleConstants.setItalic(style1, true);
+                        } else {
+                            StyleConstants.setBold(style1, true);
+                            StyleConstants.setItalic(style1, false);
+                        }
+                        try {
+                            doc1.insertString(doc1.getLength(), "while", style1);
+                        } catch (BadLocationException ex) {
+                            Logger.getLogger(P_ajustes.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                         break;
                     case "Lexemas NO detectados en la entrada":
                         tx_fuente_2.setText(this.l_fuentes_mod.get(4).getName() + " " + this.l_fuentes_mod.get(4).getSize());
                         this.tx_color_fuente_2.setText(this.l_colores_mod.get(8).getRed() + ", " + this.l_colores_mod.get(8).getGreen() + ", " + this.l_colores_mod.get(8).getBlue());
                         this.tx_color_fondo_2.setText(this.l_colores_mod.get(9).getRed() + ", " + this.l_colores_mod.get(9).getGreen() + ", " + this.l_colores_mod.get(9).getBlue());
+                        // Configuración previsualización
+                        StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(4).getFamily());
+                        StyleConstants.setForeground(style1, this.l_colores_mod.get(8));
+                        StyleConstants.setBackground(style1, this.l_colores_mod.get(9));
+                        StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(4).getSize());
+                        if (this.l_fuentes_mod.get(4).getStyle() == 0) {
+                            StyleConstants.setBold(style1, false);
+                            StyleConstants.setItalic(style1, false);
+                        }    
+                        else if (this.l_fuentes_mod.get(4).getStyle() == 2) {
+                            StyleConstants.setBold(style1, false);
+                            StyleConstants.setItalic(style1, true);
+                        } else {
+                            StyleConstants.setBold(style1, true);
+                            StyleConstants.setItalic(style1, false);
+                        }
+                        try {
+                            doc1.insertString(doc1.getLength(), "6&€?l", style1);
+                        } catch (BadLocationException ex) {
+                            Logger.getLogger(P_ajustes.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                         break;
                     default:
                         tx_fuente_2.setText(this.l_fuentes_mod.get(5).getName() + " " + this.l_fuentes_mod.get(5).getSize());
                         this.tx_color_fuente_2.setText(this.l_colores_mod.get(10).getRed() + ", " + this.l_colores_mod.get(10).getGreen() + ", " + this.l_colores_mod.get(10).getBlue());
                         this.tx_color_fondo_2.setText(this.l_colores_mod.get(11).getRed() + ", " + this.l_colores_mod.get(11).getGreen() + ", " + this.l_colores_mod.get(11).getBlue());
+                        // Configuración previsualización
+                        StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(5).getFamily());
+                        StyleConstants.setForeground(style1, this.l_colores_mod.get(10));
+                        StyleConstants.setBackground(style1, this.l_colores_mod.get(11));
+                        StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(5).getSize());
+                        if (this.l_fuentes_mod.get(5).getStyle() == 0) {
+                            StyleConstants.setBold(style1, false);
+                            StyleConstants.setItalic(style1, false);
+                        }    
+                        else if (this.l_fuentes_mod.get(5).getStyle() == 2) {
+                            StyleConstants.setBold(style1, false);
+                            StyleConstants.setItalic(style1, true);
+                        } else {
+                            StyleConstants.setBold(style1, true);
+                            StyleConstants.setItalic(style1, false);
+                        }
+                        try {
+                            doc1.insertString(doc1.getLength(), "whi", style1);
+                        } catch (BadLocationException ex) {
+                            Logger.getLogger(P_ajustes.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                         break;
                 }
             }
