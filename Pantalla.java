@@ -44,6 +44,10 @@ public class Pantalla extends javax.swing.JFrame {
     private List<String> lER;
     private List<String> lAuxER;
     private List<String> lAuxMacro;
+    private List<Integer> lERAct = new LinkedList<>();
+    private List<Integer> lPATAct = new LinkedList<>();
+    private List<Integer> lCerrarER = new LinkedList<>();
+    private List<Integer> lCerrarPAT = new LinkedList<>();
     private List<Analizador.Estado> lEaux;
     private List<Analizador.Estado> lE = new LinkedList<>();
     private List<Integer> lnER = new LinkedList<>();
@@ -368,7 +372,7 @@ public class Pantalla extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jPanel2.setBackground(new java.awt.Color(112, 176, 224));
+        jPanel2.setBackground(new java.awt.Color(183, 188, 192));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         jLabel1.setText(bundle.getString("Pantalla.jLabel1.text")); // NOI18N
@@ -403,7 +407,7 @@ public class Pantalla extends javax.swing.JFrame {
                             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jScrollPane3)
                             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(1, 1, 1)))
+                        .addGap(0, 0, 0)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cabecera_esp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(scroll_panel_especificacion, javax.swing.GroupLayout.DEFAULT_SIZE, 547, Short.MAX_VALUE)
@@ -451,6 +455,7 @@ public class Pantalla extends javax.swing.JFrame {
             this.panel_especificacion.setText(especificacion);
             this.panel_especificacion.setCaretPosition(0);
             this.panel_expr.setText("");
+            this.panel_def.setText("");
             this.panel_entrada.setText(""); // ojo
             this.panel_entrada.setEditable(false);
             this.panel_entrada.setFocusable(false);
@@ -556,6 +561,10 @@ public class Pantalla extends javax.swing.JFrame {
         boolean completo = true;
         boolean iniciando = false;
         String aux;
+        this.lERAct = new LinkedList<>();
+        this.lPATAct = new LinkedList<>();
+        this.lCerrarPAT = new LinkedList<>();
+        this.lCerrarER = new LinkedList<>();
         if ((int) tok.toCharArray()[0] == 8)
         {
             retroceso = true;
@@ -672,6 +681,43 @@ public class Pantalla extends javax.swing.JFrame {
         } else {
             StyleConstants.setBold(style1, true);
             StyleConstants.setItalic(style1, false);
+        }
+        
+        // Vamos a hacer una búsqueda de los patrones y definiciones activas
+        // para ver si tenemos que ocultarlas
+        for (int i = 0; i < this.lER.size(); i++) {
+            if (expr.contains(i+1) || expr.contains(-i-1)) {
+                if (i >= this.lAuxMacro.size()) {
+                    this.lERAct.add(i);
+                } else {
+                    this.lPATAct.add(i);
+                }
+            }
+        }
+        // Guardamos en una lista los índices de inicio y de cierre de las er o pat que 
+        // queremos cerrar
+        int ai;
+        if (this.l_fuentes_mod.get(0).getSize() == 16) {
+            if (this.lAuxMacro.size() > 12) {
+                for (int i = 12; i < this.lAuxMacro.size(); i++) {
+                    if (this.lPATAct.contains(i)) {
+                        ai = this.lPATAct.get(this.lPATAct.indexOf(i-1)); // Anterior activo
+                        this.lCerrarPAT.add(ai);
+                        this.lCerrarPAT.add(i);
+                    }
+                }
+            }
+        }
+        if (this.l_fuentes_mod.get(0).getSize() == 16) {
+            if (this.lAuxER.size() > 28) {
+                for (int i = 28; i < this.lAuxER.size(); i++) {
+                    if (this.lERAct.contains(i)) {
+                        ai = this.lERAct.get(this.lERAct.indexOf(i-1)); // Anterior activo
+                        this.lCerrarER.add(ai);
+                        this.lCerrarER.add(i);
+                    }
+                }
+            }
         }
         
         if (expr.contains(1) || expr.contains(-1))
@@ -856,12 +902,26 @@ public class Pantalla extends javax.swing.JFrame {
             }
             try {
                 String cad = "\n" + this.lER.get(i);
-                if (this.lAuxMacro.size() > i)
+                if (this.lAuxMacro.size() > i) {
+                    int cont = -1;
+                    if (this.lCerrarPAT.size() > 0) {
+                        for (int a : this.lCerrarPAT) {
+                            cont++;
+                            if (cont % 2 != 0)
+                                continue;
+                            if (i > a && i < this.lCerrarPAT.get(cont+1)) {
+                                // no se escribe y se suma a un contador
+                            }
+                        }
+                    }
                     doc.insertString(doc.getLength(), cad, style);
-                else if (this.lAuxMacro.size() == i)
+                }
+                else if (this.lAuxMacro.size() == i) {
                     doc1.insertString(doc1.getLength(), this.lER.get(i), style1);
-                else
+                }
+                else {
                     doc1.insertString(doc1.getLength(), cad, style1);
+                }
             } catch (BadLocationException ex) {
                 Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
             }
