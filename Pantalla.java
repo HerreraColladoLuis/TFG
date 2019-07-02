@@ -62,6 +62,10 @@ public class Pantalla extends javax.swing.JFrame {
     private boolean anteriorFinal = false;
     private boolean anteriorNoRec = false;
     private boolean anteriorBorrado = false;
+    private boolean borrarPAT = false;
+    private boolean borrarDEF = false;
+    private boolean borradoPAT = true;
+    private boolean borradoDEF = true;
     private int ind = -1;
     private P_ajustes pAjustes;
     private List<Font> l_fuentes = new LinkedList<>();
@@ -260,6 +264,12 @@ public class Pantalla extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 panel_exprMouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                panel_exprMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                panel_exprMouseExited(evt);
+            }
         });
         scroll_panel_expr.setViewportView(panel_expr);
 
@@ -350,6 +360,17 @@ public class Pantalla extends javax.swing.JFrame {
         panel_def.setEditable(false);
         panel_def.setBorder(null);
         panel_def.setFocusable(false);
+        panel_def.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                panel_defMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                panel_defMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                panel_defMouseExited(evt);
+            }
+        });
         jScrollPane3.setViewportView(panel_def);
 
         jPanel1.setBackground(new java.awt.Color(112, 176, 224));
@@ -404,12 +425,9 @@ public class Pantalla extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(scroll_panel_expr)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane3)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, 0)))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cabecera_esp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(scroll_panel_especificacion, javax.swing.GroupLayout.DEFAULT_SIZE, 547, Short.MAX_VALUE)
@@ -557,13 +575,13 @@ public class Pantalla extends javax.swing.JFrame {
     private void panel_entradaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_panel_entradaKeyTyped
         String tok = Character.toString(evt.getKeyChar());
         evt.consume();
+        this.borrarDEF = false;
+        this.borrarPAT = false;
         boolean vacio = false;
         boolean retroceso = false;
         boolean esFinal = false;
         boolean completo = true;
         boolean iniciando = false;
-        int cont;
-        boolean escribir;
         String aux;
         this.lERAct = new LinkedList<>();
         this.lPATAct = new LinkedList<>();
@@ -647,348 +665,8 @@ public class Pantalla extends javax.swing.JFrame {
         this.estadoEntrada.add(this.lE);
         if ((int) tok.toCharArray()[0] != 8)
             this.entrada.add(tok);
-        
-        this.panel_expr.setText("");
-        this.panel_def.setText("");
-        // Cogemos los estilos del panel de expresiones regulares
-        StyledDocument doc = this.panel_expr.getStyledDocument();
-        Style style = this.panel_expr.addStyle("Style", null);
-        StyledDocument doc1 = this.panel_def.getStyledDocument();
-        Style style1 = this.panel_def.addStyle("Style", null);
-        
-        StyleConstants.setBackground(style, this.l_colores_mod.get(3));
-        StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(1).getFamily());
-        StyleConstants.setForeground(style, this.l_colores_mod.get(2));
-        StyleConstants.setFontSize(style, this.l_fuentes_mod.get(1).getSize());
-        if (this.l_fuentes_mod.get(1).getStyle() == 0) {
-            StyleConstants.setBold(style, false);
-            StyleConstants.setItalic(style, false);
-        }    
-        else if (this.l_fuentes_mod.get(1).getStyle() == 2) {
-            StyleConstants.setBold(style, false);
-            StyleConstants.setItalic(style, true);
-        } else {
-            StyleConstants.setBold(style, true);
-            StyleConstants.setItalic(style, false);
-        }
-        
-        StyleConstants.setBackground(style1, this.l_colores_mod.get(3));
-        StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(1).getFamily());
-        StyleConstants.setForeground(style1, this.l_colores_mod.get(2));
-        StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(1).getSize());
-        if (this.l_fuentes_mod.get(1).getStyle() == 0) {
-            StyleConstants.setBold(style1, false);
-            StyleConstants.setItalic(style1, false);
-        }    
-        else if (this.l_fuentes_mod.get(1).getStyle() == 2) {
-            StyleConstants.setBold(style1, false);
-            StyleConstants.setItalic(style1, true);
-        } else {
-            StyleConstants.setBold(style1, true);
-            StyleConstants.setItalic(style1, false);
-        }
-        
-        // Vamos a hacer una búsqueda de los patrones y definiciones activas
-        // para ver si tenemos que ocultarlas
-        for (int i = 0; i < this.lER.size(); i++) {
-            if (expr.contains(i+1) || expr.contains(-i-1)) {
-                if (i >= this.lAuxMacro.size()) {
-                    this.lERAct.add(i);
-                } else {
-                    this.lPATAct.add(i);
-                }
-            }
-        }
-        // Guardamos en una lista los índices de inicio y de cierre de las er o pat que 
-        // queremos cerrar
-        int ai;
-        if (this.l_fuentes_mod.get(1).getSize() == 16) {
-            if (this.lAuxMacro.size() > 12) {
-                for (int i = 0; i < this.lAuxMacro.size(); i++) {
-                    if (this.lPATAct.contains(i)) {
-                        if (this.lPATAct.indexOf(i)-1 == -1)
-                            ai = 0;
-                        else
-                            ai = this.lPATAct.get(this.lPATAct.indexOf(i)-1); // Anterior activo
-                        this.lCerrarPAT.add(ai);
-                        this.lCerrarPAT.add(i);
-                    }
-                }
-            }
-        }
-        if (this.l_fuentes_mod.get(1).getSize() == 16) {
-            if (this.lAuxER.size() > 28) {
-                for (int i = 28; i < this.lAuxER.size(); i++) {
-                    if (this.lERAct.contains(i)) {
-                        if (this.lERAct.indexOf(i)-1 == -1)
-                            ai = this.lAuxMacro.size();
-                        else
-                            ai = this.lERAct.get(this.lERAct.indexOf(i)-1); // Anterior activo
-                        this.lCerrarER.add(ai);
-                        this.lCerrarER.add(i);
-                    }
-                }
-            }
-        }
-        
-        if (expr.contains(1) || expr.contains(-1))
-        {
-            if (expr.contains(-1)) {
-                StyleConstants.setBackground(style, this.l_colores_mod.get(5));   
-                StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(2).getFamily());
-                StyleConstants.setForeground(style, this.l_colores_mod.get(4));
-                StyleConstants.setFontSize(style, this.l_fuentes_mod.get(2).getSize());
-                if (this.l_fuentes_mod.get(2).getStyle() == 0) {
-                    StyleConstants.setBold(style, false);
-                    StyleConstants.setItalic(style, false);
-                }    
-                else if (this.l_fuentes_mod.get(2).getStyle() == 2) {
-                    StyleConstants.setBold(style, false);
-                    StyleConstants.setItalic(style, true);
-                } else {
-                    StyleConstants.setBold(style, true);
-                    StyleConstants.setItalic(style, false);
-                }
-                
-                StyleConstants.setBackground(style1, this.l_colores_mod.get(5));   
-                StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(2).getFamily());
-                StyleConstants.setForeground(style1, this.l_colores_mod.get(4));
-                StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(2).getSize());
-                if (this.l_fuentes_mod.get(2).getStyle() == 0) {
-                    StyleConstants.setBold(style1, false);
-                    StyleConstants.setItalic(style1, false);
-                }    
-                else if (this.l_fuentes_mod.get(2).getStyle() == 2) {
-                    StyleConstants.setBold(style1, false);
-                    StyleConstants.setItalic(style1, true);
-                } else {
-                    StyleConstants.setBold(style1, true);
-                    StyleConstants.setItalic(style1, false);
-                }
-            } else {
-                completo = false;
-                StyleConstants.setBackground(style, this.l_colores_mod.get(1));   
-                StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(0).getFamily());
-                StyleConstants.setForeground(style, this.l_colores_mod.get(0));
-                StyleConstants.setFontSize(style, this.l_fuentes_mod.get(0).getSize());
-                if (this.l_fuentes_mod.get(0).getStyle() == 0) {
-                    StyleConstants.setBold(style, false);
-                    StyleConstants.setItalic(style, false);
-                }    
-                else if (this.l_fuentes_mod.get(0).getStyle() == 2) {
-                    StyleConstants.setBold(style, false);
-                    StyleConstants.setItalic(style, true);
-                } else {
-                    StyleConstants.setBold(style, true);
-                    StyleConstants.setItalic(style, false);
-                }
-                
-                StyleConstants.setBackground(style1, this.l_colores_mod.get(1));   
-                StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(0).getFamily());
-                StyleConstants.setForeground(style1, this.l_colores_mod.get(0));
-                StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(0).getSize());
-                if (this.l_fuentes_mod.get(0).getStyle() == 0) {
-                    StyleConstants.setBold(style1, false);
-                    StyleConstants.setItalic(style1, false);
-                }    
-                else if (this.l_fuentes_mod.get(0).getStyle() == 2) {
-                    StyleConstants.setBold(style1, false);
-                    StyleConstants.setItalic(style1, true);
-                } else {
-                    StyleConstants.setBold(style1, true);
-                    StyleConstants.setItalic(style1, false);
-                }
-            }
-        }
-        try {
-            if (this.lAuxMacro.size() > 0)
-                doc.insertString(doc.getLength(), this.lER.get(0), style);
-            else
-                doc1.insertString(doc1.getLength(), this.lER.get(0), style1);
-        } catch (BadLocationException ex) {
-            Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        for (int i = 1; i < this.lER.size(); i++)
-        {
-            StyleConstants.setBackground(style, this.l_colores_mod.get(3));
-            StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(1).getFamily());
-            StyleConstants.setForeground(style, this.l_colores_mod.get(2));
-            StyleConstants.setFontSize(style, this.l_fuentes_mod.get(1).getSize());
-            if (this.l_fuentes_mod.get(1).getStyle() == 0) {
-                StyleConstants.setBold(style, false);
-                StyleConstants.setItalic(style, false);
-            }    
-            else if (this.l_fuentes_mod.get(1).getStyle() == 2) {
-                StyleConstants.setBold(style, false);
-                StyleConstants.setItalic(style, true);
-            } else {
-                StyleConstants.setBold(style, true);
-                StyleConstants.setItalic(style, false);
-            }
             
-            StyleConstants.setBackground(style1, this.l_colores_mod.get(3));
-            StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(1).getFamily());
-            StyleConstants.setForeground(style1, this.l_colores_mod.get(2));
-            StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(1).getSize());
-            if (this.l_fuentes_mod.get(1).getStyle() == 0) {
-                StyleConstants.setBold(style1, false);
-                StyleConstants.setItalic(style1, false);
-            }    
-            else if (this.l_fuentes_mod.get(1).getStyle() == 2) {
-                StyleConstants.setBold(style1, false);
-                StyleConstants.setItalic(style1, true);
-            } else {
-                StyleConstants.setBold(style1, true);
-                StyleConstants.setItalic(style1, false);
-            }
-            
-            if (expr.contains(i+1) || expr.contains(-i-1))
-            {
-                if (expr.contains(-i-1)) {
-                    StyleConstants.setBackground(style, this.l_colores_mod.get(5));   
-                    StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(2).getFamily());
-                    StyleConstants.setForeground(style, this.l_colores_mod.get(4));
-                    StyleConstants.setFontSize(style, this.l_fuentes_mod.get(2).getSize());
-                    if (this.l_fuentes_mod.get(2).getStyle() == 0) {
-                        StyleConstants.setBold(style, false);
-                        StyleConstants.setItalic(style, false);
-                    }    
-                    else if (this.l_fuentes_mod.get(2).getStyle() == 2) {
-                        StyleConstants.setBold(style, false);
-                        StyleConstants.setItalic(style, true);
-                    } else {
-                        StyleConstants.setBold(style, true);
-                        StyleConstants.setItalic(style, false);
-                    }
-                    
-                    StyleConstants.setBackground(style1, this.l_colores_mod.get(5));   
-                    StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(2).getFamily());
-                    StyleConstants.setForeground(style1, this.l_colores_mod.get(4));
-                    StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(2).getSize());
-                    if (this.l_fuentes_mod.get(2).getStyle() == 0) {
-                        StyleConstants.setBold(style1, false);
-                        StyleConstants.setItalic(style1, false);
-                    }    
-                    else if (this.l_fuentes_mod.get(2).getStyle() == 2) {
-                        StyleConstants.setBold(style1, false);
-                        StyleConstants.setItalic(style1, true);
-                    } else {
-                        StyleConstants.setBold(style1, true);
-                        StyleConstants.setItalic(style1, false);
-                    }
-                } else {
-                    completo = false;
-                    StyleConstants.setBackground(style, this.l_colores_mod.get(1));   
-                    StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(0).getFamily());
-                    StyleConstants.setForeground(style, this.l_colores_mod.get(0));
-                    StyleConstants.setFontSize(style, this.l_fuentes_mod.get(0).getSize());
-                    if (this.l_fuentes_mod.get(0).getStyle() == 0) {
-                        StyleConstants.setBold(style, false);
-                        StyleConstants.setItalic(style, false);
-                    }    
-                    else if (this.l_fuentes_mod.get(0).getStyle() == 2) {
-                        StyleConstants.setBold(style, false);
-                        StyleConstants.setItalic(style, true);
-                    } else {
-                        StyleConstants.setBold(style, true);
-                        StyleConstants.setItalic(style, false);
-                    }
-                    
-                    StyleConstants.setBackground(style1, this.l_colores_mod.get(1));   
-                    StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(0).getFamily());
-                    StyleConstants.setForeground(style1, this.l_colores_mod.get(0));
-                    StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(0).getSize());
-                    if (this.l_fuentes_mod.get(0).getStyle() == 0) {
-                        StyleConstants.setBold(style1, false);
-                        StyleConstants.setItalic(style1, false);
-                    }    
-                    else if (this.l_fuentes_mod.get(0).getStyle() == 2) {
-                        StyleConstants.setBold(style1, false);
-                        StyleConstants.setItalic(style1, true);
-                    } else {
-                        StyleConstants.setBold(style1, true);
-                        StyleConstants.setItalic(style1, false);
-                    }
-                }
-            }
-            try {
-                String cad = "\n" + this.lER.get(i);
-                if (this.lAuxMacro.size() > i) { // Estamos en las macros
-                    // doc.insertString(doc.getLength(), cad, style); // ASI SIN CERRAR
-                    if (this.lCerrarPAT.size() > 0) { // Comprobamos si hay que cerrar patrones
-                        cont = -1;
-                        escribir = true;
-                        for (int a : this.lCerrarPAT) {
-                            cont++;
-                            if (cont % 2 != 0) // Solo cogemos el índice inicial
-                                continue;
-                            if (i > a && i < this.lCerrarPAT.get(cont+1)) {
-                                // no se escribe y se suma a un contador
-                                escribir = false;
-                                if (i == a+1) { // Si es inmediatamente el primero sin activarse, actualizamos contador
-                                    this.contadorCerrar = 1;
-                                    this.lcont.add(this.contadorCerrar);
-                                } else if (i == this.lCerrarPAT.get(cont+1)-1) { // Si es el último en activarse, escribimos el numero
-                                    doc.insertString(doc.getLength(), "\n...("+(this.contadorCerrar+1)+")...", style);
-                                    this.lcont.set(this.lcont.size()-1, this.contadorCerrar+1);
-                                    this.contadorCerrar = -1;
-                                } else { // No es ni el primero ni el último
-                                    this.contadorCerrar++;
-                                    this.lcont.set(this.lcont.size()-1, this.contadorCerrar);
-                                }
-                                break;
-                            }
-                        }
-                        if (escribir) // Si no está entre ningún espacio de no activadas, se escribe
-                            doc.insertString(doc.getLength(), cad, style);
-                    } else { // Si no hay que cerrar patrones, lo escribimos directamente
-                        doc.insertString(doc.getLength(), cad, style);
-                    }
-                }
-                else { // Estamos en las definiciones regulares
-                    if (this.lAuxMacro.size() == i) {
-                        this.contadorCerrar = -1;
-                        cad = this.lER.get(i);
-                    }
-                    // doc1.insertString(doc1.getLength(), cad, style1); // ASI SERIA SIN CERRAR
-                    
-                    if (this.lCerrarER.size() > 0) { // Comprobamos si hay que cerrar patrones
-                        cont = -1;
-                        escribir = true;
-                        for (int a : this.lCerrarER) {
-                            cont++;
-                            if (cont % 2 != 0) // Solo cogemos el índice inicial
-                                continue;
-                            if (i > a && i < this.lCerrarER.get(cont+1)) {
-                                // no se escribe y se suma a un contador
-                                escribir = false;
-                                if (i == a+1) { // Si es inmediatamente el primero sin activarse, actualizamos contador
-                                    this.contadorCerrar = 1;
-                                    this.lcont.add(this.contadorCerrar);
-                                } else if (i == this.lCerrarER.get(cont+1)-1) { // Si es el último en activarse, escribimos el numero
-                                    doc1.insertString(doc1.getLength(), "\n...("+(this.contadorCerrar+1)+")...", style1);
-                                    this.lcont.set(this.lcont.size()-1, this.contadorCerrar+1);
-                                    this.contadorCerrar = -1;
-                                } else { // No es ni el primero ni el último
-                                    this.contadorCerrar++;
-                                    this.lcont.set(this.lcont.size()-1, this.contadorCerrar);
-                                }
-                                break;
-                            }
-                        }
-                        if (escribir) // Si no está entre ningún espacio de no activadas, se escribe
-                            doc1.insertString(doc1.getLength(), cad, style1);
-                    } else { // Si no hay que cerrar patrones, lo escribimos directamente
-                        doc1.insertString(doc1.getLength(), cad, style1);
-                    }
-                    
-                }
-            } catch (BadLocationException ex) {
-                Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } 
-        this.panel_expr.setCaretPosition(0);
-        this.panel_def.setCaretPosition(0);
+        this.mostrarPaneles(expr, true, true); // Por defecto, mostramos los patrones y las definiciones cerradas
         
         if (!vacio) {
             StyledDocument doc0 = this.panel_entrada.getStyledDocument();
@@ -1201,6 +879,356 @@ public class Pantalla extends javax.swing.JFrame {
         // PARECE QUE ESTÁ PERFECTO (SEGUIR PROBANDO)
     }//GEN-LAST:event_panel_entradaKeyTyped
 
+    private void mostrarPaneles(List<Integer> expr, boolean cerrarPAT, boolean cerrarDEF) {
+        int cont;
+        boolean escribir;
+        this.panel_expr.setText("");
+        this.panel_def.setText("");
+        // Cogemos los estilos del panel de expresiones regulares
+        StyledDocument doc = this.panel_expr.getStyledDocument();
+        Style style = this.panel_expr.addStyle("Style", null);
+        StyledDocument doc1 = this.panel_def.getStyledDocument();
+        Style style1 = this.panel_def.addStyle("Style", null);
+        
+        StyleConstants.setBackground(style, this.l_colores_mod.get(3));
+        StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(1).getFamily());
+        StyleConstants.setForeground(style, this.l_colores_mod.get(2));
+        StyleConstants.setFontSize(style, this.l_fuentes_mod.get(1).getSize());
+        if (this.l_fuentes_mod.get(1).getStyle() == 0) {
+            StyleConstants.setBold(style, false);
+            StyleConstants.setItalic(style, false);
+        }    
+        else if (this.l_fuentes_mod.get(1).getStyle() == 2) {
+            StyleConstants.setBold(style, false);
+            StyleConstants.setItalic(style, true);
+        } else {
+            StyleConstants.setBold(style, true);
+            StyleConstants.setItalic(style, false);
+        }
+        
+        StyleConstants.setBackground(style1, this.l_colores_mod.get(3));
+        StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(1).getFamily());
+        StyleConstants.setForeground(style1, this.l_colores_mod.get(2));
+        StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(1).getSize());
+        if (this.l_fuentes_mod.get(1).getStyle() == 0) {
+            StyleConstants.setBold(style1, false);
+            StyleConstants.setItalic(style1, false);
+        }    
+        else if (this.l_fuentes_mod.get(1).getStyle() == 2) {
+            StyleConstants.setBold(style1, false);
+            StyleConstants.setItalic(style1, true);
+        } else {
+            StyleConstants.setBold(style1, true);
+            StyleConstants.setItalic(style1, false);
+        }
+        
+        // Vamos a hacer una búsqueda de los patrones y definiciones activas
+        // para ver si tenemos que ocultarlas
+        for (int i = 0; i < this.lER.size(); i++) {
+            if (expr.contains(i+1) || expr.contains(-i-1)) {
+                if (i >= this.lAuxMacro.size()) {
+                    this.lERAct.add(i);
+                } else {
+                    this.lPATAct.add(i);
+                }
+            }
+        }
+        // Guardamos en una lista los índices de inicio y de cierre de las er o pat que 
+        // queremos cerrar
+        int ai;
+        if (this.l_fuentes_mod.get(1).getSize() == 16) {
+            if (this.lAuxMacro.size() > 12) {
+                for (int i = 0; i < this.lAuxMacro.size(); i++) {
+                    if (this.lPATAct.contains(i)) {
+                        this.borrarPAT = true;
+                        if (this.lPATAct.indexOf(i)-1 == -1)
+                            ai = 0;
+                        else
+                            ai = this.lPATAct.get(this.lPATAct.indexOf(i)-1); // Anterior activo
+                        this.lCerrarPAT.add(ai);
+                        this.lCerrarPAT.add(i);
+                    }
+                }
+            }
+        }
+        if (this.l_fuentes_mod.get(1).getSize() == 16) {
+            if (this.lAuxER.size() > 28) {
+                for (int i = 28; i < this.lAuxER.size(); i++) {
+                    if (this.lERAct.contains(i)) {
+                        this.borrarDEF = true;
+                        if (this.lERAct.indexOf(i)-1 == -1)
+                            ai = this.lAuxMacro.size();
+                        else
+                            ai = this.lERAct.get(this.lERAct.indexOf(i)-1); // Anterior activo
+                        this.lCerrarER.add(ai);
+                        this.lCerrarER.add(i);
+                    }
+                }
+            }
+        }
+        
+        if (expr.contains(1) || expr.contains(-1))
+        {
+            if (expr.contains(-1)) {
+                StyleConstants.setBackground(style, this.l_colores_mod.get(5));   
+                StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(2).getFamily());
+                StyleConstants.setForeground(style, this.l_colores_mod.get(4));
+                StyleConstants.setFontSize(style, this.l_fuentes_mod.get(2).getSize());
+                if (this.l_fuentes_mod.get(2).getStyle() == 0) {
+                    StyleConstants.setBold(style, false);
+                    StyleConstants.setItalic(style, false);
+                }    
+                else if (this.l_fuentes_mod.get(2).getStyle() == 2) {
+                    StyleConstants.setBold(style, false);
+                    StyleConstants.setItalic(style, true);
+                } else {
+                    StyleConstants.setBold(style, true);
+                    StyleConstants.setItalic(style, false);
+                }
+                
+                StyleConstants.setBackground(style1, this.l_colores_mod.get(5));   
+                StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(2).getFamily());
+                StyleConstants.setForeground(style1, this.l_colores_mod.get(4));
+                StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(2).getSize());
+                if (this.l_fuentes_mod.get(2).getStyle() == 0) {
+                    StyleConstants.setBold(style1, false);
+                    StyleConstants.setItalic(style1, false);
+                }    
+                else if (this.l_fuentes_mod.get(2).getStyle() == 2) {
+                    StyleConstants.setBold(style1, false);
+                    StyleConstants.setItalic(style1, true);
+                } else {
+                    StyleConstants.setBold(style1, true);
+                    StyleConstants.setItalic(style1, false);
+                }
+            } else {
+                StyleConstants.setBackground(style, this.l_colores_mod.get(1));   
+                StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(0).getFamily());
+                StyleConstants.setForeground(style, this.l_colores_mod.get(0));
+                StyleConstants.setFontSize(style, this.l_fuentes_mod.get(0).getSize());
+                if (this.l_fuentes_mod.get(0).getStyle() == 0) {
+                    StyleConstants.setBold(style, false);
+                    StyleConstants.setItalic(style, false);
+                }    
+                else if (this.l_fuentes_mod.get(0).getStyle() == 2) {
+                    StyleConstants.setBold(style, false);
+                    StyleConstants.setItalic(style, true);
+                } else {
+                    StyleConstants.setBold(style, true);
+                    StyleConstants.setItalic(style, false);
+                }
+                
+                StyleConstants.setBackground(style1, this.l_colores_mod.get(1));   
+                StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(0).getFamily());
+                StyleConstants.setForeground(style1, this.l_colores_mod.get(0));
+                StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(0).getSize());
+                if (this.l_fuentes_mod.get(0).getStyle() == 0) {
+                    StyleConstants.setBold(style1, false);
+                    StyleConstants.setItalic(style1, false);
+                }    
+                else if (this.l_fuentes_mod.get(0).getStyle() == 2) {
+                    StyleConstants.setBold(style1, false);
+                    StyleConstants.setItalic(style1, true);
+                } else {
+                    StyleConstants.setBold(style1, true);
+                    StyleConstants.setItalic(style1, false);
+                }
+            }
+        }
+        try {
+            if (this.lAuxMacro.size() > 0)
+                doc.insertString(doc.getLength(), this.lER.get(0), style);
+            else
+                doc1.insertString(doc1.getLength(), this.lER.get(0), style1);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for (int i = 1; i < this.lER.size(); i++)
+        {
+            StyleConstants.setBackground(style, this.l_colores_mod.get(3));
+            StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(1).getFamily());
+            StyleConstants.setForeground(style, this.l_colores_mod.get(2));
+            StyleConstants.setFontSize(style, this.l_fuentes_mod.get(1).getSize());
+            if (this.l_fuentes_mod.get(1).getStyle() == 0) {
+                StyleConstants.setBold(style, false);
+                StyleConstants.setItalic(style, false);
+            }    
+            else if (this.l_fuentes_mod.get(1).getStyle() == 2) {
+                StyleConstants.setBold(style, false);
+                StyleConstants.setItalic(style, true);
+            } else {
+                StyleConstants.setBold(style, true);
+                StyleConstants.setItalic(style, false);
+            }
+            
+            StyleConstants.setBackground(style1, this.l_colores_mod.get(3));
+            StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(1).getFamily());
+            StyleConstants.setForeground(style1, this.l_colores_mod.get(2));
+            StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(1).getSize());
+            if (this.l_fuentes_mod.get(1).getStyle() == 0) {
+                StyleConstants.setBold(style1, false);
+                StyleConstants.setItalic(style1, false);
+            }    
+            else if (this.l_fuentes_mod.get(1).getStyle() == 2) {
+                StyleConstants.setBold(style1, false);
+                StyleConstants.setItalic(style1, true);
+            } else {
+                StyleConstants.setBold(style1, true);
+                StyleConstants.setItalic(style1, false);
+            }
+            
+            if (expr.contains(i+1) || expr.contains(-i-1))
+            {
+                if (expr.contains(-i-1)) {
+                    StyleConstants.setBackground(style, this.l_colores_mod.get(5));   
+                    StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(2).getFamily());
+                    StyleConstants.setForeground(style, this.l_colores_mod.get(4));
+                    StyleConstants.setFontSize(style, this.l_fuentes_mod.get(2).getSize());
+                    if (this.l_fuentes_mod.get(2).getStyle() == 0) {
+                        StyleConstants.setBold(style, false);
+                        StyleConstants.setItalic(style, false);
+                    }    
+                    else if (this.l_fuentes_mod.get(2).getStyle() == 2) {
+                        StyleConstants.setBold(style, false);
+                        StyleConstants.setItalic(style, true);
+                    } else {
+                        StyleConstants.setBold(style, true);
+                        StyleConstants.setItalic(style, false);
+                    }
+                    
+                    StyleConstants.setBackground(style1, this.l_colores_mod.get(5));   
+                    StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(2).getFamily());
+                    StyleConstants.setForeground(style1, this.l_colores_mod.get(4));
+                    StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(2).getSize());
+                    if (this.l_fuentes_mod.get(2).getStyle() == 0) {
+                        StyleConstants.setBold(style1, false);
+                        StyleConstants.setItalic(style1, false);
+                    }    
+                    else if (this.l_fuentes_mod.get(2).getStyle() == 2) {
+                        StyleConstants.setBold(style1, false);
+                        StyleConstants.setItalic(style1, true);
+                    } else {
+                        StyleConstants.setBold(style1, true);
+                        StyleConstants.setItalic(style1, false);
+                    }
+                } else {
+                    StyleConstants.setBackground(style, this.l_colores_mod.get(1));   
+                    StyleConstants.setFontFamily(style, this.l_fuentes_mod.get(0).getFamily());
+                    StyleConstants.setForeground(style, this.l_colores_mod.get(0));
+                    StyleConstants.setFontSize(style, this.l_fuentes_mod.get(0).getSize());
+                    if (this.l_fuentes_mod.get(0).getStyle() == 0) {
+                        StyleConstants.setBold(style, false);
+                        StyleConstants.setItalic(style, false);
+                    }    
+                    else if (this.l_fuentes_mod.get(0).getStyle() == 2) {
+                        StyleConstants.setBold(style, false);
+                        StyleConstants.setItalic(style, true);
+                    } else {
+                        StyleConstants.setBold(style, true);
+                        StyleConstants.setItalic(style, false);
+                    }
+                    
+                    StyleConstants.setBackground(style1, this.l_colores_mod.get(1));   
+                    StyleConstants.setFontFamily(style1, this.l_fuentes_mod.get(0).getFamily());
+                    StyleConstants.setForeground(style1, this.l_colores_mod.get(0));
+                    StyleConstants.setFontSize(style1, this.l_fuentes_mod.get(0).getSize());
+                    if (this.l_fuentes_mod.get(0).getStyle() == 0) {
+                        StyleConstants.setBold(style1, false);
+                        StyleConstants.setItalic(style1, false);
+                    }    
+                    else if (this.l_fuentes_mod.get(0).getStyle() == 2) {
+                        StyleConstants.setBold(style1, false);
+                        StyleConstants.setItalic(style1, true);
+                    } else {
+                        StyleConstants.setBold(style1, true);
+                        StyleConstants.setItalic(style1, false);
+                    }
+                }
+            }
+            try {
+                String cad = "\n" + this.lER.get(i);
+                if (this.lAuxMacro.size() > i) { // Estamos en las macros
+                    if (!cerrarPAT)
+                        doc.insertString(doc.getLength(), cad, style); // ASI SIN CERRAR
+                    else {
+                        if (this.lCerrarPAT.size() > 0) { // Comprobamos si hay que cerrar patrones
+                            cont = -1;
+                            escribir = true;
+                            for (int a : this.lCerrarPAT) {
+                                cont++;
+                                if (cont % 2 != 0) // Solo cogemos el índice inicial
+                                    continue;
+                                if (i > a && i < this.lCerrarPAT.get(cont+1)) {
+                                    // no se escribe y se suma a un contador
+                                    escribir = false;
+                                    if (i == a+1) { // Si es inmediatamente el primero sin activarse, actualizamos contador
+                                        this.contadorCerrar = 1;
+                                        this.lcont.add(this.contadorCerrar);
+                                    } else if (i == this.lCerrarPAT.get(cont+1)-1) { // Si es el último en activarse, escribimos el numero
+                                        doc.insertString(doc.getLength(), "\n...("+(this.contadorCerrar+1)+")...", style);
+                                        this.lcont.set(this.lcont.size()-1, this.contadorCerrar+1);
+                                        this.contadorCerrar = -1;
+                                    } else { // No es ni el primero ni el último
+                                        this.contadorCerrar++;
+                                        this.lcont.set(this.lcont.size()-1, this.contadorCerrar);
+                                    }
+                                    break;
+                                }
+                            }
+                            if (escribir) // Si no está entre ningún espacio de no activadas, se escribe
+                                doc.insertString(doc.getLength(), cad, style);
+                        } else { // Si no hay que cerrar patrones, lo escribimos directamente
+                            doc.insertString(doc.getLength(), cad, style);
+                        }
+                    }   
+                }
+                else { // Estamos en las definiciones regulares
+                    if (this.lAuxMacro.size() == i) {
+                        this.contadorCerrar = -1;
+                        cad = this.lER.get(i);
+                    }
+                    if (!cerrarDEF)
+                        doc1.insertString(doc1.getLength(), cad, style1); // ASI SERIA SIN CERRAR
+                    else {
+                        if (this.lCerrarER.size() > 0) { // Comprobamos si hay que cerrar patrones
+                            cont = -1;
+                            escribir = true;
+                            for (int a : this.lCerrarER) {
+                                cont++;
+                                if (cont % 2 != 0) // Solo cogemos el índice inicial
+                                    continue;
+                                if (i > a && i < this.lCerrarER.get(cont+1)) {
+                                    // no se escribe y se suma a un contador
+                                    escribir = false;
+                                    if (i == a+1) { // Si es inmediatamente el primero sin activarse, actualizamos contador
+                                        this.contadorCerrar = 1;
+                                        this.lcont.add(this.contadorCerrar);
+                                    } else if (i == this.lCerrarER.get(cont+1)-1) { // Si es el último en no activarse, escribimos el numero
+                                        doc1.insertString(doc1.getLength(), "\n...("+(this.contadorCerrar+1)+")...", style1);
+                                        this.lcont.set(this.lcont.size()-1, this.contadorCerrar+1);
+                                        this.contadorCerrar = -1;
+                                    } else { // No es ni el primero ni el último
+                                        this.contadorCerrar++;
+                                        this.lcont.set(this.lcont.size()-1, this.contadorCerrar);
+                                    }
+                                    break;
+                                }
+                            }
+                            if (escribir) // Si no está entre ningún espacio de no activadas, se escribe
+                                doc1.insertString(doc1.getLength(), cad, style1);
+                        } else { // Si no hay que cerrar patrones, lo escribimos directamente
+                            doc1.insertString(doc1.getLength(), cad, style1);
+                        }
+                    }  
+                }
+            } catch (BadLocationException ex) {
+                Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } 
+        this.panel_expr.setCaretPosition(0);
+        this.panel_def.setCaretPosition(0);
+    }
+    
     private void panel_entradaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_panel_entradaFocusGained
 //        this.panel_entrada.setText("");
 //        StyledDocument doc = this.panel_entrada.getStyledDocument();
@@ -1238,7 +1266,15 @@ public class Pantalla extends javax.swing.JFrame {
     }//GEN-LAST:event_panel_entradaKeyPressed
 
     private void panel_exprMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_exprMouseClicked
-        
+        if (this.borrarPAT) {
+            if (this.borradoPAT) {
+                this.mostrarPaneles(this.lnER, false, true);
+                borradoPAT = false;
+            } else {
+                this.mostrarPaneles(this.lnER, true, true);
+                borradoPAT = true;
+            }
+        }
     }//GEN-LAST:event_panel_exprMouseClicked
 
     private void panel_exprHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_panel_exprHyperlinkUpdate
@@ -1253,6 +1289,34 @@ public class Pantalla extends javax.swing.JFrame {
         this.l_fuentes_mod.addAll(this.pAjustes.getL_fuentes_mod());
         this.l_colores_mod.addAll(this.pAjustes.getL_colores_mod());
     }//GEN-LAST:event_lbSettingsMouseClicked
+
+    private void panel_defMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_defMouseClicked
+        if (this.borrarDEF) {
+            if (this.borradoDEF) {
+                this.mostrarPaneles(lnER, true, false);
+                borradoDEF = false;
+            } else {
+                this.mostrarPaneles(lnER, true, true);
+                borradoDEF = true;
+            }
+        }
+    }//GEN-LAST:event_panel_defMouseClicked
+
+    private void panel_exprMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_exprMouseEntered
+        this.panel_exprMouseClicked(evt);
+    }//GEN-LAST:event_panel_exprMouseEntered
+
+    private void panel_exprMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_exprMouseExited
+        this.panel_exprMouseClicked(evt);
+    }//GEN-LAST:event_panel_exprMouseExited
+
+    private void panel_defMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_defMouseEntered
+        this.panel_defMouseClicked(evt);
+    }//GEN-LAST:event_panel_defMouseEntered
+
+    private void panel_defMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_defMouseExited
+        this.panel_defMouseClicked(evt);
+    }//GEN-LAST:event_panel_defMouseExited
     
     /**
      * Método para abrir un archivo con JFileChooser.
