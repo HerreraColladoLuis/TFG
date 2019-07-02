@@ -48,6 +48,8 @@ public class Pantalla extends javax.swing.JFrame {
     private List<Integer> lPATAct = new LinkedList<>();
     private List<Integer> lCerrarER = new LinkedList<>();
     private List<Integer> lCerrarPAT = new LinkedList<>();
+    private List<Integer> lcont = new LinkedList<>();
+    private int contadorCerrar = -1;
     private List<Analizador.Estado> lEaux;
     private List<Analizador.Estado> lE = new LinkedList<>();
     private List<Integer> lnER = new LinkedList<>();
@@ -560,11 +562,14 @@ public class Pantalla extends javax.swing.JFrame {
         boolean esFinal = false;
         boolean completo = true;
         boolean iniciando = false;
+        int cont;
+        boolean escribir;
         String aux;
         this.lERAct = new LinkedList<>();
         this.lPATAct = new LinkedList<>();
         this.lCerrarPAT = new LinkedList<>();
         this.lCerrarER = new LinkedList<>();
+        this.lcont = new LinkedList<>();
         if ((int) tok.toCharArray()[0] == 8)
         {
             retroceso = true;
@@ -697,22 +702,28 @@ public class Pantalla extends javax.swing.JFrame {
         // Guardamos en una lista los índices de inicio y de cierre de las er o pat que 
         // queremos cerrar
         int ai;
-        if (this.l_fuentes_mod.get(0).getSize() == 16) {
+        if (this.l_fuentes_mod.get(1).getSize() == 16) {
             if (this.lAuxMacro.size() > 12) {
-                for (int i = 12; i < this.lAuxMacro.size(); i++) {
+                for (int i = 0; i < this.lAuxMacro.size(); i++) {
                     if (this.lPATAct.contains(i)) {
-                        ai = this.lPATAct.get(this.lPATAct.indexOf(i-1)); // Anterior activo
+                        if (this.lPATAct.indexOf(i)-1 == -1)
+                            ai = 0;
+                        else
+                            ai = this.lPATAct.get(this.lPATAct.indexOf(i)-1); // Anterior activo
                         this.lCerrarPAT.add(ai);
                         this.lCerrarPAT.add(i);
                     }
                 }
             }
         }
-        if (this.l_fuentes_mod.get(0).getSize() == 16) {
+        if (this.l_fuentes_mod.get(1).getSize() == 16) {
             if (this.lAuxER.size() > 28) {
                 for (int i = 28; i < this.lAuxER.size(); i++) {
                     if (this.lERAct.contains(i)) {
-                        ai = this.lERAct.get(this.lERAct.indexOf(i-1)); // Anterior activo
+                        if (this.lERAct.indexOf(i)-1 == -1)
+                            ai = this.lAuxMacro.size();
+                        else
+                            ai = this.lERAct.get(this.lERAct.indexOf(i)-1); // Anterior activo
                         this.lCerrarER.add(ai);
                         this.lCerrarER.add(i);
                     }
@@ -902,25 +913,75 @@ public class Pantalla extends javax.swing.JFrame {
             }
             try {
                 String cad = "\n" + this.lER.get(i);
-                if (this.lAuxMacro.size() > i) {
-                    int cont = -1;
-                    if (this.lCerrarPAT.size() > 0) {
+                if (this.lAuxMacro.size() > i) { // Estamos en las macros
+                    // doc.insertString(doc.getLength(), cad, style); // ASI SIN CERRAR
+                    if (this.lCerrarPAT.size() > 0) { // Comprobamos si hay que cerrar patrones
+                        cont = -1;
+                        escribir = true;
                         for (int a : this.lCerrarPAT) {
                             cont++;
-                            if (cont % 2 != 0)
+                            if (cont % 2 != 0) // Solo cogemos el índice inicial
                                 continue;
                             if (i > a && i < this.lCerrarPAT.get(cont+1)) {
                                 // no se escribe y se suma a un contador
+                                escribir = false;
+                                if (i == a+1) { // Si es inmediatamente el primero sin activarse, actualizamos contador
+                                    this.contadorCerrar = 1;
+                                    this.lcont.add(this.contadorCerrar);
+                                } else if (i == this.lCerrarPAT.get(cont+1)-1) { // Si es el último en activarse, escribimos el numero
+                                    doc.insertString(doc.getLength(), "\n...("+(this.contadorCerrar+1)+")...", style);
+                                    this.lcont.set(this.lcont.size()-1, this.contadorCerrar+1);
+                                    this.contadorCerrar = -1;
+                                } else { // No es ni el primero ni el último
+                                    this.contadorCerrar++;
+                                    this.lcont.set(this.lcont.size()-1, this.contadorCerrar);
+                                }
+                                break;
                             }
                         }
+                        if (escribir) // Si no está entre ningún espacio de no activadas, se escribe
+                            doc.insertString(doc.getLength(), cad, style);
+                    } else { // Si no hay que cerrar patrones, lo escribimos directamente
+                        doc.insertString(doc.getLength(), cad, style);
                     }
-                    doc.insertString(doc.getLength(), cad, style);
                 }
-                else if (this.lAuxMacro.size() == i) {
-                    doc1.insertString(doc1.getLength(), this.lER.get(i), style1);
-                }
-                else {
-                    doc1.insertString(doc1.getLength(), cad, style1);
+                else { // Estamos en las definiciones regulares
+                    if (this.lAuxMacro.size() == i) {
+                        this.contadorCerrar = -1;
+                        cad = this.lER.get(i);
+                    }
+                    // doc1.insertString(doc1.getLength(), cad, style1); // ASI SERIA SIN CERRAR
+                    
+                    if (this.lCerrarER.size() > 0) { // Comprobamos si hay que cerrar patrones
+                        cont = -1;
+                        escribir = true;
+                        for (int a : this.lCerrarER) {
+                            cont++;
+                            if (cont % 2 != 0) // Solo cogemos el índice inicial
+                                continue;
+                            if (i > a && i < this.lCerrarER.get(cont+1)) {
+                                // no se escribe y se suma a un contador
+                                escribir = false;
+                                if (i == a+1) { // Si es inmediatamente el primero sin activarse, actualizamos contador
+                                    this.contadorCerrar = 1;
+                                    this.lcont.add(this.contadorCerrar);
+                                } else if (i == this.lCerrarER.get(cont+1)-1) { // Si es el último en activarse, escribimos el numero
+                                    doc1.insertString(doc1.getLength(), "\n...("+(this.contadorCerrar+1)+")...", style1);
+                                    this.lcont.set(this.lcont.size()-1, this.contadorCerrar+1);
+                                    this.contadorCerrar = -1;
+                                } else { // No es ni el primero ni el último
+                                    this.contadorCerrar++;
+                                    this.lcont.set(this.lcont.size()-1, this.contadorCerrar);
+                                }
+                                break;
+                            }
+                        }
+                        if (escribir) // Si no está entre ningún espacio de no activadas, se escribe
+                            doc1.insertString(doc1.getLength(), cad, style1);
+                    } else { // Si no hay que cerrar patrones, lo escribimos directamente
+                        doc1.insertString(doc1.getLength(), cad, style1);
+                    }
+                    
                 }
             } catch (BadLocationException ex) {
                 Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
