@@ -1,7 +1,7 @@
 import java.util.LinkedList;
 import java.util.List;
 /**
- * Clase central de la aplicaci�n, donde introducir� toda la l�gica
+ * Clase central de la aplicación, donde introduciremos toda la lógica
  * @author herre
  *
  */
@@ -9,6 +9,7 @@ public class Analizador
 {
     List<String> listaM;
     List<String> listaER;
+    List<Integer> lineas;
     /**
        * Método que recibe una lista con strings correspondientes a macros 
        * y parsea cada uno traduciendolos a un estado común
@@ -475,7 +476,7 @@ public class Analizador
         return p;
     }
     /**
-     * M�todo anulable que devuelve verdadero o falso
+     * Método anulable que devuelve verdadero o falso
      * @param nodo Nodo a analizar
      * @return verdadero o falso
      */
@@ -495,7 +496,7 @@ public class Analizador
             return true;
     }
     /**
-     * M�todo primeraPos que devuelve una lista de posiciones
+     * Método primeraPos que devuelve una lista de posiciones
      * @param nodo Nodo a analizar
      * @return Lista de posiciones
      */
@@ -530,7 +531,7 @@ public class Analizador
         return out;
     }
     /**
-     * M�todo ultimaPos que devuelve una lista de posiciones
+     * Método ultimaPos que devuelve una lista de posiciones
      * @param nodo Nodo a analizar
      * @return Lista de posiciones
      */
@@ -578,9 +579,9 @@ public class Analizador
         return out;
     }
     /**
-     * M�todo siguientePos que se calcula sobre los nodos hoja
-     * @param nodo Nodo desde el que recorreremos el �rbol
-     * @param pos Posici�n de la hoja a analizar
+     * Método siguientePos que se calcula sobre los nodos hoja
+     * @param nodo Nodo desde el que recorreremos el árbol
+     * @param pos Posición de la hoja a analizar
      * @return Lista de posiciones
      */
     public List<Integer> siguientePos(NodoArbol nodo, int pos)
@@ -797,8 +798,8 @@ public class Analizador
         return true;
     }
     /**
-     * M�todo que comprueba si dos cadenas son equivalentes para
-     * su aceptaci�n en el aut�mata.
+     * Método que comprueba si dos cadenas son equivalentes para
+     * su aceptación en el autómata.
      * @param c1 Cadena principal
      * @param c2 Cadena que comprobaremos con la principal
      * @return Verdadero si son equivalentes
@@ -956,7 +957,7 @@ public class Analizador
     }
     /**
      * Método que dada una entrada en forma de String y un estado del autómata,
-     * comprueba si con dicho terminal se puede avanzar a otro(s) estado(s). En
+     * comprueba si con dicho terminal se puede avanzar a otro(s) estado(s), en
      * ese caso, los va introduciendo en una lista de estados.
      * @param tok cadena que se lee
      * @param lIni lista de estados iniciales
@@ -1105,7 +1106,7 @@ public class Analizador
         Estado nuevo;
         lest.add(einicial);
         laux.add(einicial);
-        // Iniciamos el algoritmo de creaci�n del aut�mata
+        // Iniciamos el algoritmo de creación del autómata
         while (noMarcado > 0)
         {
             for (Estado actual : lest)
@@ -1185,8 +1186,8 @@ public class Analizador
     /**
      * Método que devuelve una lista de índices de expresiones regulares, dada una lista de estados en los que
      * se encuentra el autómata. Además, se pasa como parámetro una lista de las expresiones regulares que se 
-     * activaron en el último estado. Con esta lista se comprueba si en el nuevo estado se activa alguna expresi�n
-     * regular que anteriormente no se encontraba activa, si es as�, no se activa.
+     * activaron en el último estado. Con esta lista se comprueba si en el nuevo estado se activa alguna expresión
+     * regular que anteriormente no se encontraba activa, si es así, no se activa.
      * @param tok cadena que se lee
      * @param lE lista de estados
      * @param tabla automata
@@ -1220,7 +1221,7 @@ public class Analizador
             for (Integer obj : lInt)
             {
                 // EN PRUEBA
-                c = est.lTerm.indexOf(obj); // Cogemos el �ndice en el que se encuentra ese terminal
+                c = est.lTerm.indexOf(obj); // Cogemos el índice en el que se encuentra ese terminal
                 if (c != -1)
                 {
                     a = est.expRegs.get(c) + 1; // Cogemos el índice de la ER que tiene el terminal c

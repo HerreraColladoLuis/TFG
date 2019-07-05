@@ -9,6 +9,7 @@ public class Procesador {
     
     private static List<String> auxregex;
     private static List<String> auxmacro;
+    private static List<Integer> lineas;
     private static List<List<Analizador.Estado>> automata;
     private static Analizador.NodoArbol arbolAux;
     private static List<List<Analizador.Estado>> estadoEntrada = new LinkedList<>();
@@ -23,12 +24,12 @@ public class Procesador {
     public static List<String> procesarEsp(String argv) throws Exception {
         List<String> outList = new LinkedList<>();
         String encodingName = "UTF-8";
-        Lexicojf scanner = null;
+        Lexicojfn scanner = null;
         try 
         {
             java.io.FileInputStream stream = new java.io.FileInputStream(argv);
             java.io.Reader reader = new java.io.InputStreamReader(stream, encodingName);
-            scanner = new Lexicojf(reader);
+            scanner = new Lexicojfn(reader);
             while ( !scanner.zzAtEOF ) scanner.yylex();
         }
         catch (java.io.FileNotFoundException e) 
@@ -51,6 +52,7 @@ public class Procesador {
         List<String> auxregex1 = aux.translateRegex(scanner.regexList);
         aux.listaER = auxregex1;
         aux.listaM = auxmacro1;
+        aux.lineas = scanner.lineas;
         outList.addAll(auxmacro1);
         if (auxregex1.size() > auxmacro1.size())
         {
@@ -61,6 +63,7 @@ public class Procesador {
         }
         Procesador.auxregex = auxregex1;
         Procesador.auxmacro = auxmacro1;
+        Procesador.lineas = aux.lineas;
         return outList;
     }
     
@@ -70,6 +73,10 @@ public class Procesador {
     
     public static List<String> getMacro() {
         return auxmacro;
+    }
+    
+    public static List<Integer> getLineas() {
+        return lineas;
     }
     /**
      * Método para crear un autómata a partir de la información dada por las

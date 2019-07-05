@@ -5,6 +5,8 @@ import java.awt.Font;
 import static java.awt.Font.BOLD;
 import static java.awt.Font.PLAIN;
 import java.awt.Image;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -13,9 +15,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.Tooltip;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.UIDefaults;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -66,12 +70,14 @@ public class Pantalla extends javax.swing.JFrame {
     private boolean borrarDEF = false;
     private boolean borradoPAT = true;
     private boolean borradoDEF = true;
+    private boolean procesado = false;
     private int ind = -1;
     private P_ajustes pAjustes;
     private List<Font> l_fuentes = new LinkedList<>();
     private List<Color> l_colores = new LinkedList<>();
     private List<Font> l_fuentes_mod = new LinkedList<>();
     private List<Color> l_colores_mod = new LinkedList<>();
+    private List<Integer> lineas;
 
     public List<Font> getL_fuentes_mod() {
         return l_fuentes_mod;
@@ -258,6 +264,11 @@ public class Pantalla extends javax.swing.JFrame {
         panel_expr.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
             public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
                 panel_exprHyperlinkUpdate(evt);
+            }
+        });
+        panel_expr.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                panel_exprCaretUpdate(evt);
             }
         });
         panel_expr.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -464,6 +475,7 @@ public class Pantalla extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void boton_nuevaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_nuevaActionPerformed
+        this.procesado = false;
         String especificacion = null;
         try {
             especificacion = this.abrirArchivo();
@@ -569,6 +581,7 @@ public class Pantalla extends javax.swing.JFrame {
         
         this.panel_entrada.setEditable(true);
         this.panel_entrada.setFocusable(true);
+        this.procesado = true;
     }//GEN-LAST:event_boton_nuevaActionPerformed
 
     @SuppressWarnings("null")
@@ -1266,15 +1279,7 @@ public class Pantalla extends javax.swing.JFrame {
     }//GEN-LAST:event_panel_entradaKeyPressed
 
     private void panel_exprMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_exprMouseClicked
-        if (this.borrarPAT) {
-            if (this.borradoPAT) {
-                this.mostrarPaneles(this.lnER, false, true);
-                borradoPAT = false;
-            } else {
-                this.mostrarPaneles(this.lnER, true, true);
-                borradoPAT = true;
-            }
-        }
+        
     }//GEN-LAST:event_panel_exprMouseClicked
 
     private void panel_exprHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_panel_exprHyperlinkUpdate
@@ -1291,6 +1296,26 @@ public class Pantalla extends javax.swing.JFrame {
     }//GEN-LAST:event_lbSettingsMouseClicked
 
     private void panel_defMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_defMouseClicked
+
+    }//GEN-LAST:event_panel_defMouseClicked
+
+    private void panel_exprMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_exprMouseEntered
+        if (this.borrarPAT) {
+            if (this.borradoPAT) {
+                this.mostrarPaneles(this.lnER, false, true);
+                borradoPAT = false;
+            } else {
+                this.mostrarPaneles(this.lnER, true, true);
+                borradoPAT = true;
+            }
+        }
+    }//GEN-LAST:event_panel_exprMouseEntered
+
+    private void panel_exprMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_exprMouseExited
+        this.panel_exprMouseEntered(evt);
+    }//GEN-LAST:event_panel_exprMouseExited
+
+    private void panel_defMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_defMouseEntered
         if (this.borrarDEF) {
             if (this.borradoDEF) {
                 this.mostrarPaneles(lnER, true, false);
@@ -1300,23 +1325,16 @@ public class Pantalla extends javax.swing.JFrame {
                 borradoDEF = true;
             }
         }
-    }//GEN-LAST:event_panel_defMouseClicked
-
-    private void panel_exprMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_exprMouseEntered
-        this.panel_exprMouseClicked(evt);
-    }//GEN-LAST:event_panel_exprMouseEntered
-
-    private void panel_exprMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_exprMouseExited
-        this.panel_exprMouseClicked(evt);
-    }//GEN-LAST:event_panel_exprMouseExited
-
-    private void panel_defMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_defMouseEntered
-        this.panel_defMouseClicked(evt);
     }//GEN-LAST:event_panel_defMouseEntered
 
     private void panel_defMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_defMouseExited
-        this.panel_defMouseClicked(evt);
+        this.panel_defMouseEntered(evt);
     }//GEN-LAST:event_panel_defMouseExited
+
+    private void panel_exprCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_panel_exprCaretUpdate
+        int pos = this.panel_expr.getCaretPosition();
+        
+    }//GEN-LAST:event_panel_exprCaretUpdate
     
     /**
      * Método para abrir un archivo con JFileChooser.
@@ -1341,6 +1359,7 @@ public class Pantalla extends javax.swing.JFrame {
                 lER = Procesador.procesarEsp(abre.getPath());
                 this.lAuxER = Procesador.getER();
                 this.lAuxMacro = Procesador.getMacro();
+                this.lineas = Procesador.getLineas();
                 FileReader archivos=new FileReader(abre);
                 try (BufferedReader lee = new BufferedReader(archivos)) {
                     while((aux=lee.readLine())!=null)
