@@ -10,6 +10,8 @@ public class Procesador {
     private static List<String> auxregex;
     private static List<String> auxmacro;
     private static List<Integer> lineas;
+    private static List<Integer> ncaracP;
+    private static List<Integer> ncaracD;
     private static List<List<Analizador.Estado>> automata;
     private static Analizador.NodoArbol arbolAux;
     private static List<List<Analizador.Estado>> estadoEntrada = new LinkedList<>();
@@ -64,6 +66,8 @@ public class Procesador {
         Procesador.auxregex = auxregex1;
         Procesador.auxmacro = auxmacro1;
         Procesador.lineas = aux.lineas;
+        Procesador.ncaracP = aux.caracteresMacro(auxmacro1);
+        Procesador.ncaracD = aux.caracteresRegex(auxregex1);
         return outList;
     }
     
@@ -77,6 +81,14 @@ public class Procesador {
     
     public static List<Integer> getLineas() {
         return lineas;
+    }
+    
+    public static List<Integer> getNcaracP() {
+        return ncaracP;
+    }
+    
+    public static List<Integer> getNcaracD() {
+        return ncaracD;
     }
     /**
      * Método para crear un autómata a partir de la información dada por las

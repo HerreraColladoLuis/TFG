@@ -28,6 +28,17 @@ public class Analizador
         }
         return out;
       }
+      
+      public List<Integer> caracteresMacro(List<String> lmacros) {
+          List<Integer> salida = new LinkedList<>();
+          int cont = 0;
+          for (String macro : lmacros) {
+              cont = cont + macro.length();
+              salida.add(cont);
+              cont++;
+          }
+          return salida;
+      }
       /**
        * Método que recibe una lista con strings correspondientes a regex 
        * y parsea cada una traduciendolos a un estado común
@@ -45,6 +56,21 @@ public class Analizador
                 out.add(aux);
         }
         return out;
+      }
+      
+      public List<Integer> caracteresRegex(List<String> lregex) {
+          List<Integer> salida = new LinkedList<>();
+          int cont = 0;
+          int aux = -1;
+          for (String reg : lregex) {
+              aux++;
+              if (aux < this.listaM.size())
+                  continue;
+              cont = cont + reg.length();
+              salida.add(cont);
+              cont++;
+          }
+          return salida;
       }
     /**
      * Algoritmo para parsear un string que contiene una 

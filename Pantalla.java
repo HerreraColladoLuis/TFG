@@ -78,6 +78,9 @@ public class Pantalla extends javax.swing.JFrame {
     private List<Font> l_fuentes_mod = new LinkedList<>();
     private List<Color> l_colores_mod = new LinkedList<>();
     private List<Integer> lineas;
+    private List<Integer> ncaracP;
+    private List<Integer> ncaracD;
+    private List<String> textoEspecificacion = new LinkedList<>();
 
     public List<Font> getL_fuentes_mod() {
         return l_fuentes_mod;
@@ -104,9 +107,9 @@ public class Pantalla extends javax.swing.JFrame {
         Color bgColor = new Color(240,241,242);
         UIDefaults defaults = new UIDefaults();
         defaults.put("TextPane[Enabled].backgroundPainter", bgColor);
-        //panel_activadas.putClientProperty("Nimbus.Overrides", defaults);
-        //panel_activadas.putClientProperty("Nimbus.Overrides.InheritDefaults", true);
-        //panel_activadas.setBackground(bgColor);
+        panel_especificacion.putClientProperty("Nimbus.Overrides", defaults);
+        panel_especificacion.putClientProperty("Nimbus.Overrides.InheritDefaults", true);
+        panel_especificacion.setBackground(bgColor);
         
         ImageIcon settingsImage = new ImageIcon(getClass().getResource(("/Imágenes/settings.png")));
         Icon iconSettings = new ImageIcon(settingsImage.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT));
@@ -174,14 +177,14 @@ public class Pantalla extends javax.swing.JFrame {
         panel_entrada = new javax.swing.JTextPane();
         cabecera_esp = new javax.swing.JPanel();
         et_especificacion = new javax.swing.JLabel();
-        scroll_panel_especificacion = new javax.swing.JScrollPane();
-        panel_especificacion = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         panel_def = new javax.swing.JTextPane();
         jPanel1 = new javax.swing.JPanel();
         et_patrones = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        panel_especificacion = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -346,7 +349,7 @@ public class Pantalla extends javax.swing.JFrame {
             .addGroup(cabecera_espLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(et_especificacion)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(381, Short.MAX_VALUE))
         );
         cabecera_espLayout.setVerticalGroup(
             cabecera_espLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -356,21 +359,16 @@ public class Pantalla extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        scroll_panel_especificacion.setBorder(null);
-
-        panel_especificacion.setEditable(false);
-        panel_especificacion.setBackground(new java.awt.Color(240, 241, 242));
-        panel_especificacion.setColumns(20);
-        panel_especificacion.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        panel_especificacion.setRows(5);
-        panel_especificacion.setFocusable(false);
-        scroll_panel_especificacion.setViewportView(panel_especificacion);
-
         jScrollPane3.setBorder(null);
 
         panel_def.setEditable(false);
         panel_def.setBorder(null);
         panel_def.setFocusable(false);
+        panel_def.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                panel_defCaretUpdate(evt);
+            }
+        });
         panel_def.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 panel_defMouseClicked(evt);
@@ -428,6 +426,14 @@ public class Pantalla extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jScrollPane1.setBorder(null);
+
+        panel_especificacion.setEditable(false);
+        panel_especificacion.setBorder(null);
+        panel_especificacion.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        panel_especificacion.setFocusable(false);
+        jScrollPane1.setViewportView(panel_especificacion);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -441,12 +447,14 @@ public class Pantalla extends javax.swing.JFrame {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cabecera_esp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(scroll_panel_especificacion, javax.swing.GroupLayout.DEFAULT_SIZE, 547, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(1, 1, 1)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cabecera_entrada, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(scroll_panel_entrada)))))
+                            .addComponent(scroll_panel_entrada)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, 0)
+                        .addComponent(jScrollPane1))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -462,7 +470,7 @@ public class Pantalla extends javax.swing.JFrame {
                         .addGap(0, 0, 0)
                         .addComponent(cabecera_esp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
-                        .addComponent(scroll_panel_especificacion))
+                        .addComponent(jScrollPane1))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(scroll_panel_expr, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
@@ -588,6 +596,7 @@ public class Pantalla extends javax.swing.JFrame {
     private void panel_entradaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_panel_entradaKeyTyped
         String tok = Character.toString(evt.getKeyChar());
         evt.consume();
+        this.procesado = false;
         this.borrarDEF = false;
         this.borrarPAT = false;
         boolean vacio = false;
@@ -889,7 +898,15 @@ public class Pantalla extends javax.swing.JFrame {
                 Logger.getLogger(FPrincipal.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        // PARECE QUE ESTÁ PERFECTO (SEGUIR PROBANDO)
+        this.procesado = true;
+        try {
+            this.mostrarEspecificacion(-1);
+            // PARECE QUE ESTÁ PERFECTO (SEGUIR PROBANDO)
+        } catch (BadLocationException ex) {
+            Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_panel_entradaKeyTyped
 
     private void mostrarPaneles(List<Integer> expr, boolean cerrarPAT, boolean cerrarDEF) {
@@ -1242,6 +1259,36 @@ public class Pantalla extends javax.swing.JFrame {
         this.panel_def.setCaretPosition(0);
     }
     
+    private void mostrarEspecificacion(int linea) throws BadLocationException, IllegalArgumentException {
+        int care = 0;
+        boolean seguir = true;
+        int aux = 0;
+        this.panel_especificacion.setText("");
+        StyledDocument doc = this.panel_especificacion.getStyledDocument();
+        Style style = this.panel_especificacion.addStyle("Style", null);
+        
+        for (String l : this.textoEspecificacion) {
+            if (seguir)
+                care = care + l.length();
+            aux++;
+            if (linea == aux) {
+                StyleConstants.setBackground(style, Color.YELLOW);
+                StyleConstants.setFontSize(style, 16);
+                seguir = false;
+            } else {
+                StyleConstants.setBackground(style, new Color(240,241,242));
+                StyleConstants.setFontSize(style, 14);
+            }
+            doc.insertString(doc.getLength(), l + "\n", style);
+        }
+        if (linea == -1)
+            this.panel_especificacion.setCaretPosition(0);
+        else if (care+300 > doc.getLength())
+            this.panel_especificacion.setCaretPosition(care);
+        else
+            this.panel_especificacion.setCaretPosition(care+300);
+    }
+    
     private void panel_entradaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_panel_entradaFocusGained
 //        this.panel_entrada.setText("");
 //        StyledDocument doc = this.panel_entrada.getStyledDocument();
@@ -1300,6 +1347,7 @@ public class Pantalla extends javax.swing.JFrame {
     }//GEN-LAST:event_panel_defMouseClicked
 
     private void panel_exprMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_exprMouseEntered
+        this.procesado = false;
         if (this.borrarPAT) {
             if (this.borradoPAT) {
                 this.mostrarPaneles(this.lnER, false, true);
@@ -1309,6 +1357,7 @@ public class Pantalla extends javax.swing.JFrame {
                 borradoPAT = true;
             }
         }
+        this.procesado = true;
     }//GEN-LAST:event_panel_exprMouseEntered
 
     private void panel_exprMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_exprMouseExited
@@ -1316,6 +1365,7 @@ public class Pantalla extends javax.swing.JFrame {
     }//GEN-LAST:event_panel_exprMouseExited
 
     private void panel_defMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_defMouseEntered
+        this.procesado = false;
         if (this.borrarDEF) {
             if (this.borradoDEF) {
                 this.mostrarPaneles(lnER, true, false);
@@ -1325,6 +1375,7 @@ public class Pantalla extends javax.swing.JFrame {
                 borradoDEF = true;
             }
         }
+        this.procesado = true;
     }//GEN-LAST:event_panel_defMouseEntered
 
     private void panel_defMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_defMouseExited
@@ -1333,8 +1384,55 @@ public class Pantalla extends javax.swing.JFrame {
 
     private void panel_exprCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_panel_exprCaretUpdate
         int pos = this.panel_expr.getCaretPosition();
-        
+        int linea = 0;
+        int destacar;
+        if (procesado) {
+            for (int i = 0; i < this.ncaracP.size(); i++) {
+                linea++;
+                if (i == 0) {
+                    if (pos <= ncaracP.get(i)) {
+                        break;
+                    }
+                } else {
+                    if (pos > ncaracP.get(i-1) && pos <= ncaracP.get(i)) {
+                        break;
+                    }
+                }
+            }
+            destacar = this.lineas.get(linea-1);
+            try {
+                this.mostrarEspecificacion(destacar);
+            } catch (BadLocationException ex) {
+                Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_panel_exprCaretUpdate
+
+    private void panel_defCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_panel_defCaretUpdate
+        int pos = this.panel_def.getCaretPosition();
+        int linea = this.lAuxMacro.size();
+        int destacar;
+        if (procesado) {
+            for (int i = 0; i < this.ncaracD.size(); i++) {
+                linea++;
+                if (i == 0) {
+                    if (pos <= ncaracD.get(i)) {
+                        break;
+                    }
+                } else {
+                    if (pos > ncaracD.get(i-1) && pos <= ncaracD.get(i)) {
+                        break;
+                    }
+                }
+            }
+            destacar = this.lineas.get(linea-1);
+            try {
+                this.mostrarEspecificacion(destacar);
+            } catch (BadLocationException ex) {
+                Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_panel_defCaretUpdate
     
     /**
      * Método para abrir un archivo con JFileChooser.
@@ -1360,10 +1458,14 @@ public class Pantalla extends javax.swing.JFrame {
                 this.lAuxER = Procesador.getER();
                 this.lAuxMacro = Procesador.getMacro();
                 this.lineas = Procesador.getLineas();
+                this.ncaracP = Procesador.getNcaracP();
+                this.ncaracD = Procesador.getNcaracD();
+                this.textoEspecificacion = new LinkedList<>();
                 FileReader archivos=new FileReader(abre);
                 try (BufferedReader lee = new BufferedReader(archivos)) {
                     while((aux=lee.readLine())!=null)
                     {
+                        this.textoEspecificacion.add(aux);
                         texto+= aux+ "\n";
                     }
                 }
@@ -1424,16 +1526,16 @@ public class Pantalla extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lbHelp;
     private javax.swing.JLabel lbReg;
     private javax.swing.JLabel lbSettings;
     private javax.swing.JTextPane panel_def;
     private javax.swing.JTextPane panel_entrada;
-    private javax.swing.JTextArea panel_especificacion;
+    private javax.swing.JTextPane panel_especificacion;
     private javax.swing.JTextPane panel_expr;
     private javax.swing.JScrollPane scroll_panel_entrada;
-    private javax.swing.JScrollPane scroll_panel_especificacion;
     private javax.swing.JScrollPane scroll_panel_expr;
     // End of variables declaration//GEN-END:variables
 }
