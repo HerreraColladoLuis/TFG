@@ -228,6 +228,7 @@ public class P_ajustes extends javax.swing.JDialog {
         });
 
         lb_ayuda.setText(bundle.getString("P_ajustes.lb_ayuda.text")); // NOI18N
+        lb_ayuda.setToolTipText(bundle.getString("P_ajustes.lb_ayuda.toolTipText")); // NOI18N
 
         lb_titulo_1.setText(bundle.getString("P_ajustes.lb_titulo_1.text")); // NOI18N
 
@@ -675,7 +676,7 @@ public class P_ajustes extends javax.swing.JDialog {
                     else if (i == 4)
                         doc1.insertString(doc1.getLength(), "6&€?l", style1);
                     else
-                        doc1.insertString(doc1.getLength(), "whi", style1);
+                        doc1.insertString(doc1.getLength(), "whil", style1);
                 } catch (BadLocationException ex) {
                     Logger.getLogger(P_ajustes.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -726,7 +727,7 @@ public class P_ajustes extends javax.swing.JDialog {
                     else if (i == 8)
                         doc1.insertString(doc1.getLength(), "6&€?l", style1);
                     else
-                        doc1.insertString(doc1.getLength(), "whi", style1);
+                        doc1.insertString(doc1.getLength(), "whil", style1);
                 } catch (BadLocationException ex) {
                     Logger.getLogger(P_ajustes.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -777,7 +778,7 @@ public class P_ajustes extends javax.swing.JDialog {
                     else if (i == 9)
                         doc1.insertString(doc1.getLength(), "6&€?l", style1);
                     else
-                        doc1.insertString(doc1.getLength(), "whi", style1);
+                        doc1.insertString(doc1.getLength(), "whil", style1);
                 } catch (BadLocationException ex) {
                     Logger.getLogger(P_ajustes.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -945,7 +946,7 @@ public class P_ajustes extends javax.swing.JDialog {
                     StyleConstants.setItalic(style1, false);
                 }
                 try {
-                    doc1.insertString(doc1.getLength(), "whi", style1);
+                    doc1.insertString(doc1.getLength(), "whil", style1);
                 } catch (BadLocationException ex) {
                     Logger.getLogger(P_ajustes.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -1123,7 +1124,7 @@ public class P_ajustes extends javax.swing.JDialog {
                             StyleConstants.setItalic(style1, false);
                         }
                         try {
-                            doc1.insertString(doc1.getLength(), "whi", style1);
+                            doc1.insertString(doc1.getLength(), "whil", style1);
                         } catch (BadLocationException ex) {
                             Logger.getLogger(P_ajustes.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -1295,7 +1296,7 @@ public class P_ajustes extends javax.swing.JDialog {
                             StyleConstants.setItalic(style1, false);
                         }
                         try {
-                            doc1.insertString(doc1.getLength(), "whi", style1);
+                            doc1.insertString(doc1.getLength(), "whil", style1);
                         } catch (BadLocationException ex) {
                             Logger.getLogger(P_ajustes.class.getName()).log(Level.SEVERE, null, ex);
                         }

@@ -317,6 +317,182 @@ public class Analizador
         }
         return cadena;
     }
+    
+    public String traducirAR(String exp) throws Exception {
+        String cadAux;
+        String aux1;
+        String cadena = "";
+        boolean n = false;
+        char[] rech = exp.toCharArray();
+        int i = 0;
+        int j;
+        // Vamos a recorrer el string caracter a caracter
+        while (i < exp.length()) 
+        {	
+            // Entramos en el caso en el que se abre un set
+            if (rech[i] == '[') 
+            {
+                cadena += "\"";
+                if (rech[i+1] == '^') // Comprobamos si está negado
+                {
+                    cadena+= rech[i+1]; // aux += ^
+                    i = i+1; // Apuntamos a la negaci�n
+                    if (rech[i+1] == ']')
+                        n = true;
+                }
+                i = i+1; // Apuntamos al primer caracter del set
+                while (true)
+                {
+                    // Comprobamos si es una letra, may�scula o min�scula, o un n�mero
+                    if (((int) rech[i] > 64 && (int) rech[i] < 91) || ((int) rech[i] > 96 && (int) rech[i] < 123) || ((int) rech[i] > 47 && (int) rech[i] < 58))
+                    {
+                        // Caso correspondiente a [a-z] o [0-9] (por ejemplo)
+                        if (rech[i+1] == '-')
+                        {
+                            for (j = (int) rech[i]; j <= (int) rech[i+2]; j++)
+                                cadena += (char) j;
+                            i = i+3; // Apuntamos al siguiente caracter de la secuencia
+                        }
+                        else // Si no es una secuencia, guardamos el n�mero o la letra
+                        {
+                            cadena += rech[i];
+                            i = i+1; // Apuntamos al siguiente caracter de la secuencia
+                        }
+                    }
+                    // Comprobamos si es un caracter de escape \
+                    else if ((int) rech[i] == 10 || (int) rech[i] == 9 || (int) rech[i] == 13 || (int) rech[i] == 13 ||
+                            (int) rech[i] == 12 || (int) rech[i] == 8 || (int) rech[i] == 92 || (int) rech[i] == 39 ||
+                            (int) rech[i] == 34)
+                    {
+                        cadena += rech[i]; // Guardamos el caracter de escape
+                        i = i+1;
+                    }
+                    // Comprobamos si es el final del set
+                    else if (rech[i] == ']') // Acaba el set
+                        break; // Salimos del while
+                    // Cualquier otro s�mbolo
+                    else
+                    {
+                        cadena += rech[i]; // Guardamos el s�mbolo
+                        i = i+1;
+                    }	
+                }
+                cadena += "^##\""; // A�adir algo para saber que es un set ^##
+                if (n)
+                {
+                    n = false;
+                    cadena += "*";
+                }
+            }
+            // Entramos en el caso en el que se abre un par�ntesis
+            else if (rech[i] == '(')
+            {
+                cadena += "(";
+            }
+            else if (rech[i] == ')')
+            {
+                cadena += ")";
+            }
+            // Se encuentra un OR
+            else if (rech[i] == '|')
+            {
+                cadena += "|";
+            }
+            // Se encuentra un "
+            else if (rech[i] == '\'')
+            {
+                i = i+1;
+                while (true)
+                {
+                    if (rech[i] == '\'')
+                        break;
+                    if ((int) rech[i] == 10 || (int) rech[i] == 9 || (int) rech[i] == 13 || (int) rech[i] == 13 ||
+                        (int) rech[i] == 12 || (int) rech[i] == 8 || (int) rech[i] == 92 || (int) rech[i] == 39 ||
+                        (int) rech[i] == 34)
+                    {
+                        cadena += "\"" + rech[i] + rech[i+1] + "\""; // Guardamos el caracter de escape
+                        i = i + 1;
+                    }
+                    else
+                        cadena += "\"" + rech[i] + "\"";
+                    i = i+1;
+                }
+            }
+            else if (rech[i] == ' ')
+            {
+                // Nada
+            }
+            else if (rech[i] == '+' || rech[i] == '*' || rech[i] == '?')
+            {
+                cadena += (String.valueOf(rech[i]));
+            }
+            // Cualquier otro caracter (MACRO)
+            else if (((int) rech[i] > 96 && (int) rech[i] < 123) || ((int) rech[i] > 64 && (int) rech[i] < 91))
+            {
+                aux1 = "";
+                j = 0;
+                while (i < rech.length && rech[i] != ' ' && rech[i] != '+' && rech[i] != '*' && rech[i] != '?' && rech[i] != ')' && rech[i] != '(' && rech[i] != '|')
+                {
+                    aux1 += rech[i]; // Guardamos en aux1 la macro 
+                    i = i+1;
+                }
+                if (i < rech.length)
+                    i--;
+                // Comprobamos que la lista no esté vacia o sea nula
+                if (listaM != null && !listaM.isEmpty()) 
+                {
+                    for (String comp : listaM) // Recorremos la lista buscando la posici�n de la macro dada
+                    {
+                        if (comp.equalsIgnoreCase(aux1)) // Cuando la encontramos, salimos
+                            break;
+                        j = j+1; // En esta variable guardamos la posici�n
+                    }
+                }
+                else 
+                    throw new Exception("Lista de Macros vacía o nula"); // Devolvemos una excepci�n 
+                // Comprobamos que la lista no est� vacia o sea nula
+                if (listaER != null && !listaER.isEmpty()) 
+                {
+                    cadAux = traducirAR(listaER.get(j)); // Hacemos recursividad para parsear una macro
+                }
+                else
+                    throw new Exception("Lista de ER vacía o nula"); // Devolvemos una excepci�n
+                // A�adimos el arbol de la macro como hijo del arbol act�al
+                if (cadAux == null)
+                    throw new Exception("Cadena auxiliar nula"); // Devolvemos una excepci�n
+                else
+                {
+                    cadena += "(" + cadAux + ")";
+                }
+            }
+            // Cualquier otro caracter
+            else
+            {
+                //cadena += "\"";
+                while (true)
+                {
+                    if (i == rech.length || rech[i] == '+' || rech[i] == '*' || rech[i] == '?' || rech[i] == ' ' || rech[i] == ')' || rech[i] == '|' || rech[i] == '(')
+                    {
+                        i = i-1;
+                        break;
+                    }
+                    if ((int) rech[i] == 10 || (int) rech[i] == 9 || (int) rech[i] == 13 || (int) rech[i] == 13 ||
+                        (int) rech[i] == 12 || (int) rech[i] == 8 || (int) rech[i] == 92 || (int) rech[i] == 39 ||
+                        (int) rech[i] == 34)
+                    {
+                        cadena += "\"" + rech[i] + rech[i+1] + "\""; // Guardamos el caracter de escape
+                        i = i + 1;
+                    }
+                    else
+                        cadena += "\"" + rech[i] + "\"";
+                    i = i+1;
+                }
+                //cadena += "\"";
+            }
+            i = i+1;
+        }
+        return cadena;
+    }
     /**
      * Método que devuelve si una Expresión Regular está parseada,
      * es decir, si no tiene paréntesis inicial y final.

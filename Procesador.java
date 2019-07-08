@@ -7,6 +7,7 @@ import java.util.List;
  */
 public class Procesador {
     
+    static int tipo = -1;
     private static List<String> auxregex;
     private static List<String> auxmacro;
     private static List<Integer> lineas;
@@ -23,16 +24,34 @@ public class Procesador {
      * @return lista de ER
      * @throws Exception 
      */
+    @SuppressWarnings("null")
     public static List<String> procesarEsp(String argv) throws Exception {
         List<String> outList = new LinkedList<>();
         String encodingName = "UTF-8";
-        Lexicojfn scanner = null;
+        boolean jf = false;
+        boolean ar = false;
+        Lexicojfn scannerjf = null;
+        Lexicoalr scannerar = null;
+        if (argv.charAt(argv.length()-1) == 'x') {
+            jf = true;
+            tipo = 1;
+        }
+        else {
+            ar = true;
+            tipo = 2;
+        }
         try 
         {
             java.io.FileInputStream stream = new java.io.FileInputStream(argv);
             java.io.Reader reader = new java.io.InputStreamReader(stream, encodingName);
-            scanner = new Lexicojfn(reader);
-            while ( !scanner.zzAtEOF ) scanner.yylex();
+            if (jf == true) {
+                scannerjf = new Lexicojfn(reader);
+                while ( !scannerjf.zzAtEOF ) scannerjf.yylex();
+            }
+            else {
+                scannerar = new Lexicoalr(reader);
+                while ( !scannerar.zzAtEOF ) scannerar.yylex();
+            }
         }
         catch (java.io.FileNotFoundException e) 
         {
@@ -49,13 +68,25 @@ public class Procesador {
         }
         // DECLARACI�N DE VARIABLES A UTILIZAR
         Analizador aux = new Analizador();
-        @SuppressWarnings("null")
-        List<String> auxmacro1 = aux.translateMacro(scanner.macrosList);
-        List<String> auxregex1 = aux.translateRegex(scanner.regexList);
-        aux.listaER = auxregex1;
-        aux.listaM = auxmacro1;
-        aux.lineas = scanner.lineas;
-        outList.addAll(auxmacro1);
+        List<String> auxmacro1;
+        List<String> auxregex1;
+        if (jf == true) {
+            auxmacro1 = aux.translateMacro(scannerjf.macrosList);
+            auxregex1 = aux.translateRegex(scannerjf.regexList);
+            aux.lineas = scannerjf.lineas;
+            aux.listaER = auxregex1;
+            aux.listaM = auxmacro1;
+            outList.addAll(auxmacro1);
+        }
+        else {
+            auxmacro1 = scannerar.macrosList;
+            auxregex1 = aux.translateRegex(scannerar.regexList);
+            aux.lineas = scannerar.lineas;
+            aux.listaER = auxregex1;
+            aux.listaM = scannerar.macrosList;
+            outList.addAll(scannerar.macrosList);
+        }
+        
         if (auxregex1.size() > auxmacro1.size())
         {
             for (int cont = auxmacro1.size();cont < auxregex1.size();cont++)
@@ -106,18 +137,27 @@ public class Procesador {
         List<List<Analizador.Estado>> li;
         // EMPEZAMOS A CREAR EL ÁRBOL DE TODAS LAS EXPRESIONES REGULARES QUE ENCONTREMOS
         String fcad = auxregex.get(0);
-        outAux = aux.traducir(auxregex.get(0)); 
+        if (Procesador.tipo == 1)
+            outAux = aux.traducir(auxregex.get(0)); 
+        else
+            outAux = aux.traducirAR(auxregex.get(0)); 
         lParseadaAux = aux.parsear(outAux);
         arbol = aux.crearArbol(lParseadaAux,0);
         for (int x = 1; x < auxregex.size(); x++)
         {
-            outAux = aux.traducir(auxregex.get(x));
+            if (Procesador.tipo == 1)
+                outAux = aux.traducir(auxregex.get(x)); 
+            else
+                outAux = aux.traducirAR(auxregex.get(x)); 
             lParseadaAux = aux.parsear(outAux);
             arbolAux1 = aux.crearArbol(lParseadaAux,x);
             arbol = aux.unirArbol(arbol, arbolAux1, "|");
             fcad += "|" + auxregex.get(x);
         } 
-        out = aux.traducir(fcad);
+        if (Procesador.tipo == 1)
+            out = aux.traducir(fcad);
+        else
+            out = aux.traducirAR(fcad);
         System.out.println("ER traducida: " + out);
         lParseada = aux.parsear(out);
         System.out.print("ER parseada: ");

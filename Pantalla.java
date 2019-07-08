@@ -452,9 +452,7 @@ public class Pantalla extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cabecera_entrada, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(scroll_panel_entrada)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, 0)
-                        .addComponent(jScrollPane1))))
+                    .addComponent(jScrollPane1)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1399,6 +1397,7 @@ public class Pantalla extends javax.swing.JFrame {
                     }
                 }
             }
+
             destacar = this.lineas.get(linea-1);
             try {
                 this.mostrarEspecificacion(destacar);
@@ -1447,8 +1446,11 @@ public class Pantalla extends javax.swing.JFrame {
         {
             JFileChooser file=new JFileChooser();
             FileNameExtensionFilter filter = new FileNameExtensionFilter(
-            "Especificación léxica","flex","flex");
+            "JFLEX","flex","flex");
+            FileNameExtensionFilter filter1 = new FileNameExtensionFilter(
+            "ANTLR","antlr","antlr");
             file.setFileFilter(filter);
+            file.setFileFilter(filter1);
             file.showOpenDialog(this);
             File abre=file.getSelectedFile();
             
