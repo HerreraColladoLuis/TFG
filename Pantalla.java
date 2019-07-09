@@ -349,7 +349,7 @@ public class Pantalla extends javax.swing.JFrame {
             .addGroup(cabecera_espLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(et_especificacion)
-                .addContainerGap(381, Short.MAX_VALUE))
+                .addContainerGap(377, Short.MAX_VALUE))
         );
         cabecera_espLayout.setVerticalGroup(
             cabecera_espLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1397,8 +1397,13 @@ public class Pantalla extends javax.swing.JFrame {
                     }
                 }
             }
-
-            destacar = this.lineas.get(linea-1);
+            if (this.panel_expr.getText().equals(""))
+                destacar = -1;
+            else {
+                destacar = this.lineas.get(linea-1);
+                if (Procesador.tipo == 2)
+                    destacar = destacar+1;
+            }
             try {
                 this.mostrarEspecificacion(destacar);
             } catch (BadLocationException ex) {
@@ -1424,7 +1429,10 @@ public class Pantalla extends javax.swing.JFrame {
                     }
                 }
             }
-            destacar = this.lineas.get(linea-1);
+            if (this.panel_def.getText().equals(""))
+                destacar = -1;
+            else
+                destacar = this.lineas.get(linea-1);
             try {
                 this.mostrarEspecificacion(destacar);
             } catch (BadLocationException ex) {
