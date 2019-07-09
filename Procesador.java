@@ -30,15 +30,20 @@ public class Procesador {
         String encodingName = "UTF-8";
         boolean jf = false;
         boolean ar = false;
+        boolean f = false;
         Lexicojfn scannerjf = null;
         Lexicoalr scannerar = null;
-        if (argv.charAt(argv.length()-1) == 'x') {
+        Lexicolex scannerlex = null;
+        if (argv.charAt(argv.length()-4) == 'f') {
             jf = true;
             tipo = 1;
         }
-        else {
+        else if (argv.charAt(argv.length()-1) == 'r') {
             ar = true;
             tipo = 2;
+        } else {
+            f = true;
+            tipo = 3;
         }
         try 
         {
@@ -48,9 +53,12 @@ public class Procesador {
                 scannerjf = new Lexicojfn(reader);
                 while ( !scannerjf.zzAtEOF ) scannerjf.yylex();
             }
-            else {
+            else if (ar == true) {
                 scannerar = new Lexicoalr(reader);
                 while ( !scannerar.zzAtEOF ) scannerar.yylex();
+            } else {
+                scannerlex = new Lexicolex(reader);
+                while ( !scannerlex.zzAtEOF ) scannerlex.yylex();
             }
         }
         catch (java.io.FileNotFoundException e) 
@@ -78,13 +86,19 @@ public class Procesador {
             aux.listaM = auxmacro1;
             outList.addAll(auxmacro1);
         }
-        else {
+        else if (ar == true) {
             auxmacro1 = scannerar.macrosList;
             auxregex1 = aux.translateRegex(scannerar.regexList);
             aux.lineas = scannerar.lineas;
             aux.listaER = auxregex1;
             aux.listaM = scannerar.macrosList;
             outList.addAll(scannerar.macrosList);
+        } else {
+            auxmacro1 = scannerlex.macrosList;
+            auxregex1 = aux.translateRegex(scannerlex.regexList);
+            aux.lineas = scannerlex.lineas;
+            aux.listaER = auxregex1;
+            aux.listaM = scannerlex.macrosList;
         }
         
         if (auxregex1.size() > auxmacro1.size())
@@ -137,15 +151,15 @@ public class Procesador {
         List<List<Analizador.Estado>> li;
         // EMPEZAMOS A CREAR EL ÁRBOL DE TODAS LAS EXPRESIONES REGULARES QUE ENCONTREMOS
         String fcad = auxregex.get(0);
-        if (Procesador.tipo == 1)
+        if (Procesador.tipo == 1 || Procesador.tipo == 3)
             outAux = aux.traducir(auxregex.get(0)); 
         else
-            outAux = aux.traducirAR(auxregex.get(0)); 
+            outAux = aux.traducirAR(auxregex.get(0));  
         lParseadaAux = aux.parsear(outAux);
         arbol = aux.crearArbol(lParseadaAux,0);
         for (int x = 1; x < auxregex.size(); x++)
         {
-            if (Procesador.tipo == 1)
+            if (Procesador.tipo == 1 || Procesador.tipo == 3)
                 outAux = aux.traducir(auxregex.get(x)); 
             else
                 outAux = aux.traducirAR(auxregex.get(x)); 
@@ -154,7 +168,7 @@ public class Procesador {
             arbol = aux.unirArbol(arbol, arbolAux1, "|");
             fcad += "|" + auxregex.get(x);
         } 
-        if (Procesador.tipo == 1)
+        if (Procesador.tipo == 1|| Procesador.tipo == 3)
             out = aux.traducir(fcad);
         else
             out = aux.traducirAR(fcad);

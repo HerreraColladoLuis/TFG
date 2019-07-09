@@ -1431,8 +1431,11 @@ public class Pantalla extends javax.swing.JFrame {
             }
             if (this.panel_def.getText().equals(""))
                 destacar = -1;
-            else
+            else {
                 destacar = this.lineas.get(linea-1);
+                if (Procesador.tipo == 3)
+                    destacar = destacar+1;
+            }
             try {
                 this.mostrarEspecificacion(destacar);
             } catch (BadLocationException ex) {
@@ -1457,8 +1460,11 @@ public class Pantalla extends javax.swing.JFrame {
             "JFLEX","flex","flex");
             FileNameExtensionFilter filter1 = new FileNameExtensionFilter(
             "ANTLR","antlr","antlr");
-            file.setFileFilter(filter);
+            FileNameExtensionFilter filter2 = new FileNameExtensionFilter(
+            "LEX/FLEX","lex","lex");
+            file.setFileFilter(filter2);
             file.setFileFilter(filter1);
+            file.setFileFilter(filter);
             file.showOpenDialog(this);
             File abre=file.getSelectedFile();
             
